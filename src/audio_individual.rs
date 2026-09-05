@@ -1,11 +1,11 @@
 use gtk::gio::DBusConnection;
 use gtk::gio::{DBusCallFlags, ListStore};
-use gtk::glib::object::{Cast, CastNone, IsA};
-use gtk::glib::{g_warning, BoxedAnyObject, Variant, VariantTy};
+use gtk::glib::object::{Cast, CastNone, IsA, MayDowncastTo};
+use gtk::glib::{g_warning, BoxedAnyObject, Object, Variant, VariantTy};
 use gtk::prelude::{GridExt, ListItemExt, RangeExt, WidgetExt};
 use gtk::{
     glib, Builder, Expander, Grid, Image, Label, ListItem, ListView, NoSelection, Scale,
-    SignalListItemFactory, SingleSelection, Widget,
+    SignalListItemFactory, Widget,
 };
 
 use crate::types::{dbus, AudioStream, AudioStreamTuple, HandlerError, Program};
@@ -57,7 +57,9 @@ pub fn handle_audio_individual(
 
         let stream = item.borrow::<AudioStream>().clone();
 
-        populate_list_item(stream, list_item);
+        if let Err(e) = populate_list_item(stream, list_item) {
+            g_warning!(None, "{e:?}");
+        }
     });
 
     expander.connect_activate(glib::clone!(
@@ -126,30 +128,52 @@ fn create_list_item(builder: &Builder) -> Option<impl IsA<Widget>> {
 
     Some(ret)
 }
-// TODO: return error messages
-// or use '?'
-fn populate_list_item(stream: AudioStream, list_item: &ListItem) -> Option<()> {
-    let grid = list_item.child().and_downcast::<Grid>()?;
-    if let Some(icon) = grid.child_at(0, 0).and_downcast::<Image>() {
-        icon.set_icon_name(Some(&ui::get_individual_audio_icon(&stream.name)));
-    }
-    if let Some(label) = grid.child_at(1, 0).and_downcast::<Label>() {
-        label.set_label(&stream.name);
-    }
 
-    if let Some(r#box) = grid.child_at(0, 1).and_downcast::<gtk::Box>() {
-        if let Some(icon) = r#box.first_child().and_downcast::<Image>() {
-            icon.set_icon_name(Some(&ui::get_volume_icon(stream.volume, stream.is_muted)));
-        }
-        if let Some(label) = r#box.last_child().and_downcast::<Label>() {
-            label.set_label(&format!("{}", stream.volume));
-        }
-    }
-    if let Some(scale) = grid.child_at(1, 1).and_downcast::<Scale>() {
-        scale.set_value(stream.volume as f64);
-    }
+fn populate_list_item<'a>(
+    stream: AudioStream,
+    list_item: &'a ListItem,
+) -> Result<(), HandlerError<'a>> {
+    let grid = list_item
+        .child()
+        .downcast_or_err::<Grid>("Failed to get main-grid on individual_audio.ui")?;
 
-    Some(())
+    let icon = grid
+        .child_at(0, 0)
+        .downcast_or_err::<Image>("Failed to get image on individual_audio.ui")?;
+    icon.set_icon_name(Some(&ui::get_individual_audio_icon(&stream.name)));
+    let label = grid
+        .child_at(1, 0)
+        .downcast_or_err::<Label>("Failed to get label on individual_audio.ui")?;
+    label.set_label(&stream.name);
+
+    let r#box = grid
+        .child_at(0, 1)
+        .downcast_or_err::<gtk::Box>("Failed to get box on individual_audio.ui")?;
+    let icon = r#box
+        .first_child()
+        .downcast_or_err::<Image>("Failed to get box image on individual_audio.ui")?;
+    icon.set_icon_name(Some(&ui::get_volume_icon(stream.volume, stream.is_muted)));
+    let label = r#box
+        .last_child()
+        .downcast_or_err::<Label>("Failed to get box label on individual_audio.ui")?;
+    label.set_label(&format!("{}", stream.volume));
+    let scale = grid
+        .child_at(1, 1)
+        .downcast_or_err::<Scale>("Failed to get scale on individual_audio.ui")?;
+    scale.set_value(stream.volume as f64);
+
+    Ok(())
+}
+
+trait WidgetDowncastExt {
+    fn downcast_or_err<'a, T: IsA<Widget>>(self, msg: &'a str) -> Result<T, HandlerError<'a>>;
+}
+
+impl WidgetDowncastExt for Option<Widget> {
+    fn downcast_or_err<'a, T: IsA<Widget>>(self, msg: &'a str) -> Result<T, HandlerError<'a>> {
+        self.and_downcast::<T>()
+            .ok_or(HandlerError::ObjectError(msg))
+    }
 }
 
 fn empty_list_item() -> Label {
