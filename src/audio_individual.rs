@@ -1,7 +1,7 @@
 use gtk::gio::DBusConnection;
 use gtk::gio::{DBusCallFlags, ListStore};
-use gtk::glib::object::{Cast, CastNone, IsA, MayDowncastTo};
-use gtk::glib::{g_warning, BoxedAnyObject, Object, Variant, VariantTy};
+use gtk::glib::object::{Cast, CastNone, IsA};
+use gtk::glib::{g_warning, BoxedAnyObject, Variant, VariantTy};
 use gtk::prelude::{GridExt, ListItemExt, RangeExt, WidgetExt};
 use gtk::{
     glib, Builder, Expander, Grid, Image, Label, ListItem, ListView, NoSelection, Scale,
@@ -89,11 +89,6 @@ pub fn handle_audio_individual(
                             let children = get_stream_array(v);
 
                             store.remove_all();
-                            if children.is_empty() {
-                                store.append(&empty_list_item());
-                                return;
-                            }
-
                             for item in children {
                                 store.append(&glib::BoxedAnyObject::new(item));
                             }
@@ -174,8 +169,4 @@ impl WidgetDowncastExt for Option<Widget> {
         self.and_downcast::<T>()
             .ok_or(HandlerError::ObjectError(msg))
     }
-}
-
-fn empty_list_item() -> Label {
-    Label::builder().name("No active audio streams").build()
 }
