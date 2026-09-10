@@ -1,9 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use gtk::gdk::{self, Display, Key};
+use gtk::gdk::{Display, Key};
 use gtk::gio;
-use gtk::glib::property::PropertyGet;
 use gtk::glib::{self, g_critical};
 use gtk::{prelude::*, CssProvider};
 use gtk::{Application, ApplicationWindow, EventControllerFocus, EventControllerKey};
