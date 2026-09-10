@@ -10,7 +10,10 @@ use gtk::{
 use crate::types::{dbus, Program, State};
 use crate::{types::HandlerError, ui::get_volume_icon};
 
-pub fn handle_audio(builder: &Builder, conn: DBusConnection) -> Result<(), HandlerError<'_>> {
+pub fn handle_audio<'a>(
+    builder: &'a Builder,
+    conn: &'a DBusConnection,
+) -> Result<(), HandlerError<'a>> {
     let scale = builder
         .object::<Scale>("volume-scale")
         .ok_or(HandlerError::ObjectError("Failed to get volume-scale"))?;

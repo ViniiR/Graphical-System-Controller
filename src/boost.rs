@@ -30,7 +30,10 @@ async fn click_handler(conn: DBusConnection, button: Button) {
     };
 }
 
-pub fn handle_boost(builder: &Builder, conn: DBusConnection) -> Result<(), HandlerError<'_>> {
+pub fn handle_boost<'a>(
+    builder: &'a Builder,
+    conn: &'a DBusConnection,
+) -> Result<(), HandlerError<'a>> {
     let boost = builder
         .object::<Button>("boost-mode-button")
         .ok_or(HandlerError::ObjectError("Failed to get boost-mode-button"))?;

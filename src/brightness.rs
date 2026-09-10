@@ -11,7 +11,10 @@ use crate::types::HandlerError;
 use crate::types::{dbus, Program};
 use crate::ui::get_brightness_icon;
 
-pub fn handle_brightness(builder: &Builder, conn: DBusConnection) -> Result<(), HandlerError<'_>> {
+pub fn handle_brightness<'a>(
+    builder: &'a Builder,
+    conn: &'a DBusConnection,
+) -> Result<(), HandlerError<'a>> {
     let scale = builder
         .object::<Scale>("brightness-scale")
         .ok_or(HandlerError::ObjectError("Failed to get brightness-scale"))?;
@@ -89,6 +92,8 @@ pub fn handle_brightness(builder: &Builder, conn: DBusConnection) -> Result<(), 
 
     // Get brightness on startup
     glib::spawn_future_local(glib::clone!(
+        #[strong]
+        conn,
         #[strong]
         label,
         #[strong]

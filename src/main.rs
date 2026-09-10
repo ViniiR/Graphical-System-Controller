@@ -75,38 +75,37 @@ fn activate(app: &Application) {
             return;
         };
 
-        if let Err(e) = brightness::handle_brightness(&builder, dbus_connection.clone()) {
+        if let Err(e) = brightness::handle_brightness(&builder, &dbus_connection) {
             g_critical!(None, "Brightness error: {e:?}");
             return;
         };
 
-        if let Err(e) = power::handle_power(&builder, dbus_connection.clone()) {
+        if let Err(e) = power::handle_power(&builder, &dbus_connection) {
             g_critical!(None, "Power error: {e:?}");
             return;
         };
 
-        if let Err(e) = battery::handle_battery(&builder, dbus_connection.clone()) {
+        if let Err(e) = battery::handle_battery(&builder, &dbus_connection) {
             g_critical!(None, "Battery error: {e:?}");
             return;
         };
 
-        if let Err(e) = boost::handle_boost(&builder, dbus_connection.clone()) {
+        if let Err(e) = boost::handle_boost(&builder, &dbus_connection) {
             g_critical!(None, "Boost error: {e:?}");
             return;
         };
 
-        if let Err(e) = conservation::handle_conservation(&builder, dbus_connection.clone()) {
+        if let Err(e) = conservation::handle_conservation(&builder, &dbus_connection) {
             g_critical!(None, "Conservation error: {e:?}");
             return;
         };
 
-        if let Err(e) = audio::handle_audio(&builder, dbus_connection.clone()) {
+        if let Err(e) = audio::handle_audio(&builder, &dbus_connection) {
             g_critical!(None, "Audio error: {e:?}");
             return;
         };
 
-        if let Err(e) = audio_individual::handle_audio_individual(&builder, dbus_connection.clone())
-        {
+        if let Err(e) = audio_individual::handle_audio_individual(&builder, &dbus_connection) {
             g_critical!(None, "Audio Individual error: {e:?}");
             return;
         };

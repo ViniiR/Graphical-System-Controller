@@ -11,10 +11,10 @@ use gtk::{
 use crate::types::{dbus, AudioStream, AudioStreamTuple, HandlerError, Program};
 use crate::{ui, Filepaths};
 
-pub fn handle_audio_individual(
-    builder: &Builder,
-    conn: DBusConnection,
-) -> Result<(), HandlerError<'_>> {
+pub fn handle_audio_individual<'a>(
+    builder: &'a Builder,
+    conn: &'a DBusConnection,
+) -> Result<(), HandlerError<'a>> {
     let expander: Expander =
         builder
             .object("individual-audio-expander")
