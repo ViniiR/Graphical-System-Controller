@@ -1,0 +1,25 @@
+{
+    "version": 10,
+    "configurePresets": [
+        {
+            "name":"debug",
+            "displayName":"Debug",
+            "binaryDir":"${sourceDir}/build",
+            "generator": "Unix Makefiles",
+            "cacheVariables":{
+                "CMAKE_BUILD_TYPE":"Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS":"ON",
+                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic"
+            }
+        },
+        {
+            "name":"release",
+            "displayName":"Release",
+            "generator": "Unix Makefiles",
+            "cacheVariables":{
+                "CMAKE_BUILD_TYPE":"Release",
+                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -flto -O2"
+            }
+        }
+    ]
+}

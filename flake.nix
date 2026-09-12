@@ -23,6 +23,11 @@
 
             src = pkgs.nix-gitignore.gitignoreSource [] ./.;
 
+            cmakeFlags = [
+                "--preset"
+                "release"
+            ];
+
             nativeBuildInputs = with pkgs; [
                 pkg-config
                 cmake
