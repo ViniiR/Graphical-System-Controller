@@ -186,7 +186,7 @@ ResultVoid exec_command_as_user(
 
     int pipefd[2];
     if (pipe(pipefd) == -1) {
-        res.err_msg = "Failed fork pipe";
+        res.err_msg = "Failed to open pipe to forked process";
         return res;
     }
 
@@ -216,7 +216,10 @@ ResultVoid exec_command_as_user(
             _exit(-2);
         }
 
-        write(pipefd[1], output, size);
+        int bytes_written = write(pipefd[1], output, size);
+        if (bytes_written == -1) {
+            _exit(-3);
+        }
         close(pipefd[1]);
 
         _exit(0);
@@ -244,7 +247,11 @@ ResultVoid exec_command_as_user(
             return res;
         }
 
-        read(pipefd[0], output, size);
+        int bytes_read = read(pipefd[0], output, size);
+        if (bytes_read == -1) {
+            res.err_msg = "Failed to read output of exec_command";
+            return res;
+        }
         close(pipefd[0]);
 
         res.variant = OK;

@@ -64,7 +64,6 @@ int get_battery_handler(
 //
 
 static const char power_supply[] = "/sys/class/power_supply";
-static const char capacity[] = "/capacity";
 static const char energy_full[] = "/energy_full";
 static const char energy_now[] = "/energy_now";
 static const char status[] = "/status";
@@ -257,7 +256,7 @@ static ResultHeapString allocate_suffix(const ChargingStatus status) {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
     };
 
-    char *suffix;
+    char *suffix = NULL;
     switch (status) {
     case CHARGING:
         suffix = strdup(charging);

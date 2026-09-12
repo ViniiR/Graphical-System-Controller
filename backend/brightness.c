@@ -52,7 +52,7 @@ int set_brightness_handler(
         );
     }
 
-    if (value < 0 || value > 100) {
+    if (value > 100) {
         return sd_bus_error_setf(
             p_reterror,
             SD_BUS_ERROR_INVALID_ARGS,

@@ -65,7 +65,6 @@ static ResultHeapStructPointer get_pipewire_volume(const char *sink);
 static ResultVoid set_pipewire_volume(
     unsigned int percentage, const char *sink
 );
-static ResultBool get_is_pipewire_muted();
 static ResultVoid toggle_pipewire_muted(const char *sink);
 
 //
@@ -219,7 +218,7 @@ static int set_audio_handler_sink(
         );
     }
 
-    if (value < 0 || value > 100) {
+    if (value > 100) {
         return sd_bus_error_setf(
             p_reterror,
             SD_BUS_ERROR_INVALID_ARGS,
