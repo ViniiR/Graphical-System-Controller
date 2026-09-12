@@ -11,7 +11,6 @@ pub fn update_button_active(btn: &Button, to_active: bool) {
 // TODO:
 // MISSING ICONS
 // power modes (optional)
-// wifi
 
 //https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg
 //https://developer.gnome.org/documentation/tutorials/themed-icons.html
