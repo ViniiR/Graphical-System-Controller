@@ -57,10 +57,12 @@ pub fn handle_audio_individual<'a>(
 
         let stream = item.borrow::<AudioStream>().clone();
 
-        if let Err(e) = populate_list_item(stream, list_item) {
+        if let Err(e) = populate_list_item(&stream, list_item) {
             g_warning!(None, "{e:?}");
         }
     });
+
+    // TODO: handle input: mute, volume
 
     expander.connect_activate(glib::clone!(
         #[strong]
@@ -86,7 +88,7 @@ pub fn handle_audio_individual<'a>(
                     );
                     match call.await {
                         Ok(v) => {
-                            let children = get_stream_array(v);
+                            let children = get_stream_array(&v);
 
                             store.remove_all();
                             for item in children {
@@ -104,7 +106,7 @@ pub fn handle_audio_individual<'a>(
 }
 
 /// Variant is expected to be (a(usub))
-fn get_stream_array(variant: Variant) -> Vec<AudioStream> {
+fn get_stream_array(variant: &Variant) -> Vec<AudioStream> {
     if let Some((array,)) = variant.get::<(Vec<AudioStreamTuple>,)>() {
         array
             .into_iter()
@@ -125,7 +127,7 @@ fn create_list_item(builder: &Builder) -> Option<impl IsA<Widget>> {
 }
 
 fn populate_list_item<'a>(
-    stream: AudioStream,
+    stream: &AudioStream,
     list_item: &'a ListItem,
 ) -> Result<(), HandlerError<'a>> {
     let grid = list_item
