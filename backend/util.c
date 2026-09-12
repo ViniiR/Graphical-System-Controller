@@ -3,6 +3,7 @@
 #include "types.h"
 #include "unistd.h"
 #include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,9 @@ void trim_newlines(char *str) {
 }
 
 ResultInt string_to_int(const char *string) {
-    ResultInt res = {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0};
+    ResultInt res = {
+        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
+    };
 
     errno = 0;
 
@@ -83,8 +86,19 @@ ResultVoid write_file(const char *path, const char *content) {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = NULL
     };
 
-    // TODO: check if file exists before, do not create it
-    FILE *f = fopen(path, "w");
+    errno = 0;
+
+    int fd = open(path, O_WRONLY);
+    if (fd == -1) {
+        if (errno == ENOENT) {
+            res.err_msg = "Failed to write to file, does not exist";
+        } else {
+            res.err_msg = "Failed to write to file, failed to open";
+        }
+        return res;
+    }
+
+    FILE *f = fdopen(fd, "w");
     if (f == NULL) {
         res.err_msg = "Failed to open file with 'write' mode";
         return res;
