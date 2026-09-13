@@ -8,19 +8,22 @@ use gtk::{
 use crate::types::HandlerError;
 use crate::types::{dbus, Program};
 
-pub fn handle_power<'a>(
-    builder: &'a Builder,
-    conn: &'a DBusConnection,
-) -> Result<(), HandlerError<'a>> {
+pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let shutdown = builder
         .object::<Button>("shutdown-button")
-        .ok_or(HandlerError::ObjectError("Failed to get shutdown-button"))?;
+        .ok_or(HandlerError::ObjectError(
+            "Failed to get shutdown-button".to_string(),
+        ))?;
     let reboot = builder
         .object::<Button>("reboot-button")
-        .ok_or(HandlerError::ObjectError("Failed to get reboot-button"))?;
+        .ok_or(HandlerError::ObjectError(
+            "Failed to get reboot-button".to_string(),
+        ))?;
     let logout = builder
         .object::<Button>("logout-button")
-        .ok_or(HandlerError::ObjectError("Failed to get logout-button"))?;
+        .ok_or(HandlerError::ObjectError(
+            "Failed to get logout-button".to_string(),
+        ))?;
 
     fn make_power_connection(
         button: &Button,

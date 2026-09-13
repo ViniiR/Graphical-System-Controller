@@ -11,23 +11,22 @@ use crate::types::HandlerError;
 use crate::types::{dbus, Program};
 use crate::ui::get_brightness_icon;
 
-pub fn handle_brightness<'a>(
-    builder: &'a Builder,
-    conn: &'a DBusConnection,
-) -> Result<(), HandlerError<'a>> {
+pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale = builder
         .object::<Scale>("brightness-scale")
-        .ok_or(HandlerError::ObjectError("Failed to get brightness-scale"))?;
+        .ok_or(HandlerError::ObjectError(
+            "Failed to get brightness-scale".to_string(),
+        ))?;
     let label =
         builder
             .object::<Label>("brightness-scale-label")
             .ok_or(HandlerError::ObjectError(
-                "Failed to get brightness-scale-label",
+                "Failed to get brightness-scale-label".to_string(),
             ))?;
     let image = builder
         .object::<Image>("brightness-scale-label-image")
         .ok_or(HandlerError::ObjectError(
-            "Failed to get brightness-scale-label-image",
+            "Failed to get brightness-scale-label-image".to_string(),
         ))?;
 
     let pending_timer: Rc<RefCell<Option<glib::SourceId>>> = Rc::new(RefCell::new(None));

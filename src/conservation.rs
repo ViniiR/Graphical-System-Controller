@@ -31,15 +31,12 @@ async fn click_handler(conn: DBusConnection, button: Button) {
     };
 }
 
-pub fn handle_conservation<'a>(
-    builder: &'a Builder,
-    conn: &'a DBusConnection,
-) -> Result<(), HandlerError<'a>> {
+pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let conservation =
         builder
             .object::<Button>("conservation-mode-button")
             .ok_or(HandlerError::ObjectError(
-                "Failed to get conservation-mode-button",
+                "Failed to get conservation-mode-button".to_string(),
             ))?;
 
     conservation.connect_clicked(glib::clone!(

@@ -10,29 +10,28 @@ use gtk::{
 use crate::types::{dbus, Program, State};
 use crate::{types::HandlerError, ui::get_volume_icon};
 
-pub fn handle_audio<'a>(
-    builder: &'a Builder,
-    conn: &'a DBusConnection,
-) -> Result<(), HandlerError<'a>> {
+pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale = builder
         .object::<Scale>("volume-scale")
-        .ok_or(HandlerError::ObjectError("Failed to get volume-scale"))?;
+        .ok_or(HandlerError::ObjectError(
+            "Failed to get volume-scale".to_string(),
+        ))?;
     let label = builder
         .object::<Label>("volume-scale-label")
         .ok_or(HandlerError::ObjectError(
-            "Failed to get volume-scale-label",
+            "Failed to get volume-scale-label".to_string(),
         ))?;
     let label_box =
         builder
             .object::<Box>("volume-scale-label-box")
             .ok_or(HandlerError::ObjectError(
-                "Failed to get volume-scale-label-box",
+                "Failed to get volume-scale-label-box".to_string(),
             ))?;
     let label_image =
         builder
             .object::<Image>("volume-scale-label-image")
             .ok_or(HandlerError::ObjectError(
-                "Failed to get volume-scale-label-image",
+                "Failed to get volume-scale-label-image".to_string(),
             ))?;
 
     let state = Rc::new(RefCell::new(State::default()));

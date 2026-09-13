@@ -2,12 +2,12 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use gtk::gdk::{Display, Key};
-use gtk::gio;
+use gtk::gio::{self};
 use gtk::glib::{self, g_critical};
 use gtk::{prelude::*, CssProvider};
 use gtk::{Application, ApplicationWindow, EventControllerFocus, EventControllerKey};
 
-use crate::types::Program;
+use crate::types::{HandlerError, Program};
 
 mod audio;
 mod audio_individual;
@@ -68,47 +68,25 @@ fn activate(app: &Application) {
     };
 
     glib::spawn_future_local(async move {
-        // TODO: return here might be useless
-        // NOTE: getting system bus
-        let Ok(dbus_connection) = gio::bus_get_future(gio::BusType::System).await else {
-            g_critical!(None, "Failed to connect with DBus");
-            return;
-        };
+        let res: Result<(), HandlerError> = async {
+            // NOTE: getting system bus
+            let dbus_connection = gio::bus_get_future(gio::BusType::System).await?;
 
-        if let Err(e) = brightness::handle_brightness(&builder, &dbus_connection) {
-            g_critical!(None, "Brightness error: {e:?}");
-            return;
-        };
+            brightness::handle_brightness(&builder, &dbus_connection)?;
+            power::handle_power(&builder, &dbus_connection)?;
+            battery::handle_battery(&builder, &dbus_connection)?;
+            boost::handle_boost(&builder, &dbus_connection)?;
+            conservation::handle_conservation(&builder, &dbus_connection)?;
+            audio::handle_audio(&builder, &dbus_connection)?;
+            audio_individual::handle_audio_individual(&builder, &dbus_connection)?;
 
-        if let Err(e) = power::handle_power(&builder, &dbus_connection) {
-            g_critical!(None, "Power error: {e:?}");
-            return;
-        };
+            Ok(())
+        }
+        .await;
 
-        if let Err(e) = battery::handle_battery(&builder, &dbus_connection) {
-            g_critical!(None, "Battery error: {e:?}");
-            return;
-        };
-
-        if let Err(e) = boost::handle_boost(&builder, &dbus_connection) {
-            g_critical!(None, "Boost error: {e:?}");
-            return;
-        };
-
-        if let Err(e) = conservation::handle_conservation(&builder, &dbus_connection) {
-            g_critical!(None, "Conservation error: {e:?}");
-            return;
-        };
-
-        if let Err(e) = audio::handle_audio(&builder, &dbus_connection) {
-            g_critical!(None, "Audio error: {e:?}");
-            return;
-        };
-
-        if let Err(e) = audio_individual::handle_audio_individual(&builder, &dbus_connection) {
-            g_critical!(None, "Audio Individual error: {e:?}");
-            return;
-        };
+        if let Err(e) = res {
+            g_critical!(None, "Error: {e:?}");
+        }
     });
 
     let enable_focus_close = Rc::new(RefCell::new(true));

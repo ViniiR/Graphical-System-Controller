@@ -11,21 +11,21 @@ use gtk::{
 use crate::types::{dbus, AudioStream, AudioStreamTuple, HandlerError, Program};
 use crate::{ui, Filepaths};
 
-pub fn handle_audio_individual<'a>(
-    builder: &'a Builder,
-    conn: &'a DBusConnection,
-) -> Result<(), HandlerError<'a>> {
+pub fn handle_audio_individual(
+    builder: &Builder,
+    conn: &DBusConnection,
+) -> Result<(), HandlerError> {
     let expander: Expander =
         builder
             .object("individual-audio-expander")
             .ok_or(HandlerError::ObjectError(
-                "Failed to get individual-audio-expander",
+                "Failed to get individual-audio-expander".to_string(),
             ))?;
     let list: ListView =
         builder
             .object("individual-audio-list")
             .ok_or(HandlerError::ObjectError(
-                "Failed to get individual-audio-list",
+                "Failed to get individual-audio-list".to_string(),
             ))?;
 
     let store = ListStore::new::<glib::BoxedAnyObject>();
@@ -126,10 +126,7 @@ fn create_list_item(builder: &Builder) -> Option<impl IsA<Widget>> {
     Some(ret)
 }
 
-fn populate_list_item<'a>(
-    stream: &AudioStream,
-    list_item: &'a ListItem,
-) -> Result<(), HandlerError<'a>> {
+fn populate_list_item(stream: &AudioStream, list_item: &ListItem) -> Result<(), HandlerError> {
     let grid = list_item
         .child()
         .downcast_or_err::<Grid>("Failed to get main-grid on individual_audio.ui")?;
@@ -163,12 +160,12 @@ fn populate_list_item<'a>(
 }
 
 trait WidgetDowncastExt {
-    fn downcast_or_err<'a, T: IsA<Widget>>(self, msg: &'a str) -> Result<T, HandlerError<'a>>;
+    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError>;
 }
 
 impl WidgetDowncastExt for Option<Widget> {
-    fn downcast_or_err<'a, T: IsA<Widget>>(self, msg: &'a str) -> Result<T, HandlerError<'a>> {
+    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError> {
         self.and_downcast::<T>()
-            .ok_or(HandlerError::ObjectError(msg))
+            .ok_or(HandlerError::ObjectError(msg.to_owned()))
     }
 }
