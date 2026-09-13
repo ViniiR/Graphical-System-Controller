@@ -10,7 +10,7 @@
 #include <stdbool.h>
 
 const char DBUS_SERVICE_NAME[] = "com.vinii.vgsc";
-sd_bus *p_dbus = NULL;
+sd_bus *p_dbus = nullptr;
 
 static int fail_with_message(const char message[], sd_bus *p, const int code);
 
@@ -26,11 +26,11 @@ int main(int argc, char **argv) {
     // Brightness Controller
     err = sd_bus_add_object_vtable(
         p_dbus,
-        NULL,
+        nullptr,
         BRIGHTNESS_PATH,
         BRIGHTNESS_INTERFACE,
         BRIGHTNESS_VTABLE,
-        NULL
+        nullptr
     );
     if (err < 0)
         return fail_with_message("Failed to add object vtable", p_dbus, err);
@@ -39,11 +39,11 @@ int main(int argc, char **argv) {
     // Power controller
     err = sd_bus_add_object_vtable(
         p_dbus,
-        NULL,
+        nullptr,
         POWER_PATH,
         POWER_INTERFACE,
         POWER_VTABLE,
-        NULL
+        nullptr
     );
     if (err < 0)
         return fail_with_message("Failed to add object vtable", p_dbus, err);
@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
     // Battery controller
     err = sd_bus_add_object_vtable(
         p_dbus,
-        NULL,
+        nullptr,
         BATTERY_PATH,
         BATTERY_INTERFACE,
         BATTERY_VTABLE,
-        NULL
+        nullptr
     );
     if (err < 0)
         return fail_with_message("Failed to add object vtable", p_dbus, err);
@@ -65,11 +65,11 @@ int main(int argc, char **argv) {
     // Boost controller
     err = sd_bus_add_object_vtable(
         p_dbus,
-        NULL,
+        nullptr,
         BOOST_PATH,
         BOOST_INTERFACE,
         BOOST_VTABLE,
-        NULL
+        nullptr
     );
     if (err < 0)
         return fail_with_message("Failed to add object vtable", p_dbus, err);
@@ -78,11 +78,11 @@ int main(int argc, char **argv) {
     // Conservation controller
     err = sd_bus_add_object_vtable(
         p_dbus,
-        NULL,
+        nullptr,
         CONSERVATION_PATH,
         CONSERVATION_INTERFACE,
         CONSERVATION_VTABLE,
-        NULL
+        nullptr
     );
     if (err < 0)
         return fail_with_message("Failed to add object vtable", p_dbus, err);
@@ -91,11 +91,11 @@ int main(int argc, char **argv) {
     // Audio controller
     err = sd_bus_add_object_vtable(
         p_dbus,
-        NULL,
+        nullptr,
         AUDIO_PATH,
         AUDIO_INTERFACE,
         AUDIO_VTABLE,
-        NULL
+        nullptr
     );
     if (err < 0)
         return fail_with_message("Failed to add object vtable", p_dbus, err);
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
     printf("Started with service name: '%s'\n", DBUS_SERVICE_NAME);
 
     while (true) {
-        err = sd_bus_process(p_dbus, NULL);
+        err = sd_bus_process(p_dbus, nullptr);
         if (err < 0)
             return fail_with_message("Failed to process bus", p_dbus, err);
 

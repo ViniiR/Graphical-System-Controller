@@ -130,7 +130,7 @@ int get_all_audio_handler_individual(
 
     //
 
-    sd_bus_message *p_reply_msg = NULL;
+    sd_bus_message *p_reply_msg = nullptr;
     sd_bus_message_new_method_return(p_msg, &p_reply_msg);
 
     sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_ARRAY, "(usub)");
@@ -146,7 +146,7 @@ int get_all_audio_handler_individual(
     }
     sd_bus_message_close_container(p_reply_msg);
 
-    int return_value = sd_bus_send(NULL, p_reply_msg, NULL);
+    int return_value = sd_bus_send(nullptr, p_reply_msg, nullptr);
 
     //
 
@@ -275,7 +275,7 @@ static int toggle_audio_muted_handler_sink(
         );
     }
 
-    return sd_bus_reply_method_return(p_msg, NULL);
+    return sd_bus_reply_method_return(p_msg, nullptr);
 }
 
 //
@@ -290,7 +290,7 @@ ResultHeapStructPointer external_get_pipewire_volume(const char *sink_id) {
 
 static ResultHeapStructPointer get_pipewire_volume(const char *sink_id) {
     ResultHeapStructPointer res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = NULL
+        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 
     char command[STRING_KB];
@@ -328,12 +328,12 @@ static ResultHeapStructPointer get_pipewire_volume(const char *sink_id) {
     int volume = atof(volume_output) * 100.0;
 
     bool is_muted = false;
-    if (strstr(exec_output, "[MUTED]") != NULL) {
+    if (strstr(exec_output, "[MUTED]") != nullptr) {
         is_muted = true;
     }
 
     VolumeStatus *status = malloc(sizeof(VolumeStatus));
-    if (status == NULL) {
+    if (status == nullptr) {
         res.err_msg = "Failed to alloc";
         return res;
     }
@@ -356,7 +356,7 @@ static ResultVoid set_pipewire_volume(
         command, sizeof(command), "wpctl set-volume %s %i%%", sink, percentage
     );
 
-    ResultVoid result_exec = exec_command_as_user(NULL, 0, command, "r", UID);
+    ResultVoid result_exec = exec_command_as_user(nullptr, 0, command, "r", UID);
     if (result_exec.variant == ERR) {
         res.err_msg = result_exec.err_msg;
         return res;
@@ -373,7 +373,7 @@ static ResultVoid toggle_pipewire_muted(const char *sink) {
     char command[STRING_KB];
     snprintf(command, sizeof(command), "wpctl set-mute %s toggle", sink);
 
-    ResultVoid result_exec = exec_command_as_user(NULL, 0, command, "r", UID);
+    ResultVoid result_exec = exec_command_as_user(nullptr, 0, command, "r", UID);
     if (result_exec.variant == ERR) {
         res.err_msg = result_exec.err_msg;
         return res;

@@ -30,14 +30,14 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
     }
 
     FILE *f = fmemopen(output_id, strlen(output_id), "r");
-    if (f == NULL) {
+    if (f == nullptr) {
         res.err_msg = "fmemopen failed";
         return res;
     }
 
     //
 
-    char *line = NULL;
+    char *line = nullptr;
     size_t len = 0;
     ssize_t read_bytes;
 
@@ -78,7 +78,7 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
 
 ResultHeapStructPointer get_stream(unsigned int id) {
     ResultHeapStructPointer res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = NULL
+        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 
     char id_char[STRING_KB];

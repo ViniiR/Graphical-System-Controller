@@ -39,7 +39,7 @@ const sd_bus_vtable POWER_VTABLE[] = {
 int reboot_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
 ) {
-    ResultVoid result = exec_command(NULL, 0, "systemctl reboot", "r");
+    ResultVoid result = exec_command(nullptr, 0, "systemctl reboot", "r");
     if (result.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -49,12 +49,12 @@ int reboot_handler(
         );
     }
 
-    return sd_bus_reply_method_return(p_msg, NULL);
+    return sd_bus_reply_method_return(p_msg, nullptr);
 }
 int shutdown_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
 ) {
-    ResultVoid result = exec_command(NULL, 0, "systemctl shutdown", "r");
+    ResultVoid result = exec_command(nullptr, 0, "systemctl shutdown", "r");
     if (result.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -64,13 +64,13 @@ int shutdown_handler(
         );
     }
 
-    return sd_bus_reply_method_return(p_msg, NULL);
+    return sd_bus_reply_method_return(p_msg, nullptr);
 }
 int logout_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
 ) {
     ResultVoid result =
-        exec_command(NULL, 0, "loginctl terminate-session self", "r");
+        exec_command(nullptr, 0, "loginctl terminate-session self", "r");
     if (result.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -80,5 +80,5 @@ int logout_handler(
         );
     }
 
-    return sd_bus_reply_method_return(p_msg, NULL);
+    return sd_bus_reply_method_return(p_msg, nullptr);
 }

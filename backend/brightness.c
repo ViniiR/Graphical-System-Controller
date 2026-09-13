@@ -70,7 +70,7 @@ int set_brightness_handler(
         );
     }
 
-    return sd_bus_reply_method_return(p_msg, NULL);
+    return sd_bus_reply_method_return(p_msg, nullptr);
 }
 
 int get_brightness_handler(
@@ -134,13 +134,13 @@ static ResultInt get_brightness() {
     };
 
     dir = opendir(BACKLIGHT_PATH);
-    if (dir == NULL) {
+    if (dir == nullptr) {
         res.err_msg = "Failed to open directory";
         return res;
     }
 
     // Operates on the first file it finds that doesn't start with '.'
-    while ((entry = readdir(dir)) != NULL) {
+    while ((entry = readdir(dir)) != nullptr) {
         if (entry->d_name[0] == '.') {
             continue;
         }
@@ -234,12 +234,12 @@ static ResultVoid set_brightness_all(const unsigned int percent) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
     dir = opendir(BACKLIGHT_PATH);
-    if (dir == NULL) {
+    if (dir == nullptr) {
         res.err_msg = "Failed to open directory";
         return res;
     }
 
-    while ((entry = readdir(dir)) != NULL) {
+    while ((entry = readdir(dir)) != nullptr) {
         if (entry->d_name[0] == '.') {
             continue;
         }

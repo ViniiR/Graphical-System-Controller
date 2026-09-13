@@ -80,11 +80,11 @@ static ResultHeapString get_battery_directory() {
     };
 
     dir = opendir(power_supply);
-    if (dir == NULL) {
+    if (dir == nullptr) {
         res.err_msg = "Failed to open directory";
         return res;
     }
-    while ((entry = readdir(dir)) != NULL) {
+    while ((entry = readdir(dir)) != nullptr) {
         if (entry->d_name[0] == '.') {
             continue;
         }
@@ -256,7 +256,7 @@ static ResultHeapString allocate_suffix(const ChargingStatus status) {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
     };
 
-    char *suffix = NULL;
+    char *suffix = nullptr;
     switch (status) {
     case CHARGING:
         suffix = strdup(charging);
@@ -269,7 +269,7 @@ static ResultHeapString allocate_suffix(const ChargingStatus status) {
         break;
     }
 
-    if (suffix == NULL) {
+    if (suffix == nullptr) {
         res.err_msg = "Failed to alloc";
         return res;
     }

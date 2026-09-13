@@ -5,8 +5,8 @@
 typedef enum { OK, ERR } ResultVariant;
 
 /// INFO:
-/// T ok_value Can be NULLable.
-/// char *err_msg Can be NULLable.
+/// T ok_value Can be nullptr.
+/// char *err_msg Can be nullptr.
 ///
 /// How to use them properly:
 /// When 'variant' is ERR:
@@ -34,6 +34,6 @@ RESULT(void *, HeapStructPointer)
 #define RESULT_ERR_MSG_UNKNOWN "Unknown error"
 
 #define RESULT_VOID_DEFAULT                                                    \
-    {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = NULL};
+    {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr};
 
 #define STRING_KB 4096

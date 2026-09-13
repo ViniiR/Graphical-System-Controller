@@ -58,12 +58,12 @@ ResultHeapString read_file(const char *path) {
     };
 
     FILE *f = fopen(path, "r");
-    if (f == NULL) {
+    if (f == nullptr) {
         res.err_msg = "Failed to open file with 'read' mode";
         return res;
     }
 
-    char *buffer = NULL;
+    char *buffer = nullptr;
     size_t len = 0;
 
     ssize_t bytes_read = getdelim(&buffer, &len, '\0', f); // malloc
@@ -83,7 +83,7 @@ ResultHeapString read_file(const char *path) {
 
 ResultVoid write_file(const char *path, const char *content) {
     ResultVoid res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = NULL
+        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 
     errno = 0;
@@ -99,7 +99,7 @@ ResultVoid write_file(const char *path, const char *content) {
     }
 
     FILE *f = fdopen(fd, "w");
-    if (f == NULL) {
+    if (f == nullptr) {
         res.err_msg = "Failed to open file with 'write' mode";
         return res;
     }
@@ -130,7 +130,7 @@ ResultVoid exec_command(
     FILE *fp;
 
     fp = popen(command, modes);
-    if (fp == NULL) {
+    if (fp == nullptr) {
         snprintf(
             error_message,
             sizeof(error_message),
@@ -146,12 +146,12 @@ ResultVoid exec_command(
     char full_output[size];
     full_output[0] = '\0';
 
-    char *line = NULL;
+    char *line = nullptr;
     size_t len = 0;
     ssize_t read_bytes;
 
     while ((read_bytes = getline(&line, &len, fp)) != -1) {
-        if (read_bytes == 0 && output != NULL) {
+        if (read_bytes == 0 && output != nullptr) {
             pclose(fp);
             snprintf(
                 error_message,
