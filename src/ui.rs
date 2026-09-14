@@ -1,4 +1,8 @@
-use gtk::{prelude::WidgetExt, Button};
+use gtk::{
+    glib::{self, g_warning, Variant},
+    prelude::WidgetExt,
+    Button,
+};
 
 pub fn update_button_active(btn: &Button, to_active: bool) {
     const ACTIVE: &str = "button-active";
@@ -44,4 +48,14 @@ pub fn get_individual_audio_icon(name: &str) -> String {
     } else {
         String::from("audio-card-symbolic")
     }
+}
+
+pub async fn button_click_handler(
+    dbus_call: impl Future<Output = Result<Variant, glib::Error>>,
+    button: Button,
+) {
+    match dbus_call.await {
+        Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => update_button_active(&button, b),
+        e => g_warning!(None, "DBus call error: {e:?}"),
+    };
 }

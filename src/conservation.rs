@@ -8,29 +8,6 @@ use gtk::{
 use crate::types::{dbus, Program};
 use crate::{types::HandlerError, ui};
 
-// TODO: unify function with boost click_handler
-async fn click_handler(conn: DBusConnection, button: Button) {
-    let res = conn
-        .call_future(
-            Some(Program::BACKEND_NAME),
-            dbus::Controllers::CONSERVATION,
-            &dbus::Controllers::to_interface(dbus::Controllers::CONSERVATION),
-            dbus::Methods::TOGGLE_CONSERVATION,
-            None,
-            Some(VariantTy::TUPLE),
-            DBusCallFlags::NONE,
-            dbus::Timeout::NONE,
-        )
-        .await;
-
-    match &res {
-        Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {
-            ui::update_button_active(&button, b)
-        }
-        e => g_warning!(None, "DBus call error: {e:?}"),
-    };
-}
-
 pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let conservation =
         builder
@@ -43,7 +20,19 @@ pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(
         #[strong]
         conn,
         move |btn| {
-            glib::spawn_future_local(click_handler(conn.clone(), btn.clone()));
+            glib::spawn_future_local(ui::button_click_handler(
+                conn.call_future(
+                    Some(Program::BACKEND_NAME),
+                    dbus::Controllers::CONSERVATION,
+                    &dbus::Controllers::to_interface(dbus::Controllers::CONSERVATION),
+                    dbus::Methods::TOGGLE_CONSERVATION,
+                    None,
+                    Some(VariantTy::TUPLE),
+                    DBusCallFlags::NONE,
+                    dbus::Timeout::NONE,
+                ),
+                btn.clone(),
+            ));
         }
     ));
 
