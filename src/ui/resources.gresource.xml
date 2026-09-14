@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/com/vinii/vgsc">
+        <file preprocess="xml-stripblanks">builder.ui</file>
+        <file preprocess="xml-stripblanks">individual_audio.ui</file>
+        <file>style.css</file>
+    </gresource>
+</gresources>

@@ -21,9 +21,9 @@ mod ui;
 
 pub struct Filepaths;
 impl Filepaths {
-    pub const BUILDER: &str = "src/ui/builder.ui";
-    pub const CSS: &str = "src/ui/style.css";
-    pub const INDIVIDUAL_AUDIO_BUILDER: &str = "src/ui/individual_audio.ui";
+    pub const BUILDER: &str = "/com/vinii/vgsc/builder.ui";
+    pub const CSS: &str = "/com/vinii/vgsc/style.css";
+    pub const INDIVIDUAL_AUDIO_BUILDER: &str = "/com/vinii/vgsc/individual_audio.ui";
 }
 
 // TODO: rewrite everything to have a central logging place
@@ -32,7 +32,9 @@ impl Filepaths {
 fn main() -> glib::ExitCode {
     let app = Application::builder().application_id(Program::NAME).build();
 
-    gio::resources_register_include!("compiled.gresource").expect("Failed to register resources.");
+    gio::resources_register_include!("ui.gresource").expect("Failed to register ui resources.");
+    gio::resources_register_include!("assets.gresource")
+        .expect("Failed to register asset resources.");
 
     app.connect_startup(|_| {
         let Some(display) = Display::default() else {
@@ -41,7 +43,7 @@ fn main() -> glib::ExitCode {
         };
 
         let provider = CssProvider::new();
-        provider.load_from_path(Filepaths::CSS);
+        provider.load_from_resource(Filepaths::CSS);
         gtk::style_context_add_provider_for_display(
             &display,
             &provider,
@@ -61,7 +63,7 @@ fn main() -> glib::ExitCode {
 }
 
 fn activate(app: &Application) {
-    let builder = gtk::Builder::from_file(Filepaths::BUILDER);
+    let builder = gtk::Builder::from_resource(Filepaths::BUILDER);
     let Some(window) = builder.object::<ApplicationWindow>("main-window") else {
         g_critical!(None, "Failed to get builder main-window");
         return;

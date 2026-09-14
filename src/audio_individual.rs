@@ -41,7 +41,7 @@ pub fn handle_audio_individual(
             return;
         };
 
-        let individual_builder = Builder::from_file(Filepaths::INDIVIDUAL_AUDIO_BUILDER);
+        let individual_builder = Builder::from_resource(Filepaths::INDIVIDUAL_AUDIO_BUILDER);
 
         list_item.set_child(create_list_item(&individual_builder).as_ref());
     });
