@@ -25,6 +25,10 @@
 
 .main-window {
   padding: 20px;
+  /* NOTE: picom opacity must be at 100 */
+  background: transparent;
+  /* NOTE: must set picom corner radius rules  */
+  /* border-radius: 30px; this value is a suggestion */
 }
 
 .main-grid {
@@ -115,5 +119,5 @@
 }
 
 .debug-red {
-    background-color: red;
+  background-color: red;
 }
