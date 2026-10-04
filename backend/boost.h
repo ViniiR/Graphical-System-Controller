@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BOOST_H
+#define _BOOST_H
 
 #include <systemd/sd-bus.h>
 
@@ -13,3 +14,5 @@ int get_boost_handler(
 );
 
 extern const sd_bus_vtable BOOST_VTABLE[];
+
+#endif

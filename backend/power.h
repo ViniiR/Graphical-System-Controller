@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _POWER_H
+#define _POWER_H
 
 #include <systemd/sd-bus.h>
 
@@ -16,3 +17,5 @@ int logout_handler(
 );
 
 extern const sd_bus_vtable POWER_VTABLE[];
+
+#endif

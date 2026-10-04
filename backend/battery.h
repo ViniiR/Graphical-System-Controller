@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BATTERY_H
+#define _BATTERY_H
 
 #include <systemd/sd-bus.h>
 
@@ -10,3 +11,5 @@ int get_battery_handler(
 );
 
 extern const sd_bus_vtable BATTERY_VTABLE[];
+
+#endif

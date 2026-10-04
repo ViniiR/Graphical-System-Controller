@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _UTIL_H
+#define _UTIL_H
 
 #include "types.h"
 #include <sys/types.h>
@@ -25,3 +26,5 @@ ResultVoid exec_command_as_user(
     const char *modes,
     const uid_t target_uid
 );
+
+#endif

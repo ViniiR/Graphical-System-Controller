@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CONSERVATION_H
+#define _CONSERVATION_H
 
 #include <systemd/sd-bus.h>
 
@@ -13,3 +14,5 @@ int get_conservation_handler(
 );
 
 extern const sd_bus_vtable CONSERVATION_VTABLE[];
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _AUDIO_INTERNAL_H
+#define _AUDIO_INTERNAL_H
 
 #include "types.h"
 
@@ -15,3 +16,5 @@ typedef struct {
 } AudioStream;
 
 ResultHeapStructPointer external_get_pipewire_volume(const char *sink_id);
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BRIGHTNESS_H
+#define _BRIGHTNESS_H
 
 #include <systemd/sd-bus.h>
 
@@ -13,3 +14,5 @@ int get_brightness_handler(
 );
 
 extern const sd_bus_vtable BRIGHTNESS_VTABLE[];
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _TYPES_H
+#define _TYPES_H
 
 #include <stdbool.h>
 
@@ -37,3 +38,5 @@ RESULT(void *, HeapStructPointer)
     {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr};
 
 #define STRING_KB 4096
+
+#endif

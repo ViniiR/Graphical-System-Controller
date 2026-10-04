@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _AUDIO_H
+#define _AUDIO_H
 
 #include <systemd/sd-bus.h>
 
@@ -26,3 +27,5 @@ int toggle_audio_muted_handler_individual(
 );
 
 extern const sd_bus_vtable AUDIO_VTABLE[];
+
+#endif
