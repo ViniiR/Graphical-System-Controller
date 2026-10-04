@@ -20,7 +20,7 @@ static const unsigned int UID = 1000;
 ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    char output_id[STRING_KB];
+    char output_id[KIBIBYTE];
     ResultVoid result_ids = exec_command_as_user(
         output_id, sizeof(output_id), get_ids_command, "r", UID
     );
@@ -81,12 +81,12 @@ ResultHeapStructPointer get_stream(unsigned int id) {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 
-    char id_char[STRING_KB];
+    char id_char[KIBIBYTE];
     snprintf(id_char, sizeof(id_char), "%i", id);
 
     //
 
-    char name_command[STRING_KB];
+    char name_command[KIBIBYTE];
     snprintf(
         name_command,
         sizeof(name_command),
@@ -94,7 +94,7 @@ ResultHeapStructPointer get_stream(unsigned int id) {
         "'s/\\s*media\\.name\\s=\\s\"(.*)\"$/\\1/'",
         id
     );
-    char output_name[STRING_KB];
+    char output_name[KIBIBYTE];
     ResultVoid result_name = exec_command_as_user(
         output_name, sizeof(output_name), name_command, "r", UID
     );

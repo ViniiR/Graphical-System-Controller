@@ -37,6 +37,6 @@ RESULT(void *, HeapStructPointer)
 #define RESULT_VOID_DEFAULT                                                    \
     {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr};
 
-#define STRING_KB 4096
+#define KIBIBYTE 1024
 
 #endif

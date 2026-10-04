@@ -293,10 +293,10 @@ static ResultHeapStructPointer get_pipewire_volume(const char *sink_id) {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 
-    char command[STRING_KB];
+    char command[KIBIBYTE];
     snprintf(command, sizeof(command), "wpctl get-volume %s", sink_id);
 
-    char exec_output[STRING_KB];
+    char exec_output[KIBIBYTE];
     ResultVoid result_exec = exec_command_as_user(
         exec_output, sizeof(exec_output), command, "r", UID
     );
@@ -307,7 +307,7 @@ static ResultHeapStructPointer get_pipewire_volume(const char *sink_id) {
 
     //
 
-    char volume_input[STRING_KB];
+    char volume_input[KIBIBYTE];
     snprintf(
         volume_input,
         sizeof(volume_input),
@@ -315,7 +315,7 @@ static ResultHeapStructPointer get_pipewire_volume(const char *sink_id) {
         exec_output
     );
 
-    char volume_output[STRING_KB];
+    char volume_output[KIBIBYTE];
     ResultVoid result_volume =
         exec_command(volume_output, sizeof(volume_output), volume_input, "r");
     if (result_volume.variant == ERR) {
@@ -351,7 +351,7 @@ static ResultVoid set_pipewire_volume(
 ) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    char command[STRING_KB];
+    char command[KIBIBYTE];
     snprintf(
         command, sizeof(command), "wpctl set-volume %s %i%%", sink, percentage
     );
@@ -370,7 +370,7 @@ static ResultVoid set_pipewire_volume(
 static ResultVoid toggle_pipewire_muted(const char *sink) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    char command[STRING_KB];
+    char command[KIBIBYTE];
     snprintf(command, sizeof(command), "wpctl set-mute %s toggle", sink);
 
     ResultVoid result_exec = exec_command_as_user(nullptr, 0, command, "r", UID);

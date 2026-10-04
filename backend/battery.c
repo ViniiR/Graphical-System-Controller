@@ -125,7 +125,7 @@ static ResultInt get_battery_percentage() {
         return res;
     }
 
-    char full_capacity[STRING_KB];
+    char full_capacity[KIBIBYTE];
     snprintf(
         full_capacity,
         sizeof(full_capacity),
@@ -134,7 +134,7 @@ static ResultInt get_battery_percentage() {
         energy_full
     );
 
-    char now_capacity[STRING_KB];
+    char now_capacity[KIBIBYTE];
     snprintf(
         now_capacity,
         sizeof(now_capacity),
@@ -193,7 +193,7 @@ static ResultInt get_charging_status() {
         return res;
     }
 
-    char filepath[STRING_KB];
+    char filepath[KIBIBYTE];
     snprintf(filepath, sizeof(filepath), "%s%s", result_dir.ok_value, status);
 
     ResultHeapString result = read_file(filepath);

@@ -124,7 +124,7 @@ ResultVoid exec_command(
     const char *command,
     const char *modes
 ) {
-    static thread_local char error_message[STRING_KB];
+    static thread_local char error_message[KIBIBYTE];
 
     ResultVoid res = RESULT_VOID_DEFAULT;
     FILE *fp;

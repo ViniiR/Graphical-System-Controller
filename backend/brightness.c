@@ -102,7 +102,7 @@ static ResultHeapString read_brightness_from(
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
     };
 
-    char filepath[STRING_KB];
+    char filepath[KIBIBYTE];
     snprintf(
         filepath,
         sizeof(filepath),
@@ -215,7 +215,7 @@ static ResultVoid set_brightness(
 
     int calculated_value = ceil((float)percent * result_max_int.ok_value / 100);
 
-    char str[STRING_KB];
+    char str[KIBIBYTE];
     snprintf(str, sizeof(str), "%i", calculated_value);
 
     ResultVoid result = write_file(filepath, str);
@@ -244,7 +244,7 @@ static ResultVoid set_brightness_all(const unsigned int percent) {
             continue;
         }
 
-        char filepath[STRING_KB];
+        char filepath[KIBIBYTE];
         snprintf(
             filepath,
             sizeof(filepath),
@@ -254,7 +254,7 @@ static ResultVoid set_brightness_all(const unsigned int percent) {
             CURRENT_BRIGHTNESS_PATH
         );
 
-        char max_filepath[STRING_KB];
+        char max_filepath[KIBIBYTE];
         snprintf(
             max_filepath,
             sizeof(max_filepath),
