@@ -71,7 +71,7 @@
                         </child>
                         <child>
                         <object class="GtkImage" id="battery-button-box-image">
-                            <property name="icon-name">battery-level-0</property>
+                            <property name="icon-name">battery-level-50</property>
                         </object>
                         </child>
                     </object>
