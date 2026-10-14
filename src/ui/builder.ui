@@ -23,6 +23,7 @@
 
         <style>
             <class name="main-window"/>
+            <class name="transparent-bg"/>
         </style>
 
         <child> 
@@ -229,6 +230,11 @@
 
                 <child>
                 <object class="GtkListView" id="individual-audio-list">
+
+                    <style>
+                        <class name="transparent-bg"/>
+                    </style>
+
                 </object>
                 </child>
             </object>
