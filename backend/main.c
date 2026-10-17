@@ -12,15 +12,14 @@
 const char DBUS_SERVICE_NAME[] = "com.vinii.vgsc";
 sd_bus *p_dbus = nullptr;
 
-static int fail_with_message(const char message[], sd_bus *p, const int code);
+static int fail_with_msg(const char message[], sd_bus *p, const int code);
 
 // TODO: OPTIONAL: add cpu freq governor option
 int main(int argc, char **argv) {
     int err = 0;
 
     err = sd_bus_open_system(&p_dbus);
-    if (err < 0)
-        return fail_with_message("Failed to connect to bus", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to connect to bus", p_dbus, err);
     printf("Connected to bus\n");
 
     // Brightness Controller
@@ -32,8 +31,7 @@ int main(int argc, char **argv) {
         BRIGHTNESS_VTABLE,
         nullptr
     );
-    if (err < 0)
-        return fail_with_message("Failed to add object vtable", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", BRIGHTNESS_PATH);
 
     // Power controller
@@ -45,8 +43,7 @@ int main(int argc, char **argv) {
         POWER_VTABLE,
         nullptr
     );
-    if (err < 0)
-        return fail_with_message("Failed to add object vtable", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", POWER_PATH);
 
     // Battery controller
@@ -58,8 +55,7 @@ int main(int argc, char **argv) {
         BATTERY_VTABLE,
         nullptr
     );
-    if (err < 0)
-        return fail_with_message("Failed to add object vtable", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", BATTERY_PATH);
 
     // Boost controller
@@ -71,8 +67,7 @@ int main(int argc, char **argv) {
         BOOST_VTABLE,
         nullptr
     );
-    if (err < 0)
-        return fail_with_message("Failed to add object vtable", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", BOOST_PATH);
 
     // Conservation controller
@@ -84,8 +79,7 @@ int main(int argc, char **argv) {
         CONSERVATION_VTABLE,
         nullptr
     );
-    if (err < 0)
-        return fail_with_message("Failed to add object vtable", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", CONSERVATION_PATH);
 
     // Audio controller
@@ -97,23 +91,19 @@ int main(int argc, char **argv) {
         AUDIO_VTABLE,
         nullptr
     );
-    if (err < 0)
-        return fail_with_message("Failed to add object vtable", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", AUDIO_PATH);
 
     err = sd_bus_request_name(p_dbus, DBUS_SERVICE_NAME, 0);
-    if (err < 0)
-        return fail_with_message("Failed to request service name", p_dbus, err);
+    if (err < 0) return fail_with_msg("Failed to request service name", p_dbus, err);
     printf("Started with service name: '%s'\n", DBUS_SERVICE_NAME);
 
     while (true) {
         err = sd_bus_process(p_dbus, nullptr);
-        if (err < 0)
-            return fail_with_message("Failed to process bus", p_dbus, err);
+        if (err < 0) return fail_with_msg("Failed to process bus", p_dbus, err);
 
         err = sd_bus_wait(p_dbus, 100);
-        if (err < 0)
-            return fail_with_message("Failed to wait for bus", p_dbus, err);
+        if (err < 0) return fail_with_msg("Failed to wait for bus", p_dbus, err);
     }
 
     // Finish
@@ -121,7 +111,7 @@ int main(int argc, char **argv) {
     return err;
 }
 
-static int fail_with_message(const char message[], sd_bus *p, const int code) {
+static int fail_with_msg(const char message[], sd_bus *p, const int code) {
     fprintf(stderr,"D-Bus Error: %s %s\n", message, strerror(-code));
 
     sd_bus_unref(p);
