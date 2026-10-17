@@ -140,6 +140,12 @@ ResultVoid exec_command(
         res.err_msg = error_message;
         return res;
     }
+    if (output == nullptr && size == 0) {
+        pclose(fp);
+        res.variant = OK;
+        res.err_msg = "";
+        return res;
+    }
 
     //
 
