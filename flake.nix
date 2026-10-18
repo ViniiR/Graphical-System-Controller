@@ -18,6 +18,7 @@
             jq
             pipewire
             wireplumber
+            setxkbmap
         ];
     in {
         packages.${system} = {

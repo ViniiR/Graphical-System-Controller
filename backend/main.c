@@ -3,6 +3,7 @@
 #include "boost.h"
 #include "brightness.h"
 #include "conservation.h"
+#include "keyboard.h"
 #include "power.h"
 #include <stdio.h>
 #include <string.h>
@@ -95,6 +96,18 @@ int main(int argc, char **argv) {
     );
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", AUDIO_PATH);
+
+    // Keyboard controller
+    err = sd_bus_add_object_vtable(
+        p_dbus,
+        nullptr,
+        KEYBOARD_PATH,
+        KEYBOARD_INTERFACE,
+        KEYBOARD_VTABLE,
+        nullptr
+    );
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
+    printf("Added '%s' object vtable\n", KEYBOARD_PATH);
 
     err = sd_bus_request_name(p_dbus, DBUS_SERVICE_NAME, 0);
     if (err < 0) return fail_with_msg("Failed to request service name", p_dbus, err);

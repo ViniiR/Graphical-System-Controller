@@ -12,6 +12,7 @@ A system quick settings menu
     <li>Systemd</li>
     <li>D-Bus</li>
     <li>PipeWire</li>
+    <li>X Keyboard Extension (and by extension X11)</li>
 </ul>
 
 ## Extra
