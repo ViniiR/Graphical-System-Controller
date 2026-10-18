@@ -15,6 +15,7 @@ mod battery;
 mod boost;
 mod brightness;
 mod conservation;
+mod keyboard;
 mod power;
 mod types;
 mod ui;
@@ -81,6 +82,7 @@ fn activate(app: &Application) {
             conservation::handle_conservation(&builder, &dbus_connection)?;
             audio::handle_audio(&builder, &dbus_connection)?;
             audio_individual::handle_audio_individual(&builder, &dbus_connection)?;
+            keyboard::handle_keyboard(&builder, &dbus_connection)?;
 
             Ok(())
         }

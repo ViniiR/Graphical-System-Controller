@@ -4,12 +4,30 @@ use gtk::{
     Button,
 };
 
-pub fn update_button_active(btn: &Button, to_active: bool) {
-    const ACTIVE: &str = "button-active";
-    const INACTIVE: &str = "button-inactive";
+const ACTIVE_CLASS: &str = "button-active";
+const INACTIVE_CLASS: &str = "button-inactive";
 
-    btn.add_css_class(if to_active { ACTIVE } else { INACTIVE });
-    btn.remove_css_class(if to_active { INACTIVE } else { ACTIVE });
+pub fn update_button_active(btn: &Button, to_active: bool) {
+    btn.add_css_class(if to_active {
+        ACTIVE_CLASS
+    } else {
+        INACTIVE_CLASS
+    });
+    btn.remove_css_class(if to_active {
+        INACTIVE_CLASS
+    } else {
+        ACTIVE_CLASS
+    });
+}
+
+pub fn toggle_button_active(btn: &Button) {
+    let mut to_active = true;
+
+    if btn.has_css_class(ACTIVE_CLASS) {
+        to_active = false;
+    }
+
+    update_button_active(btn, to_active);
 }
 
 // TODO:

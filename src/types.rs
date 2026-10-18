@@ -57,6 +57,7 @@ pub mod dbus {
         pub const BOOST: &str = "/com/vinii/vgsc/Boost";
         pub const CONSERVATION: &str = "/com/vinii/vgsc/Conservation";
         pub const AUDIO: &str = "/com/vinii/vgsc/Audio";
+        pub const KEYBOARD: &str = "/com/vinii/vgsc/Keyboard";
 
         pub fn to_interface(interface: &str) -> String {
             interface
@@ -85,6 +86,8 @@ pub mod dbus {
         pub const GET_ALL_AUDIO_INDIVIDUAL: &str = "GetAllAudioIndividual";
         pub const SET_AUDIO_INDIVIDUAL: &str = "SetAudioIndividual";
         pub const TOGGLE_AUDIO_MUTED_INDIVIDUAL: &str = "ToggleAudioMutedIndividual";
+        pub const GET_KEYBOARD: &str = "GetKeyboard";
+        pub const TOGGLE_KEYBOARD: &str = "ToggleKeyboard";
     }
 
     pub struct Timeout;

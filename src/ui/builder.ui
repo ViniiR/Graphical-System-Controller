@@ -389,7 +389,7 @@
                 </style>
 
                 <child>
-                <object class="GtkButton">
+                <object class="GtkButton" id="keyboard-button-dev">
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
 
@@ -398,14 +398,14 @@
                     </style>
 
                     <child>
-                    <object class="GtkImage" id="keyboard-button-dev-image">
+                    <object class="GtkImage">
                         <property name="icon-name">utilities-terminal-symbolic</property>
                     </object>
                     </child>
                 </object>
                 </child>
                 <child>
-                <object class="GtkButton">
+                <object class="GtkButton" id="keyboard-button-standard">
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
 
@@ -414,7 +414,7 @@
                     </style>
 
                     <child>
-                    <object class="GtkImage" id="keyboard-button-standard-image">
+                    <object class="GtkImage">
                         <property name="icon-name">input-keyboard-symbolic</property>
                     </object>
                     </child>
