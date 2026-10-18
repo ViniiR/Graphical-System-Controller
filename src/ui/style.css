@@ -116,6 +116,25 @@
   padding: 0px 0px 0px 10px;
 }
 
+.multi-button-wrapper {
+  padding: 0px;
+}
+
+.multi-button {
+  font-weight: bold;
+  border: none;
+  border-radius: 0px;
+  background-color: var(--disabled);
+}
+.multi-button:first-child {
+    border-radius: 50px 0px 0px 50px;
+}
+.multi-button:last-child {
+    border-radius: 0px 50px 50px 0px;
+}
+
+/* . */
+
 .unused {
   background-color: var(--unused);
   color: var(--unused-text);

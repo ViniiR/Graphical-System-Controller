@@ -368,6 +368,60 @@
                 </child>
             </object>
             </child>
+            <child>
+            <object class="GtkGrid" id="keyboard-button-wrapper">
+                <layout>
+                    <property name="column">2</property>
+                    <property name="row">5</property>
+                    <property name="column-span">2</property>
+                    <property name="row-span">1</property>
+                </layout>
+
+                <property name="column-spacing">0</property>
+                <property name="row-spacing">0</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">False</property>
+                <property name="column-homogeneous">True</property>
+
+                <style>
+                    <class name="button"/>
+                    <class name="multi-button-wrapper"/>
+                </style>
+
+                <child>
+                <object class="GtkButton">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+
+                    <style>
+                        <class name="multi-button"/>
+                    </style>
+
+                    <child>
+                    <object class="GtkImage" id="keyboard-button-dev-image">
+                        <property name="icon-name">utilities-terminal-symbolic</property>
+                    </object>
+                    </child>
+                </object>
+                </child>
+                <child>
+                <object class="GtkButton">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+
+                    <style>
+                        <class name="multi-button"/>
+                    </style>
+
+                    <child>
+                    <object class="GtkImage" id="keyboard-button-standard-image">
+                        <property name="icon-name">input-keyboard-symbolic</property>
+                    </object>
+                    </child>
+                </object>
+                </child>
+            </object>
+            </child>
 
         </object>
         </child>

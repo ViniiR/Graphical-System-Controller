@@ -22,6 +22,10 @@
         <file alias="scalable/status/audio-volume-muted-symbolic.svg">audio-volume-muted-symbolic.svg</file>
 
         <file alias="scalable/status/firefox-logo.svg">firefox-logo.svg</file>
+
+        <file alias="scalable/status/input-keyboard-symbolic.svg">input-keyboard-symbolic.svg</file>
+        <file alias="scalable/status/utilities-terminal-symbolic.svg">utilities-terminal-symbolic.svg</file>
+
         <file alias="scalable/status/audio-card-symbolic.svg">audio-card-symbolic.svg</file>
         <file alias="scalable/status/audio-headset-symbolic.svg">audio-headset-symbolic.svg</file>
 
