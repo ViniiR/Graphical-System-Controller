@@ -56,7 +56,7 @@ const sd_bus_vtable AUDIO_VTABLE[] = {
     SD_BUS_VTABLE_END
 };
 
-static const unsigned int UID = 1000;
+extern const unsigned int UID;
 static const char DEFAULT_SINK[] = "@DEFAULT_SINK@";
 
 //
@@ -356,7 +356,8 @@ static ResultVoid set_pipewire_volume(
         command, sizeof(command), "wpctl set-volume %s %i%%", sink, percentage
     );
 
-    ResultVoid result_exec = exec_command_as_user(nullptr, 0, command, "r", UID);
+    ResultVoid result_exec =
+        exec_command_as_user(nullptr, 0, command, "r", UID);
     if (result_exec.variant == ERR) {
         res.err_msg = result_exec.err_msg;
         return res;
@@ -373,7 +374,8 @@ static ResultVoid toggle_pipewire_muted(const char *sink) {
     char command[KIBIBYTE];
     snprintf(command, sizeof(command), "wpctl set-mute %s toggle", sink);
 
-    ResultVoid result_exec = exec_command_as_user(nullptr, 0, command, "r", UID);
+    ResultVoid result_exec =
+        exec_command_as_user(nullptr, 0, command, "r", UID);
     if (result_exec.variant == ERR) {
         res.err_msg = result_exec.err_msg;
         return res;

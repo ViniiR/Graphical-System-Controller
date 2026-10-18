@@ -14,6 +14,8 @@ sd_bus *p_dbus = nullptr;
 
 static int fail_with_msg(const char message[], sd_bus *p, const int code);
 
+const unsigned int UID = 1000;
+
 // TODO: OPTIONAL: add cpu freq governor option
 int main(int argc, char **argv) {
     int err = 0;
