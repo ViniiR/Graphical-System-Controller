@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
+// TODO: battery charging under 10% does not display icon
+
 const char BATTERY_PATH[] = "/com/vinii/vgsc/Battery";
 const char BATTERY_INTERFACE[] = "com.vinii.vgsc.Battery";
 
