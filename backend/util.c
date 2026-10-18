@@ -5,10 +5,13 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <threads.h>
+
+// TODO: remove const from unneeded parameters
 
 /// Remove all newlines '\r' '\n' from str
 void trim_newlines(char *str) {
@@ -211,6 +214,13 @@ ResultVoid exec_command_as_user(
         char runtime_dir[64];
         snprintf(runtime_dir, sizeof(runtime_dir), "/run/user/%d", target_uid);
         setenv("XDG_RUNTIME_DIR", runtime_dir, 1);
+
+        struct passwd *pw = getpwuid(target_uid);
+        char xauth_path[KIBIBYTE];
+        snprintf(xauth_path, sizeof(xauth_path), "%s/.Xauthority", pw->pw_dir);
+        setenv("XAUTHORITY", xauth_path, 1);
+        setenv("DISPLAY", ":0", 1);
+
         if (setgid(target_uid) != 0 || setuid(target_uid) != 0) {
             // res.err_msg = "Failed to drop process privileges";
             _exit(-1);
