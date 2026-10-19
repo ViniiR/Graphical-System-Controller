@@ -1,12 +1,11 @@
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, VariantTy},
+    gio::DBusConnection,
+    glib::{self, g_warning},
     prelude::ButtonExt,
     Builder, Button,
 };
 
-use crate::types::{dbus, Program};
-use crate::{types::HandlerError, ui};
+use crate::{dbus, types::HandlerError, ui};
 
 pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let dev_btn =
@@ -23,16 +22,7 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
             ))?;
 
     async fn handle_click(conn: DBusConnection, std_btn: Button, dev_btn: Button) {
-        let dbus_call = conn.call_future(
-            Some(Program::BACKEND_NAME),
-            dbus::Controllers::KEYBOARD,
-            &dbus::Controllers::to_interface(dbus::Controllers::KEYBOARD),
-            dbus::Methods::TOGGLE_KEYBOARD,
-            None,
-            None,
-            DBusCallFlags::NONE,
-            dbus::Timeout::NONE,
-        );
+        let dbus_call = dbus::Keyboard::toggle(&conn);
         match dbus_call.await {
             Ok(_v) => {
                 ui::toggle_button_active(&std_btn);
@@ -70,18 +60,7 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
         #[strong]
         std_btn,
         async move {
-            let res = conn
-                .call_future(
-                    Some(Program::BACKEND_NAME),
-                    dbus::Controllers::KEYBOARD,
-                    &dbus::Controllers::to_interface(dbus::Controllers::KEYBOARD),
-                    dbus::Methods::GET_KEYBOARD,
-                    None,
-                    Some(VariantTy::TUPLE),
-                    DBusCallFlags::NONE,
-                    dbus::Timeout::NONE,
-                )
-                .await;
+            let res = dbus::Keyboard::get(&conn).await;
 
             match &res {
                 Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {

@@ -1,10 +1,10 @@
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, VariantTy},
+    gio::DBusConnection,
+    glib::{self, g_warning},
     Builder, Image, Label,
 };
 
-use crate::types::{dbus, HandlerError, Program};
+use crate::{dbus, types::HandlerError};
 
 pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let label =
@@ -26,18 +26,7 @@ pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), Ha
         async move {
             #[allow(clippy::never_loop)]
             loop {
-                let res = conn
-                    .call_future(
-                        Some(Program::BACKEND_NAME),
-                        dbus::Controllers::BATTERY,
-                        &dbus::Controllers::to_interface(dbus::Controllers::BATTERY),
-                        dbus::Methods::GET_BATTERY,
-                        None,
-                        Some(VariantTy::TUPLE), // "su"
-                        DBusCallFlags::NONE,
-                        dbus::Timeout::NONE,
-                    )
-                    .await;
+                let res = dbus::Battery::get(&conn).await;
 
                 if let Err(e) = res {
                     g_warning!(None, "DBus call error: {e:?}");

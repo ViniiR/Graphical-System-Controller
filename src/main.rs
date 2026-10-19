@@ -1,11 +1,12 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
-use gtk::gdk::{Display, Key};
-use gtk::gio::{self};
-use gtk::glib::{self, g_critical};
-use gtk::{prelude::*, CssProvider};
-use gtk::{Application, ApplicationWindow, EventControllerFocus, EventControllerKey};
+use gtk::{
+    gdk::{Display, Key},
+    gio::{self},
+    glib::{self, g_critical},
+    prelude::*,
+    Application, ApplicationWindow, CssProvider, EventControllerFocus, EventControllerKey,
+};
 
 use crate::types::{HandlerError, Program};
 
@@ -15,6 +16,7 @@ mod battery;
 mod boost;
 mod brightness;
 mod conservation;
+mod dbus;
 mod keyboard;
 mod power;
 mod types;

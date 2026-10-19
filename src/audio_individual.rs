@@ -1,15 +1,20 @@
-use gtk::gio::DBusConnection;
-use gtk::gio::{DBusCallFlags, ListStore};
-use gtk::glib::object::{Cast, CastNone, IsA};
-use gtk::glib::{g_warning, BoxedAnyObject, Variant, VariantTy};
-use gtk::prelude::{GridExt, ListItemExt, RangeExt, WidgetExt};
 use gtk::{
-    glib, Builder, Expander, Grid, Image, Label, ListItem, ListView, NoSelection, Scale,
+    gio::{DBusConnection, ListStore},
+    glib::{
+        self, g_warning,
+        object::{Cast, CastNone, IsA},
+        BoxedAnyObject, Variant,
+    },
+    prelude::{GridExt, ListItemExt, RangeExt, WidgetExt},
+    Builder, Expander, Grid, Image, Label, ListItem, ListView, NoSelection, Scale,
     SignalListItemFactory, Widget,
 };
 
-use crate::types::{dbus, AudioStream, AudioStreamTuple, HandlerError, Program};
-use crate::{ui, Filepaths};
+use crate::{
+    dbus,
+    types::{AudioStream, AudioStreamTuple, HandlerError},
+    ui, Filepaths,
+};
 
 pub fn handle_audio_individual(
     builder: &Builder,
@@ -76,16 +81,7 @@ pub fn handle_audio_individual(
                 #[strong]
                 store,
                 async move {
-                    let call = conn.call_future(
-                        Some(Program::BACKEND_NAME),
-                        dbus::Controllers::AUDIO,
-                        &dbus::Controllers::to_interface(dbus::Controllers::AUDIO),
-                        dbus::Methods::GET_ALL_AUDIO_INDIVIDUAL,
-                        None,
-                        Some(VariantTy::TUPLE),
-                        DBusCallFlags::NONE,
-                        dbus::Timeout::NONE,
-                    );
+                    let call = dbus::Audio::get_all_individual(&conn);
                     match call.await {
                         Ok(v) => {
                             let children = get_stream_array(&v);

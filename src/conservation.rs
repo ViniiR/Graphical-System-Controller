@@ -1,12 +1,11 @@
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, VariantTy},
+    gio::DBusConnection,
+    glib::{self, g_warning},
     prelude::ButtonExt,
     Builder, Button,
 };
 
-use crate::types::{dbus, Program};
-use crate::{types::HandlerError, ui};
+use crate::{dbus, types::HandlerError, ui};
 
 pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let conservation =
@@ -21,16 +20,7 @@ pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(
         conn,
         move |btn| {
             glib::spawn_future_local(ui::button_click_handler(
-                conn.call_future(
-                    Some(Program::BACKEND_NAME),
-                    dbus::Controllers::CONSERVATION,
-                    &dbus::Controllers::to_interface(dbus::Controllers::CONSERVATION),
-                    dbus::Methods::TOGGLE_CONSERVATION,
-                    None,
-                    Some(VariantTy::TUPLE),
-                    DBusCallFlags::NONE,
-                    dbus::Timeout::NONE,
-                ),
+                dbus::Conservation::toggle(&conn),
                 btn.clone(),
             ));
         }
@@ -43,18 +33,7 @@ pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(
         #[strong]
         conservation,
         async move {
-            let res = conn
-                .call_future(
-                    Some(Program::BACKEND_NAME),
-                    dbus::Controllers::CONSERVATION,
-                    &dbus::Controllers::to_interface(dbus::Controllers::CONSERVATION),
-                    dbus::Methods::GET_CONSERVATION,
-                    None,
-                    Some(VariantTy::TUPLE),
-                    DBusCallFlags::NONE,
-                    dbus::Timeout::NONE,
-                )
-                .await;
+            let res = dbus::Conservation::get(&conn).await;
 
             match &res {
                 Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {

@@ -1,12 +1,11 @@
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, VariantTy},
+    gio::DBusConnection,
+    glib::{self, g_warning},
     prelude::ButtonExt,
     Builder, Button,
 };
 
-use crate::types::{dbus, Program};
-use crate::{types::HandlerError, ui};
+use crate::{dbus, types::HandlerError, ui};
 
 pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let boost = builder
@@ -20,16 +19,7 @@ pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
         conn,
         move |btn| {
             glib::spawn_future_local(ui::button_click_handler(
-                conn.call_future(
-                    Some(Program::BACKEND_NAME),
-                    dbus::Controllers::BOOST,
-                    &dbus::Controllers::to_interface(dbus::Controllers::BOOST),
-                    dbus::Methods::TOGGLE_BOOST,
-                    None,
-                    Some(VariantTy::TUPLE),
-                    DBusCallFlags::NONE,
-                    dbus::Timeout::NONE,
-                ),
+                dbus::Boost::toggle(&conn),
                 btn.clone(),
             ));
         }
@@ -42,18 +32,7 @@ pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
         #[strong]
         boost,
         async move {
-            let res = conn
-                .call_future(
-                    Some(Program::BACKEND_NAME),
-                    dbus::Controllers::BOOST,
-                    &dbus::Controllers::to_interface(dbus::Controllers::BOOST),
-                    dbus::Methods::GET_BOOST,
-                    None,
-                    Some(VariantTy::TUPLE),
-                    DBusCallFlags::NONE,
-                    dbus::Timeout::NONE,
-                )
-                .await;
+            let res = dbus::Boost::get(&conn).await;
 
             match &res {
                 Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {

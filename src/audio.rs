@@ -1,14 +1,17 @@
 use std::{cell::RefCell, ops::Deref, rc::Rc};
 
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, object::ObjectExt, variant::ToVariant, SignalHandlerId, VariantTy},
+    gio::DBusConnection,
+    glib::{self, g_warning, object::ObjectExt, SignalHandlerId},
     prelude::{RangeExt, WidgetExt},
     Box, Builder, GestureClick, Image, Label, Scale,
 };
 
-use crate::types::{dbus, Program, State};
-use crate::{types::HandlerError, ui::get_volume_icon};
+use crate::{
+    dbus,
+    types::{HandlerError, State},
+    ui::get_volume_icon,
+};
 
 pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale = builder
@@ -104,16 +107,7 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
         #[strong]
         state,
         async move {
-            let call = conn.call_future(
-                Some(Program::BACKEND_NAME),
-                dbus::Controllers::AUDIO,
-                &dbus::Controllers::to_interface(dbus::Controllers::AUDIO),
-                dbus::Methods::GET_AUDIO,
-                None,
-                Some(VariantTy::TUPLE),
-                DBusCallFlags::NONE,
-                dbus::Timeout::NONE,
-            );
+            let call = dbus::Audio::get(&conn);
             match call.await {
                 Ok(v) => {
                     let mut state = state.borrow_mut();
@@ -194,18 +188,7 @@ fn update_volume<T>(
 }
 
 async fn handle_scale_update_timeout(value: u32, conn: DBusConnection, state: Rc<RefCell<State>>) {
-    let res = conn
-        .call_future(
-            Some(Program::BACKEND_NAME),
-            dbus::Controllers::AUDIO,
-            &dbus::Controllers::to_interface(dbus::Controllers::AUDIO),
-            dbus::Methods::SET_AUDIO,
-            Some(&(value,).to_variant()),
-            Some(VariantTy::TUPLE),
-            DBusCallFlags::NONE,
-            dbus::Timeout::NONE,
-        )
-        .await;
+    let res = dbus::Audio::set(&conn, value).await;
     match res {
         Ok(v) => {
             let mut state = state.borrow_mut();
@@ -216,35 +199,13 @@ async fn handle_scale_update_timeout(value: u32, conn: DBusConnection, state: Rc
 }
 
 async fn handle_mute_click(conn: DBusConnection, image: Image) {
-    let res = conn
-        .call_future(
-            Some(Program::BACKEND_NAME),
-            dbus::Controllers::AUDIO,
-            &dbus::Controllers::to_interface(dbus::Controllers::AUDIO),
-            dbus::Methods::TOGGLE_AUDIO_MUTED,
-            None,
-            None,
-            DBusCallFlags::NONE,
-            dbus::Timeout::NONE,
-        )
-        .await;
+    let res = dbus::Audio::toggle_muted(&conn).await;
     if let Err(e) = &res {
         g_warning!(None, "DBus call error: {e:?}");
         return;
     }
 
-    let get = conn
-        .call_future(
-            Some(Program::BACKEND_NAME),
-            dbus::Controllers::AUDIO,
-            &dbus::Controllers::to_interface(dbus::Controllers::AUDIO),
-            dbus::Methods::GET_AUDIO,
-            None,
-            Some(VariantTy::TUPLE),
-            DBusCallFlags::NONE,
-            dbus::Timeout::NONE,
-        )
-        .await;
+    let get = dbus::Audio::get(&conn).await;
     if let Err(e) = &get {
         g_warning!(None, "DBus call error: {e:?}");
         return;

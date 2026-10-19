@@ -1,12 +1,11 @@
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, SignalHandlerId},
+    gio::DBusConnection,
+    glib::{self, g_warning},
     prelude::ButtonExt,
     Builder, Button,
 };
 
-use crate::types::HandlerError;
-use crate::types::{dbus, Program};
+use crate::{dbus, types::HandlerError};
 
 pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let shutdown = builder
@@ -25,40 +24,48 @@ pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             "Failed to get logout-button".to_string(),
         ))?;
 
-    fn make_power_connection(
-        button: &Button,
-        method: &'static str,
-        conn: &DBusConnection,
-    ) -> SignalHandlerId {
-        button.connect_clicked(glib::clone!(
-            #[strong]
-            conn,
-            move |_button| {
-                let res = conn.call_future(
-                    Some(Program::BACKEND_NAME),
-                    dbus::Controllers::POWER,
-                    &dbus::Controllers::to_interface(dbus::Controllers::POWER),
-                    method,
-                    None,
-                    None,
-                    DBusCallFlags::NONE,
-                    dbus::Timeout::NONE,
-                );
+    shutdown.connect_clicked(glib::clone!(
+        #[strong]
+        conn,
+        move |_button| {
+            let conn = conn.clone();
+            glib::spawn_future_local(async move {
+                let res = dbus::Power::shutdown(&conn).await;
 
-                glib::spawn_future_local(async move {
-                    let res = res.await;
+                if let Err(e) = &res {
+                    g_warning!(None, "DBus call error: {e:?}");
+                }
+            });
+        }
+    ));
+    reboot.connect_clicked(glib::clone!(
+        #[strong]
+        conn,
+        move |_button| {
+            let conn = conn.clone();
+            glib::spawn_future_local(async move {
+                let res = dbus::Power::reboot(&conn).await;
 
-                    if let Err(e) = &res {
-                        g_warning!(None, "DBus call error: {e:?}");
-                    }
-                });
-            }
-        ))
-    }
+                if let Err(e) = &res {
+                    g_warning!(None, "DBus call error: {e:?}");
+                }
+            });
+        }
+    ));
+    logout.connect_clicked(glib::clone!(
+        #[strong]
+        conn,
+        move |_button| {
+            let conn = conn.clone();
+            glib::spawn_future_local(async move {
+                let res = dbus::Power::logout(&conn).await;
 
-    make_power_connection(&shutdown, dbus::Methods::SHUTDOWN, conn);
-    make_power_connection(&reboot, dbus::Methods::REBOOT, conn);
-    make_power_connection(&logout, dbus::Methods::LOGOUT, conn);
+                if let Err(e) = &res {
+                    g_warning!(None, "DBus call error: {e:?}");
+                }
+            });
+        }
+    ));
 
     Ok(())
 }

@@ -1,15 +1,13 @@
 use std::{cell::RefCell, rc::Rc};
 
 use gtk::{
-    gio::{DBusCallFlags, DBusConnection},
-    glib::{self, g_warning, object::ObjectExt, variant::ToVariant, SignalHandlerId, VariantTy},
+    gio::DBusConnection,
+    glib::{self, g_warning, object::ObjectExt, SignalHandlerId},
     prelude::RangeExt,
     Builder, Image, Label, Scale,
 };
 
-use crate::types::HandlerError;
-use crate::types::{dbus, Program};
-use crate::ui::get_brightness_icon;
+use crate::{dbus, types::HandlerError, ui::get_brightness_icon};
 
 pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale = builder
@@ -63,16 +61,7 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
                         timer_clone.borrow_mut().take();
                         last_sent_clone.set(value);
 
-                        let res = conn.call_future(
-                            Some(Program::BACKEND_NAME),
-                            dbus::Controllers::BRIGHTNESS,
-                            &dbus::Controllers::to_interface(dbus::Controllers::BRIGHTNESS),
-                            dbus::Methods::SET_BRIGHTNESS,
-                            Some(&(value,).to_variant()),
-                            None,
-                            DBusCallFlags::NONE,
-                            dbus::Timeout::NONE,
-                        );
+                        let res = dbus::Brightness::set(&conn, value);
 
                         glib::spawn_future_local(async move {
                             let res = res.await;
@@ -100,16 +89,7 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
         #[strong]
         scale,
         async move {
-            let call = conn.call_future(
-                Some(Program::BACKEND_NAME),
-                dbus::Controllers::BRIGHTNESS,
-                &dbus::Controllers::to_interface(dbus::Controllers::BRIGHTNESS),
-                dbus::Methods::GET_BRIGHTNESS,
-                None,
-                Some(VariantTy::TUPLE),
-                DBusCallFlags::NONE,
-                dbus::Timeout::NONE,
-            );
+            let call = dbus::Brightness::get(&conn);
 
             match call.await {
                 Ok(r) => {
