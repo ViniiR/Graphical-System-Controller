@@ -6,13 +6,26 @@ A system quick settings menu
 
 <img src="./assets/showcase.png" alt="">
 
-## Additional Requirements
+## Requirements 
+
+This project was built on top of libsystemd so it absolutely requires: 
 
 <ul>
     <li>Systemd</li>
     <li>D-Bus</li>
+</ul>
+
+## Additional Requirements
+
+> [!NOTE]
+> This project is very modular but no additional modules have yet been implemented.  
+> It currently is tailored for my specific system and thus the following requirements exist.
+
+<ul>
     <li>PipeWire</li>
     <li>X Keyboard Extension (and by extension X11)</li>
+    <li>Dunst</li>
+    <li>A Lenovo notebook(laptop)</li>
 </ul>
 
 ## Extra
