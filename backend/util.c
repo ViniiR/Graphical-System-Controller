@@ -11,8 +11,6 @@
 #include <string.h>
 #include <threads.h>
 
-// TODO: remove const from unneeded parameters
-
 /// Remove all newlines '\r' '\n' from str
 void trim_newlines(char *str) {
     //
@@ -123,7 +121,7 @@ ResultVoid write_file(const char *path, const char *content) {
 /// must add it flake.nix systemd.services.<...>.path
 ResultVoid exec_command(
     char *output,
-    const unsigned int size,
+    unsigned int size,
     const char *command,
     const char *modes
 ) {
@@ -186,10 +184,10 @@ ResultVoid exec_command(
 
 ResultVoid exec_command_as_user(
     char *output,
-    const unsigned int size,
+    unsigned int size,
     const char *command,
     const char *modes,
-    const uid_t target_uid
+    uid_t target_uid
 ) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 

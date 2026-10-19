@@ -221,7 +221,7 @@ static ResultInt get_charging_status() {
     return res;
 }
 
-static ResultInt format_percentage(const int percentage) {
+static ResultInt format_percentage(int percentage) {
     ResultInt res = {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
     };

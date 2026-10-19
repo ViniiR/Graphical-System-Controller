@@ -28,7 +28,7 @@ const sd_bus_vtable CONSERVATION_VTABLE[] = {
 //
 
 static ResultBool get_is_conservation_active();
-static ResultVoid set_conservation_mode(const bool value);
+static ResultVoid set_conservation_mode(bool value);
 
 //
 
@@ -109,7 +109,7 @@ static ResultBool get_is_conservation_active() {
     return res;
 }
 
-static ResultVoid set_conservation_mode(const bool value) {
+static ResultVoid set_conservation_mode(bool value) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
     ResultVoid result_write =

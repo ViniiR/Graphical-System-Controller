@@ -13,7 +13,7 @@
 const char DBUS_SERVICE_NAME[] = "com.vinii.vgsc";
 sd_bus *p_dbus = nullptr;
 
-static int fail_with_msg(const char message[], sd_bus *p, const int code);
+static int fail_with_msg(const char message[], sd_bus *p, int code);
 
 const unsigned int UID = 1000;
 
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     return err;
 }
 
-static int fail_with_msg(const char message[], sd_bus *p, const int code) {
+static int fail_with_msg(const char message[], sd_bus *p, int code) {
     fprintf(stderr,"D-Bus Error: %s %s\n", message, strerror(-code));
 
     sd_bus_unref(p);

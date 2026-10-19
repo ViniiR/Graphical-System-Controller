@@ -33,7 +33,7 @@ const sd_bus_vtable BRIGHTNESS_VTABLE[] = {
 
 static ResultInt get_brightness();
 
-static ResultVoid set_brightness_all(const unsigned int percent);
+static ResultVoid set_brightness_all(unsigned int percent);
 
 //
 
@@ -196,7 +196,7 @@ static ResultInt get_brightness() {
 }
 
 static ResultVoid set_brightness(
-    const unsigned int percent, const char *filepath, const char *max_filepath
+    unsigned int percent, const char *filepath, const char *max_filepath
 ) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
@@ -228,7 +228,7 @@ static ResultVoid set_brightness(
     res.err_msg = "";
     return res;
 }
-static ResultVoid set_brightness_all(const unsigned int percent) {
+static ResultVoid set_brightness_all(unsigned int percent) {
     DIR *dir;
     struct dirent *entry;
     ResultVoid res = RESULT_VOID_DEFAULT;
