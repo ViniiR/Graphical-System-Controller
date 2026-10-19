@@ -17,7 +17,7 @@ impl ToInterface for str {
 }
 
 trait BuildCall {
-    const PATH: &str;
+    const NAME: &str;
 
     fn build(
         conn: &DBusConnection,
@@ -27,8 +27,8 @@ trait BuildCall {
     ) -> DbusCallFuture {
         conn.call_future(
             Some(Program::BACKEND_NAME),
-            Self::PATH,
-            &Self::PATH.to_interface(),
+            &format!("{}/{}", Program::PATH, Self::NAME),
+            &format!("{}/{}", Program::PATH, Self::NAME).to_interface(),
             method,
             params,
             reply,
@@ -40,7 +40,7 @@ trait BuildCall {
 
 pub struct Brightness;
 impl BuildCall for Brightness {
-    const PATH: &str = "/com/vinii/vgsc/Brightness";
+    const NAME: &str = "Brightness";
 }
 impl Brightness {
     pub const SET: &str = "SetBrightness";
@@ -56,7 +56,7 @@ impl Brightness {
 
 pub struct Power;
 impl BuildCall for Power {
-    const PATH: &str = "/com/vinii/vgsc/Power";
+    const NAME: &str = "Power";
 }
 impl Power {
     pub const SHUTDOWN: &str = "Shutdown";
@@ -76,7 +76,7 @@ impl Power {
 
 pub struct Battery;
 impl BuildCall for Battery {
-    const PATH: &str = "/com/vinii/vgsc/Battery";
+    const NAME: &str = "Battery";
 }
 impl Battery {
     pub const GET: &str = "GetBattery";
@@ -88,7 +88,7 @@ impl Battery {
 
 pub struct Boost;
 impl BuildCall for Boost {
-    const PATH: &str = "/com/vinii/vgsc/Boost";
+    const NAME: &str = "Boost";
 }
 impl Boost {
     pub const GET: &str = "GetBoost";
@@ -104,7 +104,7 @@ impl Boost {
 
 pub struct Conservation;
 impl BuildCall for Conservation {
-    const PATH: &str = "/com/vinii/vgsc/Conservation";
+    const NAME: &str = "Conservation";
 }
 impl Conservation {
     pub const GET: &str = "GetConservation";
@@ -120,7 +120,7 @@ impl Conservation {
 
 pub struct Audio;
 impl BuildCall for Audio {
-    const PATH: &str = "/com/vinii/vgsc/Audio";
+    const NAME: &str = "Audio";
 }
 impl Audio {
     pub const GET: &str = "GetAudio";
@@ -165,7 +165,7 @@ impl Audio {
 
 pub struct Keyboard;
 impl BuildCall for Keyboard {
-    const PATH: &str = "/com/vinii/vgsc/Keyboard";
+    const NAME: &str = "Keyboard";
 }
 impl Keyboard {
     pub const GET: &str = "GetKeyboard";
