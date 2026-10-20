@@ -2,6 +2,7 @@ use gtk::{
     gio::{DBusCallFlags, DBusConnection},
     glib::{self, variant::ToVariant, Variant, VariantTy},
 };
+use macros::BuildCall;
 
 use crate::types::Program;
 
@@ -38,10 +39,8 @@ trait BuildCall {
     }
 }
 
+#[derive(BuildCall)]
 pub struct Brightness;
-impl BuildCall for Brightness {
-    const NAME: &str = "Brightness";
-}
 impl Brightness {
     pub const SET: &str = "SetBrightness";
     pub const GET: &str = "GetBrightness";
@@ -54,10 +53,8 @@ impl Brightness {
     }
 }
 
+#[derive(BuildCall)]
 pub struct Power;
-impl BuildCall for Power {
-    const NAME: &str = "Power";
-}
 impl Power {
     pub const SHUTDOWN: &str = "Shutdown";
     pub const REBOOT: &str = "Reboot";
@@ -74,10 +71,8 @@ impl Power {
     }
 }
 
+#[derive(BuildCall)]
 pub struct Battery;
-impl BuildCall for Battery {
-    const NAME: &str = "Battery";
-}
 impl Battery {
     pub const GET: &str = "GetBattery";
 
@@ -86,10 +81,8 @@ impl Battery {
     }
 }
 
+#[derive(BuildCall)]
 pub struct Boost;
-impl BuildCall for Boost {
-    const NAME: &str = "Boost";
-}
 impl Boost {
     pub const GET: &str = "GetBoost";
     pub const TOGGLE: &str = "ToggleBoost";
@@ -102,10 +95,8 @@ impl Boost {
     }
 }
 
+#[derive(BuildCall)]
 pub struct Conservation;
-impl BuildCall for Conservation {
-    const NAME: &str = "Conservation";
-}
 impl Conservation {
     pub const GET: &str = "GetConservation";
     pub const TOGGLE: &str = "ToggleConservation";
@@ -118,10 +109,8 @@ impl Conservation {
     }
 }
 
+#[derive(BuildCall)]
 pub struct Audio;
-impl BuildCall for Audio {
-    const NAME: &str = "Audio";
-}
 impl Audio {
     pub const GET: &str = "GetAudio";
     pub const SET: &str = "SetAudio";
@@ -163,10 +152,8 @@ impl Audio {
     //}
 }
 
+#[derive(BuildCall)]
 pub struct Keyboard;
-impl BuildCall for Keyboard {
-    const NAME: &str = "Keyboard";
-}
 impl Keyboard {
     pub const GET: &str = "GetKeyboard";
     pub const TOGGLE: &str = "ToggleKeyboard";
