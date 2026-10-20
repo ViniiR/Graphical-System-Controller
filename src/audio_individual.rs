@@ -132,7 +132,7 @@ fn populate_list_item(stream: &AudioStream, list_item: &ListItem) -> Result<(), 
     let icon = grid
         .child_at(0, 0)
         .downcast_or_err::<Image>("Failed to get image on individual_audio.ui")?;
-    icon.set_icon_name(Some(&ui::get_individual_audio_icon(&stream.name)));
+    icon.set_icon_name(Some(ui::get_individual_audio_icon(&stream.name)));
     let label = grid
         .child_at(1, 0)
         .downcast_or_err::<Label>("Failed to get label on individual_audio.ui")?;
@@ -144,7 +144,7 @@ fn populate_list_item(stream: &AudioStream, list_item: &ListItem) -> Result<(), 
     let icon = r#box
         .first_child()
         .downcast_or_err::<Image>("Failed to get box image on individual_audio.ui")?;
-    icon.set_icon_name(Some(&ui::get_volume_icon(stream.volume, stream.is_muted)));
+    icon.set_icon_name(Some(ui::get_volume_icon(stream.volume, stream.is_muted)));
     let label = r#box
         .last_child()
         .downcast_or_err::<Label>("Failed to get box label on individual_audio.ui")?;

@@ -118,7 +118,7 @@ fn update_brightness(
     signal: Option<&SignalHandlerId>,
 ) {
     label.set_text(&format!("{}", percentage));
-    image.set_icon_name(Some(&get_brightness_icon(percentage)));
+    image.set_icon_name(Some(get_brightness_icon(percentage)));
 
     if let (Some(s), Some(scl)) = (signal, scale) {
         scl.block_signal(s);

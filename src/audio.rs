@@ -178,7 +178,7 @@ fn update_volume<T>(
     T: Deref<Target = State>,
 {
     label.set_text(&format!("{}", state.volume));
-    image.set_icon_name(Some(&get_volume_icon(state.volume, state.is_muted)));
+    image.set_icon_name(Some(get_volume_icon(state.volume, state.is_muted)));
 
     if let Some(signal) = signal {
         scale.block_signal(signal);
@@ -215,7 +215,7 @@ async fn handle_mute_click(conn: DBusConnection, image: Image) {
     let volume = get.child_value(0).get::<u32>();
     let is_muted = get.child_value(1).get::<bool>();
     match (volume, is_muted) {
-        (Some(v), Some(m)) => image.set_icon_name(Some(&get_volume_icon(v, m))),
+        (Some(v), Some(m)) => image.set_icon_name(Some(get_volume_icon(v, m))),
         _ => g_warning!(None, "DBus unknown call error"),
     }
 }
