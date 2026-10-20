@@ -4,7 +4,7 @@ use gtk::{
 };
 use macros::BuildCall;
 
-use crate::types::Program;
+use crate::Program;
 
 pub type DbusCallFuture = std::pin::Pin<Box<dyn Future<Output = Result<Variant, glib::Error>>>>;
 
@@ -27,7 +27,7 @@ trait BuildCall {
         reply: Option<&VariantTy>,
     ) -> DbusCallFuture {
         conn.call_future(
-            Some(Program::BACKEND_NAME),
+            Some(Program::NAME),
             &format!("{}/{}", Program::PATH, Self::NAME),
             &format!("{}/{}", Program::PATH, Self::NAME).to_interface(),
             method,

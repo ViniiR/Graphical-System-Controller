@@ -8,7 +8,7 @@ use gtk::{
     Application, ApplicationWindow, CssProvider, EventControllerFocus, EventControllerKey,
 };
 
-use crate::types::{HandlerError, Program};
+use crate::types::HandlerError;
 
 mod audio;
 mod audio_individual;
@@ -22,11 +22,26 @@ mod power;
 mod types;
 mod ui;
 
-pub struct Filepaths;
-impl Filepaths {
-    pub const BUILDER: &str = "/com/vinii/vgsc/builder.ui";
-    pub const CSS: &str = "/com/vinii/vgsc/style.css";
-    pub const INDIVIDUAL_AUDIO_BUILDER: &str = "/com/vinii/vgsc/individual_audio.ui";
+// Vinii's Graphical System Controller (Daemon)
+pub struct Program;
+impl Program {
+    pub const PATH: &str = "/com/vinii/vgsc";
+    pub const NAME: &str = "com.vinii.vgsc";
+
+    pub const FILES: ProgramFiles = ProgramFiles {
+        css: "style.css",
+        builder: "builder.ui",
+        individual_audio_builder: "individual_audio_builder.ui",
+    };
+
+    fn at_runtime_path(filename: &str) -> String {
+        format!("{}/{filename}", Self::PATH)
+    }
+}
+pub struct ProgramFiles {
+    pub css: &'static str,
+    pub builder: &'static str,
+    pub individual_audio_builder: &'static str,
 }
 
 // TODO: rewrite everything to have a central logging place
@@ -46,7 +61,7 @@ fn main() -> glib::ExitCode {
         };
 
         let provider = CssProvider::new();
-        provider.load_from_resource(Filepaths::CSS);
+        provider.load_from_resource(&Program::at_runtime_path(Program::FILES.css));
         gtk::style_context_add_provider_for_display(
             &display,
             &provider,
@@ -66,7 +81,7 @@ fn main() -> glib::ExitCode {
 }
 
 fn activate(app: &Application) {
-    let builder = gtk::Builder::from_resource(Filepaths::BUILDER);
+    let builder = gtk::Builder::from_resource(&Program::at_runtime_path(Program::FILES.builder));
     let Some(window) = builder.object::<ApplicationWindow>("main-window") else {
         g_critical!(None, "Failed to get builder main-window");
         return;

@@ -13,7 +13,7 @@ use gtk::{
 use crate::{
     dbus,
     types::{AudioStream, AudioStreamTuple, HandlerError},
-    ui, Filepaths,
+    ui, Program,
 };
 
 pub fn handle_audio_individual(
@@ -46,7 +46,9 @@ pub fn handle_audio_individual(
             return;
         };
 
-        let individual_builder = Builder::from_resource(Filepaths::INDIVIDUAL_AUDIO_BUILDER);
+        let individual_builder = Builder::from_resource(&Program::at_runtime_path(
+            Program::FILES.individual_audio_builder,
+        ));
 
         list_item.set_child(create_list_item(&individual_builder).as_ref());
     });

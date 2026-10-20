@@ -37,17 +37,6 @@ impl From<AudioStreamTuple> for AudioStream {
     }
 }
 
-pub struct Program;
-impl Program {
-    // Vinii's Graphical System Controller (Daemon)
-    pub const PATH: &str = "/com/vinii/vgsc";
-    pub const NAME: &str = "com.vinii.vgsc";
-
-    // TODO: may be unnecessary
-    pub const BACKEND_PATH: &str = "/com/vinii/vgsc";
-    pub const BACKEND_NAME: &str = "com.vinii.vgsc";
-}
-
 #[derive(Default)]
 pub struct State {
     pub volume: u32,
