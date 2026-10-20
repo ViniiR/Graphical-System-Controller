@@ -8,14 +8,25 @@
 #include <stdio.h>
 #include <string.h>
 #include <systemd/sd-bus.h>
-#include <stdbool.h>
 
+const char DBUS_SERVICE_PATH[] = "/com/vinii/vgsc";
 const char DBUS_SERVICE_NAME[] = "com.vinii.vgsc";
-sd_bus *p_dbus = nullptr;
+
+const unsigned int UID = 1000;
+
+//
 
 static int fail_with_msg(const char message[], sd_bus *p, int code);
 
-const unsigned int UID = 1000;
+static int add_controller(const char *name, const sd_bus_vtable *vtable);
+
+//
+
+static sd_bus *p_dbus = nullptr;
+
+static const unsigned int HUNDRED = 100;
+
+//
 
 // TODO: OPTIONAL: add cpu freq governor option
 int main(int argc, char **argv) {
@@ -26,89 +37,41 @@ int main(int argc, char **argv) {
     printf("Connected to bus\n");
 
     // Brightness Controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        BRIGHTNESS_PATH,
-        BRIGHTNESS_INTERFACE,
-        BRIGHTNESS_VTABLE,
-        nullptr
-    );
+    err = add_controller(BRIGHTNESS_NAME, BRIGHTNESS_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", BRIGHTNESS_PATH);
+    printf("Added '%s' object vtable\n", BRIGHTNESS_NAME);
 
     // Power controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        POWER_PATH,
-        POWER_INTERFACE,
-        POWER_VTABLE,
-        nullptr
-    );
+    err = add_controller(POWER_NAME, POWER_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", POWER_PATH);
+    printf("Added '%s' object vtable\n", POWER_NAME);
 
     // Battery controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        BATTERY_PATH,
-        BATTERY_INTERFACE,
-        BATTERY_VTABLE,
-        nullptr
-    );
+    err = add_controller(BATTERY_NAME, BATTERY_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", BATTERY_PATH);
+    printf("Added '%s' object vtable\n", BATTERY_NAME);
 
     // Boost controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        BOOST_PATH,
-        BOOST_INTERFACE,
-        BOOST_VTABLE,
-        nullptr
-    );
+    err = add_controller(BOOST_NAME, BOOST_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", BOOST_PATH);
+    printf("Added '%s' object vtable\n", BOOST_NAME);
 
     // Conservation controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        CONSERVATION_PATH,
-        CONSERVATION_INTERFACE,
-        CONSERVATION_VTABLE,
-        nullptr
-    );
+    err = add_controller(CONSERVATION_NAME, CONSERVATION_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", CONSERVATION_PATH);
+    printf("Added '%s' object vtable\n", CONSERVATION_NAME);
 
     // Audio controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        AUDIO_PATH,
-        AUDIO_INTERFACE,
-        AUDIO_VTABLE,
-        nullptr
-    );
+    err = add_controller(AUDIO_NAME, AUDIO_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", AUDIO_PATH);
+    printf("Added '%s' object vtable\n", AUDIO_NAME);
 
     // Keyboard controller
-    err = sd_bus_add_object_vtable(
-        p_dbus,
-        nullptr,
-        KEYBOARD_PATH,
-        KEYBOARD_INTERFACE,
-        KEYBOARD_VTABLE,
-        nullptr
-    );
+    err = add_controller(KEYBOARD_NAME, KEYBOARD_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
-    printf("Added '%s' object vtable\n", KEYBOARD_PATH);
+    printf("Added '%s' object vtable\n", KEYBOARD_NAME);
 
+    // Bus
     err = sd_bus_request_name(p_dbus, DBUS_SERVICE_NAME, 0);
     if (err < 0) return fail_with_msg("Failed to request service name", p_dbus, err);
     printf("Started with service name: '%s'\n", DBUS_SERVICE_NAME);
@@ -126,8 +89,22 @@ int main(int argc, char **argv) {
     return err;
 }
 
+//
+
+static int add_controller(const char *name, const sd_bus_vtable *vtable) {
+    char path[HUNDRED];
+    snprintf(path, sizeof(path), "%s/%s", DBUS_SERVICE_PATH, name);
+
+    char interface[HUNDRED];
+    snprintf(interface, sizeof(interface), "%s.%s", DBUS_SERVICE_NAME, name);
+
+    return sd_bus_add_object_vtable(
+        p_dbus, nullptr, path, interface, vtable, nullptr
+    );
+}
+
 static int fail_with_msg(const char message[], sd_bus *p, int code) {
-    fprintf(stderr,"D-Bus Error: %s %s\n", message, strerror(-code));
+    fprintf(stderr, "D-Bus Error: %s %s\n", message, strerror(-code));
 
     sd_bus_unref(p);
     return code;

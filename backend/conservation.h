@@ -3,8 +3,7 @@
 
 #include <systemd/sd-bus.h>
 
-extern const char CONSERVATION_PATH[];
-extern const char CONSERVATION_INTERFACE[];
+extern const char CONSERVATION_NAME[];
 
 int toggle_conservation_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror

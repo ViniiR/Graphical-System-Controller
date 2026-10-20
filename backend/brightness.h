@@ -3,8 +3,7 @@
 
 #include <systemd/sd-bus.h>
 
-extern const char BRIGHTNESS_PATH[];
-extern const char BRIGHTNESS_INTERFACE[];
+extern const char BRIGHTNESS_NAME[];
 
 int set_brightness_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror

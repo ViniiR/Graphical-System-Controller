@@ -3,8 +3,7 @@
 
 #include <systemd/sd-bus.h>
 
-extern const char AUDIO_PATH[];
-extern const char AUDIO_INTERFACE[];
+extern const char AUDIO_NAME[];
 
 int get_audio_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror

@@ -6,8 +6,7 @@
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
-const char AUDIO_PATH[] = "/com/vinii/vgsc/Audio";
-const char AUDIO_INTERFACE[] = "com.vinii.vgsc.Audio";
+const char AUDIO_NAME[] = "Audio";
 
 const sd_bus_vtable AUDIO_VTABLE[] = {
     SD_BUS_VTABLE_START(0),

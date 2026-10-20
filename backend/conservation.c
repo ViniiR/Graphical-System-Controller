@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
-const char CONSERVATION_PATH[] = "/com/vinii/vgsc/Conservation";
-const char CONSERVATION_INTERFACE[] = "com.vinii.vgsc.Conservation";
+const char CONSERVATION_NAME[] = "Conservation";
 
 const sd_bus_vtable CONSERVATION_VTABLE[] = {
     SD_BUS_VTABLE_START(0),

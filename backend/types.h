@@ -1,8 +1,6 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
-#include <stdbool.h>
-
 typedef enum { OK, ERR } ResultVariant;
 
 /// INFO:

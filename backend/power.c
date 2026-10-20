@@ -4,8 +4,7 @@
 #include "util.h"
 #include <systemd/sd-bus.h>
 
-const char POWER_PATH[] = "/com/vinii/vgsc/Power";
-const char POWER_INTERFACE[] = "com.vinii.vgsc.Power";
+const char POWER_NAME[] = "Power";
 
 const sd_bus_vtable POWER_VTABLE[] = {
     SD_BUS_VTABLE_START(0),

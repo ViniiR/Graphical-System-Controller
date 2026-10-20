@@ -4,8 +4,7 @@
 #include <string.h>
 #include <systemd/sd-bus.h>
 
-const char KEYBOARD_PATH[] = "/com/vinii/vgsc/Keyboard";
-const char KEYBOARD_INTERFACE[] = "com.vinii.vgsc.Keyboard";
+const char KEYBOARD_NAME[] = "Keyboard";
 
 const sd_bus_vtable KEYBOARD_VTABLE[] = {
     SD_BUS_VTABLE_START(0),

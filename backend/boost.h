@@ -3,8 +3,7 @@
 
 #include <systemd/sd-bus.h>
 
-extern const char BOOST_PATH[];
-extern const char BOOST_INTERFACE[];
+extern const char BOOST_NAME[];
 
 int toggle_boost_handler(
     sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror

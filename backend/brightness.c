@@ -7,8 +7,7 @@
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
-const char BRIGHTNESS_PATH[] = "/com/vinii/vgsc/Brightness";
-const char BRIGHTNESS_INTERFACE[] = "com.vinii.vgsc.Brightness";
+const char BRIGHTNESS_NAME[] = "Brightness";
 
 const sd_bus_vtable BRIGHTNESS_VTABLE[] = {
     SD_BUS_VTABLE_START(0),

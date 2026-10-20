@@ -10,8 +10,7 @@
 
 // TODO: battery charging under 10% does not display icon
 
-const char BATTERY_PATH[] = "/com/vinii/vgsc/Battery";
-const char BATTERY_INTERFACE[] = "com.vinii.vgsc.Battery";
+const char BATTERY_NAME[] = "Battery";
 
 const sd_bus_vtable BATTERY_VTABLE[] = {
     SD_BUS_VTABLE_START(0),

@@ -1,12 +1,10 @@
 #include "boost.h"
 #include "types.h"
 #include "util.h"
-#include <stdbool.h>
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
-const char BOOST_PATH[] = "/com/vinii/vgsc/Boost";
-const char BOOST_INTERFACE[] = "com.vinii.vgsc.Boost";
+const char BOOST_NAME[] = "Boost";
 
 const sd_bus_vtable BOOST_VTABLE[] = {
     SD_BUS_VTABLE_START(0),
