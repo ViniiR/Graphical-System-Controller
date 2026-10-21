@@ -1,8 +1,9 @@
 #include "battery.h"
 #include "dirent.h"
 #include "string.h"
-#include "types.h"
-#include "util.h"
+#include "lib/types.h"
+#include "lib/transform.h"
+#include "lib/file.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

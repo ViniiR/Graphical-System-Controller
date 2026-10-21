@@ -1,6 +1,6 @@
 #include "boost.h"
-#include "types.h"
-#include "util.h"
+#include "lib/types.h"
+#include "lib/file.h"
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 

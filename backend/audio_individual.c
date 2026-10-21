@@ -1,6 +1,7 @@
 #include "audio_internal.h"
-#include "types.h"
-#include "util.h"
+#include "lib/types.h"
+#include "lib/process.h"
+#include "lib/transform.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

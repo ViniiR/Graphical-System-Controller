@@ -5,9 +5,11 @@ project(vgsc LANGUAGES C)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/backend")
+set(INCLUDE_DIR
+    "${CMAKE_SOURCE_DIR}/backend"
+)
 
-file(GLOB SOURCES
+file(GLOB_RECURSE SOURCES
     "${CMAKE_SOURCE_DIR}/backend/*.c"
 )
 

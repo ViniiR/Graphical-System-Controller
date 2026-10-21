@@ -1,7 +1,7 @@
 #include "power.h"
 #include "systemd/sd-bus-vtable.h"
-#include "types.h"
-#include "util.h"
+#include "lib/types.h"
+#include "lib/process.h"
 #include <systemd/sd-bus.h>
 
 const char POWER_NAME[] = "Power";
