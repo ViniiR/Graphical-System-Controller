@@ -30,12 +30,6 @@ pub fn toggle_button_active(btn: &Button) {
     update_button_active(btn, to_active);
 }
 
-// TODO:
-// MISSING ICONS
-// power modes (optional)
-
-//https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg
-//https://developer.gnome.org/documentation/tutorials/themed-icons.html
 pub const fn get_volume_icon(percentage: u32, is_muted: bool) -> &'static str {
     if is_muted {
         return "audio-volume-muted-symbolic";

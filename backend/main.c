@@ -28,7 +28,6 @@ static const unsigned int HUNDRED = 100;
 
 //
 
-// TODO: OPTIONAL: add cpu freq governor option
 int main(int argc, char **argv) {
     int err = 0;
 

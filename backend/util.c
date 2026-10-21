@@ -203,8 +203,6 @@ ResultVoid exec_command_as_user(
         return res;
     }
 
-    // TODO: this is the only part of the application that doesn't propagate
-    // errors up.
     // Run as child process
     if (pid == 0) {
         close(pipefd[0]);

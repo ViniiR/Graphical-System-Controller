@@ -44,9 +44,6 @@ pub struct ProgramFiles {
     pub individual_audio_builder: &'static str,
 }
 
-// TODO: rewrite everything to have a central logging place
-// dont log and return error, return error then log(higher up)
-// whenever possible, maybe not in closures
 fn main() -> glib::ExitCode {
     let app = Application::builder().application_id(Program::NAME).build();
 

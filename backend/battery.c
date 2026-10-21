@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
-// TODO: battery charging under 10% does not display icon
-
 const char BATTERY_NAME[] = "Battery";
 
 const sd_bus_vtable BATTERY_VTABLE[] = {

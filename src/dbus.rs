@@ -132,13 +132,12 @@ impl Audio {
     }
 
     pub const GET_ALL_INDIVIDUAL: &str = "GetAllAudioIndividual";
-    pub const SET_INDIVIDUAL: &str = "SetAudioIndividual";
-    pub const TOGGLE_MUTED_INDIVIDUAL: &str = "ToggleAudioMutedIndividual";
+    //pub const SET_INDIVIDUAL: &str = "SetAudioIndividual";
+    //pub const TOGGLE_MUTED_INDIVIDUAL: &str = "ToggleAudioMutedIndividual";
 
     pub fn get_all_individual(conn: &DBusConnection) -> DbusCallFuture {
         Self::build(conn, Self::GET_ALL_INDIVIDUAL, None, Some(VariantTy::TUPLE))
     }
-    // TODO: implement this functionality
     //pub fn set_individual(conn: &DBusConnection, value: u32) -> DbusCallFuture {
     //    Self::build(
     //        conn,

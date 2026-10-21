@@ -69,8 +69,6 @@ pub fn handle_audio_individual(
         }
     });
 
-    // TODO: handle input: mute, volume
-
     expander.connect_activate(glib::clone!(
         #[strong]
         conn,
