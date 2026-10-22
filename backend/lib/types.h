@@ -5,7 +5,7 @@ typedef enum { OK, ERR } ResultVariant;
 
 /// INFO:
 /// T ok_value Can be nullptr.
-/// char *err_msg Can be nullptr.
+/// char *err_msg Must be a static string or nullptr.
 ///
 /// How to use them properly:
 /// When 'variant' is ERR:
@@ -17,7 +17,7 @@ typedef enum { OK, ERR } ResultVariant;
 #define RESULT(T, Name)                                                        \
     typedef struct {                                                           \
         ResultVariant variant;                                                 \
-        char *err_msg;                                                         \
+        const char *err_msg;                                                   \
         T ok_value;                                                            \
     } Result##Name;
 
