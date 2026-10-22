@@ -5,24 +5,15 @@ use gtk::{
     Builder, Button,
 };
 
-use crate::{dbus, lib_utils::types::HandlerError};
+use crate::{
+    dbus,
+    lib_utils::types::{BuilderObject, HandlerError},
+};
 
 pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let shutdown = builder
-        .object::<Button>("shutdown-button")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get shutdown-button".to_string(),
-        ))?;
-    let reboot = builder
-        .object::<Button>("reboot-button")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get reboot-button".to_string(),
-        ))?;
-    let logout = builder
-        .object::<Button>("logout-button")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get logout-button".to_string(),
-        ))?;
+    let shutdown: Button = builder.get_object("shutdown-button")?;
+    let reboot: Button = builder.get_object("reboot-button")?;
+    let logout: Button = builder.get_object("logout-button")?;
 
     shutdown.connect_clicked(glib::clone!(
         #[strong]

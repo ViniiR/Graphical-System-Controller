@@ -11,35 +11,17 @@ use crate::{
     dbus,
     lib_utils::{
         transform::LossyU32Cast,
-        types::{HandlerError, State},
+        types::{BuilderObject, HandlerError, State},
         ui::get_volume_icon,
     },
 };
 
 // TODO: lessen lines on this func
 pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let scale = builder
-        .object::<Scale>("volume-scale")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get volume-scale".to_string(),
-        ))?;
-    let label = builder
-        .object::<Label>("volume-scale-label")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get volume-scale-label".to_string(),
-        ))?;
-    let label_box =
-        builder
-            .object::<Box>("volume-scale-label-box")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get volume-scale-label-box".to_string(),
-            ))?;
-    let label_image =
-        builder
-            .object::<Image>("volume-scale-label-image")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get volume-scale-label-image".to_string(),
-            ))?;
+    let scale: Scale = builder.get_object("volume-scale")?;
+    let label: Label = builder.get_object("volume-scale-label")?;
+    let label_box: Box = builder.get_object("volume-scale-label-box")?;
+    let label_image: Image = builder.get_object("volume-scale-label-image")?;
 
     let state = Rc::new(RefCell::new(State::default()));
 

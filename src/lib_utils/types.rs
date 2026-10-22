@@ -1,4 +1,4 @@
-use gtk::glib::{self, g_warning};
+use gtk::glib::{self, g_warning, object::IsA, Object};
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
@@ -10,6 +10,21 @@ pub enum HandlerError {
 impl From<glib::Error> for HandlerError {
     fn from(value: glib::Error) -> Self {
         Self::DBusError(value.message().to_owned())
+    }
+}
+
+pub trait BuilderObject {
+    fn get_object<T>(&self, name: &str) -> Result<T, HandlerError>
+    where
+        T: IsA<Object>;
+}
+impl BuilderObject for gtk::Builder {
+    fn get_object<T>(&self, name: &str) -> Result<T, HandlerError>
+    where
+        T: IsA<Object>,
+    {
+        self.object::<T>(name)
+            .ok_or(HandlerError::ObjectError(format!("Failed to get {name}")))
     }
 }
 

@@ -7,16 +7,14 @@ use gtk::{
 
 use crate::{
     dbus,
-    lib_utils::{types::HandlerError, ui},
+    lib_utils::{
+        types::{BuilderObject, HandlerError},
+        ui,
+    },
 };
 
 pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let conservation =
-        builder
-            .object::<Button>("conservation-mode-button")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get conservation-mode-button".to_string(),
-            ))?;
+    let conservation: Button = builder.get_object("conservation-mode-button")?;
 
     conservation.connect_clicked(glib::clone!(
         #[strong]

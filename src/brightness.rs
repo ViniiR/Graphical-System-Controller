@@ -9,26 +9,17 @@ use gtk::{
 
 use crate::{
     dbus,
-    lib_utils::{transform::LossyU32Cast, types::HandlerError, ui::get_brightness_icon},
+    lib_utils::{
+        transform::LossyU32Cast,
+        types::{BuilderObject, HandlerError},
+        ui::get_brightness_icon,
+    },
 };
 
 pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let scale = builder
-        .object::<Scale>("brightness-scale")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get brightness-scale".to_string(),
-        ))?;
-    let label =
-        builder
-            .object::<Label>("brightness-scale-label")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get brightness-scale-label".to_string(),
-            ))?;
-    let image = builder
-        .object::<Image>("brightness-scale-label-image")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get brightness-scale-label-image".to_string(),
-        ))?;
+    let scale: Scale = builder.get_object("brightness-scale")?;
+    let label: Label = builder.get_object("brightness-scale-label")?;
+    let image: Image = builder.get_object("brightness-scale-label-image")?;
 
     let pending_timer: Rc<RefCell<Option<glib::SourceId>>> = Rc::new(RefCell::new(None));
     let last_sent_value = Rc::new(std::cell::Cell::new(u32::MAX));

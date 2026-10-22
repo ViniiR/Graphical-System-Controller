@@ -7,22 +7,15 @@ use gtk::{
 
 use crate::{
     dbus,
-    lib_utils::{types::HandlerError, ui},
+    lib_utils::{
+        types::{BuilderObject, HandlerError},
+        ui,
+    },
 };
 
 pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let dev_btn =
-        builder
-            .object::<Button>("keyboard-button-dev")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get keyboard-button-dev".to_string(),
-            ))?;
-    let std_btn =
-        builder
-            .object::<Button>("keyboard-button-standard")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get keyboard-button-standard".to_string(),
-            ))?;
+    let dev_btn: Button = builder.get_object("keyboard-button-dev")?;
+    let std_btn: Button = builder.get_object("keyboard-button-standard")?;
 
     dev_btn.connect_clicked(glib::clone!(
         #[strong]

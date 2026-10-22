@@ -4,21 +4,14 @@ use gtk::{
     Builder, Image, Label,
 };
 
-use crate::{dbus, lib_utils::types::HandlerError};
+use crate::{
+    dbus,
+    lib_utils::types::{BuilderObject, HandlerError},
+};
 
 pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let label =
-        builder
-            .object::<Label>("battery-button-box-label")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get battery label".to_string(),
-            ))?;
-    let image =
-        builder
-            .object::<Image>("battery-button-box-image")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get battery image".to_string(),
-            ))?;
+    let label: Label = builder.get_object("battery-button-box-label")?;
+    let image: Image = builder.get_object("battery-button-box-image")?;
 
     glib::spawn_future_local(glib::clone!(
         #[strong]

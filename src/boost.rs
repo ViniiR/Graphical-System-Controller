@@ -7,15 +7,14 @@ use gtk::{
 
 use crate::{
     dbus,
-    lib_utils::{types::HandlerError, ui},
+    lib_utils::{
+        types::{BuilderObject, HandlerError},
+        ui,
+    },
 };
 
 pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
-    let boost = builder
-        .object::<Button>("boost-mode-button")
-        .ok_or(HandlerError::ObjectError(
-            "Failed to get boost-mode-button".to_string(),
-        ))?;
+    let boost: Button = builder.get_object("boost-mode-button")?;
 
     boost.connect_clicked(glib::clone!(
         #[strong]

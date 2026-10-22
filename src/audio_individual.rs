@@ -13,7 +13,7 @@ use gtk::{
 use crate::{
     dbus,
     lib_utils::{
-        types::{AudioStream, AudioStreamTuple, HandlerError},
+        types::{AudioStream, AudioStreamTuple, BuilderObject, HandlerError},
         ui,
     },
     Program,
@@ -23,18 +23,8 @@ pub fn handle_audio_individual(
     builder: &Builder,
     conn: &DBusConnection,
 ) -> Result<(), HandlerError> {
-    let expander: Expander =
-        builder
-            .object("individual-audio-expander")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get individual-audio-expander".to_string(),
-            ))?;
-    let list: ListView =
-        builder
-            .object("individual-audio-list")
-            .ok_or(HandlerError::ObjectError(
-                "Failed to get individual-audio-list".to_string(),
-            ))?;
+    let expander: Expander = builder.get_object("individual-audio-expander")?;
+    let list: ListView = builder.get_object("individual-audio-list")?;
 
     let store = ListStore::new::<glib::BoxedAnyObject>();
 
