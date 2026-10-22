@@ -9,9 +9,11 @@ use gtk::{
 
 use crate::{
     dbus,
-    lib_utils::transform::LossyU32Cast,
-    types::{HandlerError, State},
-    ui::get_volume_icon,
+    lib_utils::{
+        transform::LossyU32Cast,
+        types::{HandlerError, State},
+        ui::get_volume_icon,
+    },
 };
 
 // TODO: lessen lines on this func

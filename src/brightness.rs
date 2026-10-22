@@ -8,7 +8,8 @@ use gtk::{
 };
 
 use crate::{
-    dbus, lib_utils::transform::LossyU32Cast, types::HandlerError, ui::get_brightness_icon,
+    dbus,
+    lib_utils::{transform::LossyU32Cast, types::HandlerError, ui::get_brightness_icon},
 };
 
 pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {

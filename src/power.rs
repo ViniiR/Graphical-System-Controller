@@ -5,7 +5,7 @@ use gtk::{
     Builder, Button,
 };
 
-use crate::{dbus, types::HandlerError};
+use crate::{dbus, lib_utils::types::HandlerError};
 
 pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let shutdown = builder

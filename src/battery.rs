@@ -4,7 +4,7 @@ use gtk::{
     Builder, Image, Label,
 };
 
-use crate::{dbus, types::HandlerError};
+use crate::{dbus, lib_utils::types::HandlerError};
 
 pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let label =

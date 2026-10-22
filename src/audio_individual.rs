@@ -12,8 +12,11 @@ use gtk::{
 
 use crate::{
     dbus,
-    types::{AudioStream, AudioStreamTuple, HandlerError},
-    ui, Program,
+    lib_utils::{
+        types::{AudioStream, AudioStreamTuple, HandlerError},
+        ui,
+    },
+    Program,
 };
 
 pub fn handle_audio_individual(

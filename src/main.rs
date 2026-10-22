@@ -8,7 +8,7 @@ use gtk::{
     Application, ApplicationWindow, CssProvider, EventControllerFocus, EventControllerKey,
 };
 
-use crate::types::HandlerError;
+use crate::lib_utils::types::HandlerError;
 
 mod audio;
 mod audio_individual;
@@ -20,8 +20,6 @@ mod dbus;
 mod keyboard;
 mod lib_utils;
 mod power;
-mod types;
-mod ui;
 
 // Vinii's Graphical System Controller (Daemon)
 pub struct Program;

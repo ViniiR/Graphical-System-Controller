@@ -5,7 +5,10 @@ use gtk::{
     Builder, Button,
 };
 
-use crate::{dbus, types::HandlerError, ui};
+use crate::{
+    dbus,
+    lib_utils::{types::HandlerError, ui},
+};
 
 pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let conservation =
