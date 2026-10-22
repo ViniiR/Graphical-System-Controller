@@ -150,7 +150,7 @@ fn populate_list_item(stream: &AudioStream, list_item: &ListItem) -> Result<(), 
     let scale = grid
         .child_at(1, 1)
         .downcast_or_err::<Scale>("Failed to get scale on individual_audio.ui")?;
-    scale.set_value(stream.volume as f64);
+    scale.set_value(stream.volume.into());
 
     Ok(())
 }

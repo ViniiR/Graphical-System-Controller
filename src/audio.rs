@@ -9,10 +9,12 @@ use gtk::{
 
 use crate::{
     dbus,
+    lib_utils::transform::LossyU32Cast,
     types::{HandlerError, State},
     ui::get_volume_icon,
 };
 
+// TODO: lessen lines on this func
 pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale = builder
         .object::<Scale>("volume-scale")
@@ -52,7 +54,7 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
         #[strong]
         state,
         move |scale| {
-            let value = scale.value() as u32;
+            let value = scale.value().to_lossy_u32();
 
             {
                 let mut s = state.borrow_mut();
@@ -111,7 +113,7 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             match call.await {
                 Ok(v) => {
                     let mut state = state.borrow_mut();
-                    state.update(v);
+                    state.update(&v);
                     update_volume(&state, &label, &label_image, &scale, Some(&signal_rc));
                 }
                 Err(e) => g_warning!(None, "DBus call error: {e:?}"),
@@ -145,29 +147,6 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
 
 //
 
-//macro_rules! update_volume {
-//    (
-//        $volume:expr,
-//        $label:ident,
-//        $image:ident,
-//        $scale:ident,
-//        $signal:ident
-//    ) => {{
-//        let vol: u32 = $volume;
-//        let lbl: Label = $label;
-//        let img: Image = $image;
-//        let scl: Scale = $scale;
-//        let sig: Scale = $scale;
-//
-//        lbl.set_text(&format!("{}", vol));
-//        //img.set_icon_name(Some(&get_volume_icon(vol, state.is_muted)));
-//
-//        scl.block_signal(sig);
-//        scl.set_value(vol.into());
-//        scl.unblock_signal(sig);
-//    }};
-//}
-
 fn update_volume<T>(
     state: &T,
     label: &Label,
@@ -192,7 +171,7 @@ async fn handle_scale_update_timeout(value: u32, conn: DBusConnection, state: Rc
     match res {
         Ok(v) => {
             let mut state = state.borrow_mut();
-            state.update(v);
+            state.update(&v);
         }
         Err(e) => g_warning!(None, "DBus call error: {e:?}"),
     }
@@ -206,16 +185,17 @@ async fn handle_mute_click(conn: DBusConnection, image: Image) {
     }
 
     let get = dbus::Audio::get(&conn).await;
-    if let Err(e) = &get {
-        g_warning!(None, "DBus call error: {e:?}");
-        return;
-    }
-    let get = get.unwrap();
-
-    let volume = get.child_value(0).get::<u32>();
-    let is_muted = get.child_value(1).get::<bool>();
-    match (volume, is_muted) {
-        (Some(v), Some(m)) => image.set_icon_name(Some(get_volume_icon(v, m))),
-        _ => g_warning!(None, "DBus unknown call error"),
+    match get {
+        Ok(v) => {
+            let volume = v.child_value(0).get::<u32>();
+            let is_muted = v.child_value(1).get::<bool>();
+            match (volume, is_muted) {
+                (Some(v), Some(m)) => image.set_icon_name(Some(get_volume_icon(v, m))),
+                _ => g_warning!(None, "DBus unknown call error"),
+            }
+        }
+        Err(e) => {
+            g_warning!(None, "DBus call error: {e:?}");
+        }
     }
 }

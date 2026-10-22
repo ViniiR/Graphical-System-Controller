@@ -18,6 +18,7 @@ mod brightness;
 mod conservation;
 mod dbus;
 mod keyboard;
+mod lib_utils;
 mod power;
 mod types;
 mod ui;
@@ -47,9 +48,10 @@ pub struct ProgramFiles {
 fn main() -> glib::ExitCode {
     let app = Application::builder().application_id(Program::NAME).build();
 
-    gio::resources_register_include!("ui.gresource").expect("Failed to register ui resources.");
+    gio::resources_register_include!("ui.gresource")
+        .unwrap_or_else(|_| g_critical!(None, "Failed to register ui resources."));
     gio::resources_register_include!("assets.gresource")
-        .expect("Failed to register asset resources.");
+        .unwrap_or_else(|_| g_critical!(None, "Failed to register asset resources."));
 
     app.connect_startup(|_| {
         let Some(display) = Display::default() else {

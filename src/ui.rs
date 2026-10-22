@@ -21,16 +21,10 @@ pub fn update_button_active(btn: &Button, to_active: bool) {
 }
 
 pub fn toggle_button_active(btn: &Button) {
-    let mut to_active = true;
-
-    if btn.has_css_class(ACTIVE_CLASS) {
-        to_active = false;
-    }
-
-    update_button_active(btn, to_active);
+    update_button_active(btn, !btn.has_css_class(ACTIVE_CLASS));
 }
 
-pub const fn get_volume_icon(percentage: u32, is_muted: bool) -> &'static str {
+pub fn get_volume_icon(percentage: u32, is_muted: bool) -> &'static str {
     if is_muted {
         return "audio-volume-muted-symbolic";
     }
@@ -67,7 +61,7 @@ pub async fn button_click_handler(
     button: Button,
 ) {
     match dbus_call.await {
-        Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => update_button_active(&button, b),
+        Ok(v) if let Some(b) = v.child_value(0).get::<bool>() => update_button_active(&button, b),
         e => g_warning!(None, "DBus call error: {e:?}"),
-    };
+    }
 }

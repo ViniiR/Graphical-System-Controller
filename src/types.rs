@@ -28,7 +28,7 @@ impl From<AudioStream> for AudioStreamTuple {
 }
 impl From<AudioStreamTuple> for AudioStream {
     fn from(value: AudioStreamTuple) -> Self {
-        AudioStream {
+        Self {
             sink_id: value.0,
             name: value.1,
             volume: value.2,
@@ -54,7 +54,7 @@ impl State {
         self.is_muted = !self.is_muted;
     }
 
-    pub fn update(&mut self, variant: glib::Variant) {
+    pub fn update(&mut self, variant: &glib::Variant) {
         let percentage = variant.child_value(0).get::<u32>();
         let is_muted = variant.child_value(1).get::<bool>();
 

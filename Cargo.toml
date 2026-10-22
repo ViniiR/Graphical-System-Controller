@@ -12,3 +12,24 @@ macros = { path = "./macros" }
 
 [build-dependencies]
 glib-build-tools = "0.22.8"
+
+[lints.clippy]
+pedantic = { level = "deny", priority = -1 }
+style = { level = "warn", priority = -2 }
+
+arithmetic_side_effects = "deny"
+unchecked_time_subtraction = "deny"
+
+as_conversions = "deny"
+indexing_slicing = "deny"
+out_of_bounds_indexing = "deny"
+
+todo = "deny"
+unreachable = "deny"
+unimplemented = "deny"
+
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+panic_in_result_fn = "deny"
+exit = "deny"

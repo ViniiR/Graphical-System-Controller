@@ -36,11 +36,11 @@ pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(
             let res = dbus::Conservation::get(&conn).await;
 
             match &res {
-                Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {
-                    ui::update_button_active(&conservation, b)
+                Ok(v) if let Some(b) = v.child_value(0).get::<bool>() => {
+                    ui::update_button_active(&conservation, b);
                 }
                 e => g_warning!(None, "DBus call error: {e:?}"),
-            };
+            }
         }
     ));
     Ok(())

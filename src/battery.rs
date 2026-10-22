@@ -24,29 +24,28 @@ pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), Ha
         #[strong]
         conn,
         async move {
-            #[allow(clippy::never_loop)]
             loop {
                 let res = dbus::Battery::get(&conn).await;
 
-                if let Err(e) = res {
-                    g_warning!(None, "DBus call error: {e:?}");
-                    return;
-                }
-                let res = res.unwrap();
+                match res {
+                    Ok(v) => {
+                        let icon_name = v.child_value(0).get::<String>();
+                        let percentage = v.child_value(1).get::<u32>();
 
-                let icon_name = res.child_value(0).get::<String>();
-                let percentage = res.child_value(1).get::<u32>();
-
-                match (icon_name, percentage) {
-                    (Some(icon), Some(percentage)) => {
-                        label.set_text(&format!("{percentage}%"));
-                        image.set_icon_name(Some(&icon));
+                        match (icon_name, percentage) {
+                            (Some(icon), Some(percentage)) => {
+                                label.set_text(&format!("{percentage}%"));
+                                image.set_icon_name(Some(&icon));
+                            }
+                            _ => {
+                                g_warning!(None, "GetBattery returned invalid tuple types");
+                            }
+                        }
                     }
-                    _ => {
-                        g_warning!(None, "GetBattery returned invalid tuple types");
+                    Err(e) => {
+                        g_warning!(None, "DBus call error: {e:?}");
                     }
                 }
-
                 glib::timeout_future_seconds(1).await;
             }
         }

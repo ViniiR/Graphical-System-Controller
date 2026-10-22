@@ -7,7 +7,9 @@ use gtk::{
     Builder, Image, Label, Scale,
 };
 
-use crate::{dbus, types::HandlerError, ui::get_brightness_icon};
+use crate::{
+    dbus, lib_utils::transform::LossyU32Cast, types::HandlerError, ui::get_brightness_icon,
+};
 
 pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale = builder
@@ -38,7 +40,7 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
         #[strong]
         conn,
         move |scale| {
-            let value = scale.value() as u32;
+            let value = scale.value().to_lossy_u32();
 
             update_brightness(value, &label, &image, None, None);
 
@@ -117,12 +119,12 @@ fn update_brightness(
     scale: Option<&Scale>,
     signal: Option<&SignalHandlerId>,
 ) {
-    label.set_text(&format!("{}", percentage));
+    label.set_text(&format!("{percentage}"));
     image.set_icon_name(Some(get_brightness_icon(percentage)));
 
     if let (Some(s), Some(scl)) = (signal, scale) {
         scl.block_signal(s);
-        scl.set_value(percentage as f64);
+        scl.set_value(percentage.into());
         scl.unblock_signal(s);
     }
 }

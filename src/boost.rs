@@ -35,11 +35,11 @@ pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             let res = dbus::Boost::get(&conn).await;
 
             match &res {
-                Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {
-                    ui::update_button_active(&boost, b)
+                Ok(v) if let Some(b) = v.child_value(0).get::<bool>() => {
+                    ui::update_button_active(&boost, b);
                 }
                 e => g_warning!(None, "DBus call error: {e:?}"),
-            };
+            }
         }
     ));
 

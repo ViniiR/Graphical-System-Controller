@@ -21,17 +21,6 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
                 "Failed to get keyboard-button-standard".to_string(),
             ))?;
 
-    async fn handle_click(conn: DBusConnection, std_btn: Button, dev_btn: Button) {
-        let dbus_call = dbus::Keyboard::toggle(&conn);
-        match dbus_call.await {
-            Ok(_v) => {
-                ui::toggle_button_active(&std_btn);
-                ui::toggle_button_active(&dev_btn);
-            }
-            e => g_warning!(None, "DBus call error: {e:?}"),
-        };
-    }
-
     dev_btn.connect_clicked(glib::clone!(
         #[strong]
         conn,
@@ -63,14 +52,25 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
             let res = dbus::Keyboard::get(&conn).await;
 
             match &res {
-                Ok(_v) if let Some(b) = _v.child_value(0).get::<bool>() => {
+                Ok(v) if let Some(b) = v.child_value(0).get::<bool>() => {
                     ui::update_button_active(&std_btn, b);
                     ui::update_button_active(&dev_btn, !b);
                 }
                 e => g_warning!(None, "DBus call error: {e:?}"),
-            };
+            }
         }
     ));
 
     Ok(())
+}
+
+async fn handle_click(conn: DBusConnection, std_btn: Button, dev_btn: Button) {
+    let dbus_call = dbus::Keyboard::toggle(&conn);
+    match dbus_call.await {
+        Ok(_v) => {
+            ui::toggle_button_active(&std_btn);
+            ui::toggle_button_active(&dev_btn);
+        }
+        e => g_warning!(None, "DBus call error: {e:?}"),
+    }
 }
