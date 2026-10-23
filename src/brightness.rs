@@ -8,7 +8,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::{
         transform::LossyU32Cast,
         types::{BuilderObject, HandlerError},
@@ -24,13 +24,9 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
     let pending_timer: Rc<RefCell<Option<glib::SourceId>>> = Rc::new(RefCell::new(None));
     let last_sent_value = Rc::new(std::cell::Cell::new(u32::MAX));
 
-    let signal = scale.connect_value_changed(glib::clone!(
-        #[strong]
-        label,
-        #[strong]
-        image,
-        #[strong]
-        conn,
+    let signal = scale.connect_value_changed(clone_as!(
+        #[strong],
+        [label, image, conn],
         move |scale| {
             let value = scale.value().to_lossy_u32();
 
@@ -48,9 +44,9 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
 
             let source_id = glib::timeout_add_local_once(
                 std::time::Duration::from_millis(50),
-                glib::clone!(
-                    #[strong]
-                    conn,
+                clone_as!(
+                    #[strong],
+                    [conn],
                     move || {
                         timer_clone.borrow_mut().take();
                         last_sent_clone.set(value);
@@ -73,15 +69,9 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
     ));
 
     // Get brightness on startup
-    glib::spawn_future_local(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        label,
-        #[strong]
-        image,
-        #[strong]
-        scale,
+    glib::spawn_future_local(clone_as!(
+        #[strong],
+        [conn, label, image, scale],
         async move {
             let call = dbus::Brightness::get(&conn);
 

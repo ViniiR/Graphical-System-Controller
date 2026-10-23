@@ -6,7 +6,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::types::{BuilderObject, HandlerError},
 };
 
@@ -15,9 +15,9 @@ pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     let reboot: Button = builder.get_object("reboot-button")?;
     let logout: Button = builder.get_object("logout-button")?;
 
-    shutdown.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
+    shutdown.connect_clicked(clone_as!(
+        #[strong],
+        [conn],
         move |_button| {
             let conn = conn.clone();
             glib::spawn_future_local(async move {
@@ -29,9 +29,9 @@ pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             });
         }
     ));
-    reboot.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
+    reboot.connect_clicked(clone_as!(
+        #[strong],
+        [conn],
         move |_button| {
             let conn = conn.clone();
             glib::spawn_future_local(async move {
@@ -43,9 +43,9 @@ pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             });
         }
     ));
-    logout.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
+    logout.connect_clicked(clone_as!(
+        #[strong],
+        [conn],
         move |_button| {
             let conn = conn.clone();
             glib::spawn_future_local(async move {

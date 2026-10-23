@@ -11,7 +11,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::{
         types::{AudioStream, AudioStreamTuple, BuilderObject, HandlerError},
         ui,
@@ -62,17 +62,13 @@ pub fn handle_audio_individual(
         }
     });
 
-    expander.connect_activate(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        store,
+    expander.connect_activate(clone_as!(
+        #[strong],
+        [conn, store],
         move |_expander| {
-            glib::spawn_future_local(glib::clone!(
-                #[strong]
-                conn,
-                #[strong]
-                store,
+            glib::spawn_future_local(clone_as!(
+                #[strong],
+                [conn, store],
                 async move {
                     let call = dbus::Audio::get_all_individual(&conn);
                     match call.await {

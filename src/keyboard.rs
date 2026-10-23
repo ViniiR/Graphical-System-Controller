@@ -6,7 +6,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::{
         types::{BuilderObject, HandlerError},
         ui,
@@ -17,33 +17,25 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
     let dev_btn: Button = builder.get_object("keyboard-button-dev")?;
     let std_btn: Button = builder.get_object("keyboard-button-standard")?;
 
-    dev_btn.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        std_btn,
+    dev_btn.connect_clicked(clone_as!(
+        #[strong],
+        [conn, std_btn],
         move |btn| {
             glib::spawn_future_local(handle_click(conn.clone(), std_btn.clone(), btn.clone()));
         }
     ));
-    std_btn.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        dev_btn,
+    std_btn.connect_clicked(clone_as!(
+        #[strong],
+        [conn, dev_btn],
         move |btn| {
             glib::spawn_future_local(handle_click(conn.clone(), dev_btn.clone(), btn.clone()));
         }
     ));
 
     // Get keyboard on startup
-    glib::spawn_future_local(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        dev_btn,
-        #[strong]
-        std_btn,
+    glib::spawn_future_local(clone_as!(
+        #[strong],
+        [conn, dev_btn, std_btn],
         async move {
             let res = dbus::Keyboard::get(&conn).await;
 

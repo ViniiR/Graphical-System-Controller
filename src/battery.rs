@@ -5,7 +5,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::types::{BuilderObject, HandlerError},
 };
 
@@ -13,9 +13,9 @@ pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), Ha
     let label: Label = builder.get_object("battery-button-box-label")?;
     let image: Image = builder.get_object("battery-button-box-image")?;
 
-    glib::spawn_future_local(glib::clone!(
-        #[strong]
-        conn,
+    glib::spawn_future_local(clone_as!(
+        #[strong],
+        [conn],
         async move {
             loop {
                 let res = dbus::Battery::get(&conn).await;

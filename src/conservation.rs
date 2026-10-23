@@ -6,7 +6,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::{
         types::{BuilderObject, HandlerError},
         ui,
@@ -16,9 +16,9 @@ use crate::{
 pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let conservation: Button = builder.get_object("conservation-mode-button")?;
 
-    conservation.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
+    conservation.connect_clicked(clone_as!(
+        #[strong],
+        [conn],
         move |btn| {
             glib::spawn_future_local(ui::button_click_handler(
                 dbus::Conservation::toggle(&conn),
@@ -28,11 +28,9 @@ pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(
     ));
 
     // Get boost on startup
-    glib::spawn_future_local(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        conservation,
+    glib::spawn_future_local(clone_as!(
+        #[strong],
+        [conn, conservation],
         async move {
             let res = dbus::Conservation::get(&conn).await;
 

@@ -110,11 +110,9 @@ fn activate(app: &Application) {
     let enable_focus_close = Rc::new(RefCell::new(true));
 
     let key_controller = EventControllerKey::new();
-    key_controller.connect_key_pressed(glib::clone!(
-        #[strong]
-        window,
-        #[strong]
-        enable_focus_close,
+    key_controller.connect_key_pressed(clone_as!(
+        #[strong],
+        [window, enable_focus_close],
         move |_, val, _code, _state| {
             match val {
                 Key::Escape => {
@@ -133,11 +131,9 @@ fn activate(app: &Application) {
     window.add_controller(key_controller);
 
     let focus_controller = EventControllerFocus::new();
-    focus_controller.connect_leave(glib::clone!(
-        #[strong]
-        window,
-        #[strong]
-        enable_focus_close,
+    focus_controller.connect_leave(clone_as!(
+        #[strong],
+        [window, enable_focus_close],
         move |_| {
             if *enable_focus_close.borrow() {
                 window.close();

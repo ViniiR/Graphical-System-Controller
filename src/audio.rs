@@ -8,7 +8,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::{
         transform::LossyU32Cast,
         types::{BuilderObject, HandlerError, State},
@@ -16,7 +16,6 @@ use crate::{
     },
 };
 
-// TODO: lessen lines on this func
 pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let scale: Scale = builder.get_object("volume-scale")?;
     let label: Label = builder.get_object("volume-scale-label")?;
@@ -28,15 +27,9 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     let pending_timer: Rc<RefCell<Option<glib::SourceId>>> = Rc::new(RefCell::new(None));
     let last_sent_value = Rc::new(std::cell::Cell::new(u32::MAX));
 
-    let signal = scale.connect_value_changed(glib::clone!(
-        #[strong]
-        label,
-        #[strong]
-        label_image,
-        #[strong]
-        conn,
-        #[strong]
-        state,
+    let signal = scale.connect_value_changed(clone_as!(
+        #[strong],
+        [label, label_image, conn, state],
         move |scale| {
             let value = scale.value().to_lossy_u32();
 
@@ -58,11 +51,9 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
 
             let source_id = glib::timeout_add_local_once(
                 std::time::Duration::from_millis(50),
-                glib::clone!(
-                    #[strong]
-                    conn,
-                    #[strong]
-                    state,
+                clone_as!(
+                    #[strong],
+                    [conn, state],
                     move || {
                         timer_clone.borrow_mut().take();
                         last_sent_clone.set(value);
@@ -79,19 +70,9 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     let signal_rc = Rc::new(signal);
 
     // Get volume on startup
-    glib::spawn_future_local(glib::clone!(
-        #[strong]
-        label,
-        #[strong]
-        scale,
-        #[strong]
-        conn,
-        #[strong]
-        label_image,
-        #[strong]
-        signal_rc,
-        #[strong]
-        state,
+    glib::spawn_future_local(clone_as!(
+        #[strong],
+        [label, scale, conn, label_image, signal_rc, state],
         async move {
             let call = dbus::Audio::get(&conn);
             match call.await {
@@ -106,15 +87,9 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     ));
 
     let click_controller = GestureClick::new();
-    click_controller.connect_pressed(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        label_image,
-        #[strong]
-        label,
-        #[strong]
-        scale,
+    click_controller.connect_pressed(clone_as!(
+        #[strong],
+        [conn, label_image, label, scale],
         move |_gesture, _n_press, _x, _y| {
             {
                 let mut state = state.borrow_mut();

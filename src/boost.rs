@@ -6,7 +6,7 @@ use gtk::{
 };
 
 use crate::{
-    dbus,
+    clone_as, dbus,
     lib_utils::{
         types::{BuilderObject, HandlerError},
         ui,
@@ -16,9 +16,9 @@ use crate::{
 pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let boost: Button = builder.get_object("boost-mode-button")?;
 
-    boost.connect_clicked(glib::clone!(
-        #[strong]
-        conn,
+    boost.connect_clicked(clone_as!(
+        #[strong],
+        [conn],
         move |btn| {
             glib::spawn_future_local(ui::button_click_handler(
                 dbus::Boost::toggle(&conn),
@@ -28,11 +28,9 @@ pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     ));
 
     // Get boost on startup
-    glib::spawn_future_local(glib::clone!(
-        #[strong]
-        conn,
-        #[strong]
-        boost,
+    glib::spawn_future_local(clone_as!(
+        #[strong],
+        [conn, boost],
         async move {
             let res = dbus::Boost::get(&conn).await;
 
