@@ -26,7 +26,7 @@ pub fn handle_brightness(builder: &Builder, conn: &DBusConnection) -> Result<(),
 
     let signal = scale.connect_value_changed(clone_as!(
         #[strong],
-        [label, image, conn],
+        [conn, label, image],
         move |scale| {
             let value = scale.value().to_lossy_u32();
 

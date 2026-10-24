@@ -65,7 +65,7 @@ for_window [class="vgsc"]\
 - Function ```exec_command_as_user``` does not propagate errors with messages
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Update Result types to one single type with a union (may be pointless)
-- Simplify audio.rs
+- Simplify audio.rs, audio_individual.rs, brightness.rs
 
 References for icons:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg

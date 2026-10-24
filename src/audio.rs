@@ -29,7 +29,7 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
 
     let signal = scale.connect_value_changed(clone_as!(
         #[strong],
-        [label, label_image, conn, state],
+        [conn, label, label_image, state],
         move |scale| {
             let value = scale.value().to_lossy_u32();
 
@@ -72,7 +72,7 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     // Get volume on startup
     glib::spawn_future_local(clone_as!(
         #[strong],
-        [label, scale, conn, label_image, signal_rc, state],
+        [conn, label, scale, label_image, signal_rc, state],
         async move {
             let call = dbus::Audio::get(&conn);
             match call.await {

@@ -55,7 +55,7 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
 async fn handle_click(conn: DBusConnection, std_btn: Button, dev_btn: Button) {
     let dbus_call = dbus::Keyboard::toggle(&conn);
     match dbus_call.await {
-        Ok(_v) => {
+        Ok(_) => {
             ui::toggle_button_active(&std_btn);
             ui::toggle_button_active(&dev_btn);
         }
