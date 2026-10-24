@@ -4,6 +4,7 @@
 #include "brightness.h"
 #include "conservation.h"
 #include "keyboard.h"
+#include "notification.h"
 #include "power.h"
 #include <stdio.h>
 #include <string.h>
@@ -69,6 +70,11 @@ int main(int argc, char **argv) {
     err = add_controller(KEYBOARD_NAME, KEYBOARD_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", KEYBOARD_NAME);
+
+    // Notification controller
+    err = add_controller(NOTIFICATION_NAME, NOTIFICATION_VTABLE);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
+    printf("Added '%s' object vtable\n", NOTIFICATION_NAME);
 
     // Bus
     err = sd_bus_request_name(p_dbus, DBUS_SERVICE_NAME, 0);

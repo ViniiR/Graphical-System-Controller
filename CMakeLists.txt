@@ -18,6 +18,7 @@ find_package(PkgConfig REQUIRED)
 find_library(MATH_LIBRARY m)
 
 pkg_check_modules(LIBSYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
+pkg_check_modules(cJSON REQUIRED IMPORTED_TARGET libcjson)
 
 add_executable(
     ${PROJECT_NAME}
@@ -33,4 +34,5 @@ target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE ${MATH_LIBRARY}
     PRIVATE PkgConfig::LIBSYSTEMD
+    PRIVATE PkgConfig::cJSON
 )

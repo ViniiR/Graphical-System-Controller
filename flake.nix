@@ -62,6 +62,7 @@
                         # Libraries
                         systemd
                         dbus
+                        cjson
                     ]
                     ++ daemonRuntimePackages;
 
@@ -127,6 +128,7 @@
             packages = with pkgs; [
                 pkg-config
                 systemd
+                cjson
                 cmake
                 gcc
                 gtk4
