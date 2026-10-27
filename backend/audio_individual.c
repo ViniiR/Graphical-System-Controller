@@ -29,7 +29,7 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
         return res;
     }
 
-    FILE *f = fmemopen(output_id, strlen(output_id), "r");
+    FILE *f = fmemopen(output_id, strnlen(output_id, sizeof(output_id)), "r");
     if (f == nullptr) {
         res.err_msg = "fmemopen failed";
         return res;
