@@ -11,7 +11,7 @@ static const char get_ids_command[] =
     "(.info.props[\"media.class\"] | strings | startswith(\"Stream/\") and "
     "contains(\"Audio\"))) | .id '";
 
-ResultHeapStructPointer get_stream(unsigned int id);
+ResultHeapStruct get_stream(unsigned int id);
 
 /// stream_array is an array of allocated structs(must free individually)
 /// array_size is a pointer to keep track of array_stream's size
@@ -54,7 +54,7 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
             res.err_msg = line_int_result.err_msg;
             return res;
         }
-        ResultHeapStructPointer result = get_stream(line_int_result.ok_value);
+        ResultHeapStruct result = get_stream(line_int_result.ok_value);
         if (result.variant == ERR) {
             free(line);
             fclose(f);
@@ -74,8 +74,8 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
     return res;
 }
 
-ResultHeapStructPointer get_stream(unsigned int id) {
-    ResultHeapStructPointer res = {
+ResultHeapStruct get_stream(unsigned int id) {
+    ResultHeapStruct res = {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 
@@ -104,7 +104,7 @@ ResultHeapStructPointer get_stream(unsigned int id) {
 
     //
 
-    ResultHeapStructPointer result_volume =
+    ResultHeapStruct result_volume =
         external_get_pipewire_volume(id_char);
     if (result_volume.variant == ERR) {
         res.err_msg = result_volume.err_msg;

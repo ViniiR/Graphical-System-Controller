@@ -27,7 +27,7 @@ RESULT(bool, Bool)
 
 /// ResultHeap... do not need free() on ERR variant
 RESULT(char *, HeapString)
-RESULT(void *, HeapStructPointer)
+RESULT(void *, HeapStruct)
 
 #define RESULT_ERR_MSG_UNKNOWN "Unknown error"
 

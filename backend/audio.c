@@ -60,7 +60,7 @@ static const char DEFAULT_SINK[] = "@DEFAULT_SINK@";
 
 //
 
-static ResultHeapStructPointer get_pipewire_volume(const char *sink);
+static ResultHeapStruct get_pipewire_volume(const char *sink);
 static ResultVoid set_pipewire_volume(
     unsigned int percentage, const char *sink
 );
@@ -178,7 +178,7 @@ static int get_audio_handler_sink(
     sd_bus_error *p_reterror,
     const char *sink_id
 ) {
-    ResultHeapStructPointer result_volume = get_pipewire_volume(sink_id);
+    ResultHeapStruct result_volume = get_pipewire_volume(sink_id);
     if (result_volume.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -237,7 +237,7 @@ static int set_audio_handler_sink(
 
     //
 
-    ResultHeapStructPointer result_get_volume = get_pipewire_volume(sink_id);
+    ResultHeapStruct result_get_volume = get_pipewire_volume(sink_id);
     if (result_get_volume.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -283,12 +283,12 @@ static int toggle_audio_muted_handler_sink(
 // 1000 it's not ideal and likely a temporary solution, as far as temporary
 // solutions last
 
-ResultHeapStructPointer external_get_pipewire_volume(const char *sink_id) {
+ResultHeapStruct external_get_pipewire_volume(const char *sink_id) {
     return get_pipewire_volume(sink_id);
 }
 
-static ResultHeapStructPointer get_pipewire_volume(const char *sink_id) {
-    ResultHeapStructPointer res = {
+static ResultHeapStruct get_pipewire_volume(const char *sink_id) {
+    ResultHeapStruct res = {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
     };
 

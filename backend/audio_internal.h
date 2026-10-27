@@ -15,6 +15,6 @@ typedef struct {
     bool is_muted;
 } AudioStream;
 
-ResultHeapStructPointer external_get_pipewire_volume(const char *sink_id);
+ResultHeapStruct external_get_pipewire_volume(const char *sink_id);
 
 #endif
