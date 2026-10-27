@@ -121,6 +121,10 @@ ResultHeapStruct get_stream(unsigned int id) {
     audio->name = strdup(output_name);
     audio->volume = status->volume;
     audio->is_muted = status->is_muted;
+    if (audio->name == nullptr) {
+        res.err_msg = "Strdup failed";
+        return res;
+    }
 
     free(result_volume.ok_value);
 

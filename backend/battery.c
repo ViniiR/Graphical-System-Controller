@@ -268,9 +268,8 @@ static ResultHeapString allocate_suffix(const ChargingStatus status) {
         suffix = strdup("");
         break;
     }
-
     if (suffix == nullptr) {
-        res.err_msg = "Failed to alloc";
+        res.err_msg = "Strdup failed";
         return res;
     }
 
