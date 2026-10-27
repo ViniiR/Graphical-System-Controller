@@ -39,7 +39,9 @@ static ResultVoid get_notifications(
 //
 
 int get_recent_notifications(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     Notification *output[MAX_NOTIFICATIONS];
     size_t size = 0;

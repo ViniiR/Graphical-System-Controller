@@ -1,9 +1,9 @@
 #include "battery.h"
 #include "dirent.h"
-#include "string.h"
-#include "lib/types.h"
-#include "lib/transform.h"
 #include "lib/file.h"
+#include "lib/transform.h"
+#include "lib/types.h"
+#include "string.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +31,9 @@ static ResultInt get_battery_percentage();
 //
 
 int get_battery_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultHeapString result_icon = get_battery_icon();
     if (result_icon.variant == ERR) {

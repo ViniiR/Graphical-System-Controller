@@ -1,6 +1,6 @@
 #include "boost.h"
-#include "lib/types.h"
 #include "lib/file.h"
+#include "lib/types.h"
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
@@ -33,7 +33,9 @@ static ResultVoid set_boost_mode(bool value);
 //
 
 int toggle_boost_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultBool result_is_active = get_is_boost_active();
     if (result_is_active.variant == ERR) {
@@ -59,7 +61,9 @@ int toggle_boost_handler(
 }
 
 int get_boost_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultBool result_is_active = get_is_boost_active();
     if (result_is_active.variant == ERR) {

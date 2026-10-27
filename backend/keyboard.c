@@ -1,7 +1,7 @@
 #include "keyboard.h"
-#include "lib/types.h"
 #include "lib/process.h"
 #include "lib/transform.h"
+#include "lib/types.h"
 #include <string.h>
 #include <systemd/sd-bus.h>
 
@@ -34,7 +34,9 @@ static ResultVoid toggle_keyboard(bool is_standard);
 //
 
 int toggle_keyboard_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultBool result = get_is_standard_keyboard();
     if (result.variant == ERR) {
@@ -59,7 +61,9 @@ int toggle_keyboard_handler(
     return sd_bus_reply_method_return(p_msg, nullptr);
 }
 int get_keyboard_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultBool result = get_is_standard_keyboard();
     if (result.variant == ERR) {

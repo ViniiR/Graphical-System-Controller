@@ -21,7 +21,7 @@ static int add_controller(const char *name, const sd_bus_vtable *vtable);
 
 static sd_bus *p_dbus = nullptr;
 
-int main(int argc, char **argv) {
+int main(void) {
     int err = 0;
 
     err = sd_bus_open_system(&p_dbus);

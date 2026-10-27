@@ -1,6 +1,6 @@
 #include "conservation.h"
-#include "lib/types.h"
 #include "lib/file.h"
+#include "lib/types.h"
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
@@ -32,7 +32,9 @@ static ResultVoid set_conservation_mode(bool value);
 //
 
 int toggle_conservation_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultBool result_is_conservation_active = get_is_conservation_active();
     if (result_is_conservation_active.variant == ERR) {
@@ -61,7 +63,9 @@ int toggle_conservation_handler(
 }
 
 int get_conservation_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
 
     ResultBool result_is_conservation_active = get_is_conservation_active();

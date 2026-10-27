@@ -1,9 +1,8 @@
 #include "audio.h"
-#include "lib/types.h"
 #include "audio_individual.h"
 #include "audio_internal.h"
-#include "lib/types.h"
 #include "lib/process.h"
+#include "lib/types.h"
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
@@ -110,7 +109,9 @@ int toggle_audio_muted_handler(
 //
 
 int get_all_audio_handler_individual(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     // Realistically it will never be bigger than 5 elements
     static const size_t MAX_SIZE = 20;
@@ -174,7 +175,7 @@ int toggle_audio_muted_handler_individual(
 
 static int get_audio_handler_sink(
     sd_bus_message *p_msg,
-    void *p_userdata,
+    [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror,
     const char *sink_id
 ) {
@@ -201,7 +202,7 @@ static int get_audio_handler_sink(
 
 static int set_audio_handler_sink(
     sd_bus_message *p_msg,
-    void *p_userdata,
+    [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror,
     const char *sink_id
 ) {
@@ -260,7 +261,7 @@ static int set_audio_handler_sink(
 
 static int toggle_audio_muted_handler_sink(
     sd_bus_message *p_msg,
-    void *p_userdata,
+    [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror,
     const char *sink_id
 ) {

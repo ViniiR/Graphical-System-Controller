@@ -1,7 +1,7 @@
 #include "power.h"
-#include "systemd/sd-bus-vtable.h"
-#include "lib/types.h"
 #include "lib/process.h"
+#include "lib/types.h"
+#include "systemd/sd-bus-vtable.h"
 #include <systemd/sd-bus.h>
 
 const char POWER_NAME[] = "Power";
@@ -36,7 +36,9 @@ const sd_bus_vtable POWER_VTABLE[] = {
 //
 
 int reboot_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultVoid result = exec_command(nullptr, 0, "systemctl reboot", "r");
     if (result.variant == ERR) {
@@ -51,7 +53,9 @@ int reboot_handler(
     return sd_bus_reply_method_return(p_msg, nullptr);
 }
 int shutdown_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultVoid result = exec_command(nullptr, 0, "systemctl shutdown", "r");
     if (result.variant == ERR) {
@@ -66,7 +70,9 @@ int shutdown_handler(
     return sd_bus_reply_method_return(p_msg, nullptr);
 }
 int logout_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultVoid result =
         exec_command(nullptr, 0, "loginctl terminate-session self", "r");

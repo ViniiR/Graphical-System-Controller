@@ -18,7 +18,7 @@
             "generator": "Unix Makefiles",
             "cacheVariables":{
                 "CMAKE_BUILD_TYPE":"Release",
-                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -flto -O2"
+                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Werror -flto -O2"
             }
         }
     ]

@@ -1,8 +1,8 @@
 #include "brightness.h"
-#include "systemd/sd-bus-protocol.h"
-#include "lib/types.h"
 #include "lib/file.h"
 #include "lib/transform.h"
+#include "lib/types.h"
+#include "systemd/sd-bus-protocol.h"
 #include <dirent.h>
 #include <math.h>
 #include <stdlib.h>
@@ -38,7 +38,9 @@ static ResultVoid set_brightness_all(unsigned int percent);
 //
 
 int set_brightness_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     uint32_t value;
     int res;
@@ -74,7 +76,9 @@ int set_brightness_handler(
 }
 
 int get_brightness_handler(
-    sd_bus_message *p_msg, void *p_userdata, sd_bus_error *p_reterror
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
 ) {
     ResultInt result = get_brightness();
     if (result.variant == ERR) {
