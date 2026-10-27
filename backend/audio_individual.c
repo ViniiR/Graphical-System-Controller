@@ -13,8 +13,6 @@ static const char get_ids_command[] =
 
 ResultHeapStructPointer get_stream(unsigned int id);
 
-extern const unsigned int UID;
-
 /// stream_array is an array of allocated structs(must free individually)
 /// array_size is a pointer to keep track of array_stream's size
 ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {

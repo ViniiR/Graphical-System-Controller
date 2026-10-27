@@ -56,7 +56,6 @@ const sd_bus_vtable AUDIO_VTABLE[] = {
     SD_BUS_VTABLE_END
 };
 
-extern const unsigned int UID;
 static const char DEFAULT_SINK[] = "@DEFAULT_SINK@";
 
 //

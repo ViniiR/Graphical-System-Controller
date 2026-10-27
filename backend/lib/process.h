@@ -4,6 +4,8 @@
 #include "lib/types.h"
 #include <sys/types.h>
 
+extern const unsigned int UID;
+
 ResultVoid exec_command(
     char *output,
     unsigned int size,

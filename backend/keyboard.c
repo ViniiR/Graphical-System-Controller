@@ -74,8 +74,6 @@ int get_keyboard_handler(
     return sd_bus_reply_method_return(p_msg, "b", result.ok_value);
 }
 
-extern const unsigned int UID;
-
 static ResultBool get_is_standard_keyboard() {
     ResultBool res = {
         .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = false

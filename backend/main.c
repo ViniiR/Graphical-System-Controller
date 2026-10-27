@@ -6,14 +6,10 @@
 #include "keyboard.h"
 #include "notification.h"
 #include "power.h"
-#include <stdio.h>
-#include <string.h>
 #include <systemd/sd-bus.h>
 
 const char DBUS_SERVICE_PATH[] = "/com/vinii/vgsc";
 const char DBUS_SERVICE_NAME[] = "com.vinii.vgsc";
-
-const unsigned int UID = 1000;
 
 //
 
@@ -24,10 +20,6 @@ static int add_controller(const char *name, const sd_bus_vtable *vtable);
 //
 
 static sd_bus *p_dbus = nullptr;
-
-static const unsigned int HUNDRED = 100;
-
-//
 
 int main(int argc, char **argv) {
     int err = 0;
@@ -97,10 +89,11 @@ int main(int argc, char **argv) {
 //
 
 static int add_controller(const char *name, const sd_bus_vtable *vtable) {
-    char path[HUNDRED];
+    static const unsigned int MAX_PATH = 100;
+    char path[MAX_PATH];
     snprintf(path, sizeof(path), "%s/%s", DBUS_SERVICE_PATH, name);
 
-    char interface[HUNDRED];
+    char interface[MAX_PATH];
     snprintf(interface, sizeof(interface), "%s.%s", DBUS_SERVICE_NAME, name);
 
     return sd_bus_add_object_vtable(

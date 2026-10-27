@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+const unsigned int UID = 1000;
+
 /// WARNING: if programs are not available in root's $PATH
 /// must add it flake.nix systemd.services.<...>.path
 ResultVoid exec_command(

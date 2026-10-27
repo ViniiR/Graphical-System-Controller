@@ -28,8 +28,6 @@ typedef struct {
     char *icon;
 } Notification;
 
-extern const unsigned int UID;
-
 static const unsigned int MAX_NOTIFICATIONS = 20;
 
 //
