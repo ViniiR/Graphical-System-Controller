@@ -25,14 +25,14 @@ RESULT(void *, Void)
 RESULT(int, Int)
 RESULT(bool, Bool)
 
-/// ResultHeapString does not need free() on ERR variant
+/// ResultHeap... do not need free() on ERR variant
 RESULT(char *, HeapString)
 RESULT(void *, HeapStructPointer)
 
 #define RESULT_ERR_MSG_UNKNOWN "Unknown error"
 
 #define RESULT_VOID_DEFAULT                                                    \
-    {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr};
+    {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr}
 
 #define KIBIBYTE 1024
 
