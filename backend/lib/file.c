@@ -35,9 +35,7 @@ ResultHeapString read_file(const char *path) {
 }
 
 ResultVoid write_file(const char *path, const char *content) {
-    ResultVoid res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
-    };
+    ResultVoid res = RESULT_VOID_DEFAULT;
 
     errno = 0;
 
