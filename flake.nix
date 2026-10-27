@@ -136,6 +136,7 @@
                 cargo
                 clippy
                 rust-analyzer
+                gdb
                 icon-library
                 zsh
             ];
