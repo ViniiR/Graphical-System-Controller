@@ -97,6 +97,7 @@ static ResultBool get_is_standard_keyboard() {
     }
     if (strnlen(output, sizeof(output)) == sizeof(output)) {
         res.err_msg = "Failed to get setxkbmap exec_command output";
+        return res;
     }
     trim_newlines(output);
     if (strcmp(output, "nodeadkeys") == 0) {

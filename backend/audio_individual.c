@@ -115,6 +115,10 @@ ResultHeapStructPointer get_stream(unsigned int id) {
     VolumeStatus *status = result_volume.ok_value;
 
     AudioStream *audio = malloc(sizeof(AudioStream));
+    if (audio == nullptr) {
+        res.err_msg = "Failed to alloc";
+        return res;
+    }
     audio->sink_id = id;
     audio->name = strdup(output_name);
     audio->volume = status->volume;
