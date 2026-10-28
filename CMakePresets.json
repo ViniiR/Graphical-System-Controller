@@ -2,24 +2,43 @@
     "version": 10,
     "configurePresets": [
         {
+            "name":"base",
+            "displayName":"Base",
+            "hidden": true,
+            "cacheVariables":{
+                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wswitch-enum -Wstrict-prototypes -Wunreachable-code -Wredundant-decls"
+            }
+        },
+        {
             "name":"debug",
             "displayName":"Debug",
             "binaryDir":"${sourceDir}/build",
             "generator": "Unix Makefiles",
+            "inherits": "base",
             "cacheVariables":{
                 "CMAKE_BUILD_TYPE":"Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS":"ON",
-                "CMAKE_C_FLAGS": "-g -Wall -Wextra -Wpedantic"
+                "CMAKE_EXPORT_COMPILE_COMMANDS":"ON"
             }
         },
         {
             "name":"release",
             "displayName":"Release",
             "generator": "Unix Makefiles",
+            "inherits": "base",
             "cacheVariables":{
                 "CMAKE_BUILD_TYPE":"Release",
-                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Werror -flto -O2"
+                "CMAKE_C_FLAGS_RELEASE": "-Werror -flto -O2"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "release"
         }
     ]
 }
