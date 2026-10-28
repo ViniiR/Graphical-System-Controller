@@ -307,13 +307,9 @@ static ResultHeapStruct get_pipewire_volume(const char *sink_id) {
 
     //
 
-    char volume_input[KIBIBYTE];
-    snprintf(
-        volume_input,
-        sizeof(volume_input),
-        "echo \"%s\" | awk '{printf $2}'",
-        exec_output
-    );
+    static const char format[] = "echo \"%s\" | awk '{printf $2}'";
+    char volume_input[KIBIBYTE + sizeof(format)];
+    snprintf(volume_input, sizeof(volume_input), format, exec_output);
 
     char volume_output[KIBIBYTE];
     ResultVoid result_volume =
