@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="com.vinii.vgsc">
+    <requires lib="gtk" version="4.20"/>
+
+    <object class="GtkGrid" id="main-grid">
+        <property name="column-spacing">10</property>
+        <property name="row-spacing">10</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="column-homogeneous">True</property>
+        <property name="row-homogeneous">True</property>
+        <property name="height-request">40</property>
+
+        <style>
+            <class name="notification"/>
+        </style>
+
+        <child>
+        <object class="GtkImage" id="notification-icon">
+            <layout>
+                <property name="column">0</property>
+                <property name="row">0</property>
+                <property name="column-span">1</property>
+                <property name="row-span">2</property>
+            </layout>
+            <property name="icon-name"></property>
+            <!-- TODO: icon doesnt expand fully (???) -->
+            <!-- <property name="hexpand">True</property> -->
+            <!-- <property name="vexpand">True</property> -->
+
+            <style>
+                <class name="notification-icon"/>
+            </style>
+
+        </object>
+        </child>
+        <child>
+        <object class="GtkLabel" id="notification-body-label">
+            <layout>
+                <property name="column">1</property>
+                <property name="row">0</property>
+                <property name="column-span">3</property>
+                <property name="row-span">2</property>
+            </layout>
+            <property name="label"></property>
+            <property name="halign">start</property>
+            <property name="ellipsize">3</property>
+
+            <style>
+                <class name="notification-label"/>
+            </style>
+
+        </object>
+        </child>
+
+    </object>
+</interface>

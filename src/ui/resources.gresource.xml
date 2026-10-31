@@ -3,6 +3,7 @@
     <gresource prefix="/com/vinii/vgsc">
         <file preprocess="xml-stripblanks">builder.ui</file>
         <file preprocess="xml-stripblanks">individual_audio_builder.ui</file>
+        <file preprocess="xml-stripblanks">notification_builder.ui</file>
         <file>style.css</file>
     </gresource>
 </gresources>

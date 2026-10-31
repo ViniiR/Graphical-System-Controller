@@ -165,6 +165,16 @@ impl Keyboard {
     }
 }
 
+#[derive(BuildCall)]
+pub struct Notification;
+impl Notification {
+    pub const GET_RECENT: &str = "GetRecentNotifications";
+
+    pub fn get_recent(conn: &DBusConnection) -> DbusCallFuture {
+        Self::build(conn, Self::GET_RECENT, None, Some(VariantTy::TUPLE))
+    }
+}
+
 pub struct Timeout;
 impl Timeout {
     pub const NONE: i32 = -1;

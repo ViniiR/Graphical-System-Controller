@@ -19,6 +19,7 @@ mod conservation;
 mod dbus;
 mod keyboard;
 mod lib_utils;
+mod notification;
 mod power;
 
 // Vinii's Graphical System Controller (Daemon)
@@ -31,6 +32,7 @@ impl Program {
         css: "style.css",
         builder: "builder.ui",
         individual_audio_builder: "individual_audio_builder.ui",
+        notification_builder: "notification_builder.ui",
     };
 
     fn at_runtime_path(filename: &str) -> String {
@@ -41,6 +43,7 @@ pub struct ProgramFiles {
     pub css: &'static str,
     pub builder: &'static str,
     pub individual_audio_builder: &'static str,
+    pub notification_builder: &'static str,
 }
 
 fn main() -> glib::ExitCode {
@@ -97,6 +100,7 @@ fn activate(app: &Application) {
             audio::handle_audio(&builder, &dbus_connection)?;
             audio_individual::handle_audio_individual(&builder, &dbus_connection)?;
             keyboard::handle_keyboard(&builder, &dbus_connection)?;
+            notification::handle_notification(&builder, &dbus_connection)?;
 
             Ok(())
         }

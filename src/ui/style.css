@@ -14,6 +14,12 @@
 
   --dark-white: #a1a1a1;
   --foreground: white;
+
+  --secondary-bg: #505050;
+
+  /* TODO: rename */
+  --top-button-corners: 10px;
+  --button-corners: 5px;
 }
 
 * {
@@ -40,8 +46,8 @@
 /* . */
 
 .battery-button {
-  border-radius: 50px;
   background-color: var(--prussian);
+  border-top-left-radius: var(--top-button-corners);
   border: none;
   padding: 10px;
   font-weight: bold;
@@ -51,10 +57,13 @@
 }
 
 .power-button {
-  border-radius: 50px;
+  border-radius: var(--button-corners);
   background-color: var(--prussian);
   border: none;
   padding: 10px;
+}
+.power-button:last-child {
+  border-top-right-radius: var(--top-button-corners);
 }
 .power-button:hover {
   background-color: var(--enabled-hover);
@@ -91,7 +100,7 @@
 /* . */
 
 .button {
-  border-radius: 50px;
+  border-radius: var(--button-corners);
   font-weight: bold;
   border: none;
 }
@@ -123,13 +132,43 @@
 .multi-button {
   font-weight: bold;
   border: none;
-  border-radius: 0px;
+  border-radius: var(--button-corners);
 }
 .multi-button:first-child {
-    border-radius: 50px 0px 0px 50px;
+  border-radius: var(--button-corners) 0px 0px var(--button-corners);
 }
 .multi-button:last-child {
-    border-radius: 0px 50px 50px 0px;
+  border-radius: 0px var(--button-corners) var(--button-corners) 0px;
+}
+
+/* . */
+
+.notification-title {
+    font-weight: 600;
+}
+.notification-list {
+    border-radius: var(--button-corners) var(--button-corners) var(--top-button-corners) var(--top-button-corners);
+    /* NOTE: pointless height request, it already works by magic (smh) */
+    /* min-height: calc((40px) * 3); */
+}
+.notification-list > row {
+    padding: 2px 0px;
+}
+.notification-list > row:first-child {
+    padding-top: 0px;
+}
+.notification-list > row:last-child {
+    padding-bottom: 0px;
+}
+.notification {
+    margin: 0px;
+    min-height: 40px;
+    background-color: var(--secondary-bg);
+    border-radius: var(--button-corners);
+}
+.notification-label {
+}
+.notification-icon {
 }
 
 /* . */
@@ -141,4 +180,10 @@
 
 .debug-red {
   background-color: red;
+}
+.debug-green {
+  background-color: green;
+}
+.debug-blue {
+  background-color: blue;
 }

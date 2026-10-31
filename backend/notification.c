@@ -63,8 +63,8 @@ int get_recent_notifications(
     for (size_t i = 0; i < size; i++) {
         sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_STRUCT, "sss");
 
-        sd_bus_message_append(p_reply_msg, "s", output[i]->app);
         sd_bus_message_append(p_reply_msg, "s", output[i]->body);
+        sd_bus_message_append(p_reply_msg, "s", output[i]->app);
         sd_bus_message_append(p_reply_msg, "s", output[i]->icon);
 
         sd_bus_message_close_container(p_reply_msg);

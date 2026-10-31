@@ -18,8 +18,9 @@
     </object>
 
     <object class="GtkApplicationWindow" id="main-window">
-        <property name="default-width">200</property>
-        <property name="default-height">400</property>
+        <property name="default-width">350</property>
+        <!-- NOTE: this height is pixel perfect for NotificationList to properly size 3 Notifications + their in-between padding -->
+        <property name="default-height">415</property>
 
         <style>
             <class name="main-window"/>
@@ -33,6 +34,7 @@
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="column-homogeneous">True</property>
+            <!-- <property name="row-homogeneous">True</property> -->
 
             <style>
                 <class name="main-grid"/>
@@ -416,6 +418,59 @@
                     <child>
                     <object class="GtkImage">
                         <property name="icon-name">input-keyboard-symbolic</property>
+                    </object>
+                    </child>
+                </object>
+                </child>
+            </object>
+            </child>
+
+            <child>
+            <object class="GtkGrid" id="notification-wrapper">
+                <layout>
+                    <property name="column">0</property>
+                    <property name="row">6</property>
+                    <property name="column-span">4</property>
+                    <property name="row-span">3</property>
+                </layout>
+
+                <child>
+                <object class="GtkLabel" id="notification-title">
+                    <layout>
+                        <property name="column">0</property>
+                        <property name="row">1</property>
+                        <property name="column-span">4</property>
+                        <property name="row-span">1</property>
+                    </layout>
+                    <property name="label">Notifications</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">True</property>
+
+                    <style>
+                        <class name="notification-title"/>
+                    </style>
+
+                </object>
+                </child>
+                <child>
+                <object class="GtkScrolledWindow">
+                    <layout>
+                        <property name="column">0</property>
+                        <property name="row">2</property>
+                        <property name="column-span">4</property>
+                        <property name="row-span">2</property>
+                    </layout>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+
+                    <child>
+                    <object class="GtkListView" id="notification-list">
+
+                        <style>
+                            <class name="transparent-bg"/>
+                            <class name="notification-list"/>
+                        </style>
+
                     </object>
                     </child>
                 </object>
