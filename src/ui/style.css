@@ -17,9 +17,8 @@
 
   --secondary-bg: #505050;
 
-  /* TODO: rename */
-  --top-button-corners: 10px;
-  --button-corners: 5px;
+  --outer-button-corners: 10px;
+  --inner-button-corners: 5px;
 }
 
 * {
@@ -47,7 +46,7 @@
 
 .battery-button {
   background-color: var(--prussian);
-  border-top-left-radius: var(--top-button-corners);
+  border-top-left-radius: var(--outer-button-corners);
   border: none;
   padding: 10px;
   font-weight: bold;
@@ -57,13 +56,13 @@
 }
 
 .power-button {
-  border-radius: var(--button-corners);
+  border-radius: var(--inner-button-corners);
   background-color: var(--prussian);
   border: none;
   padding: 10px;
 }
 .power-button:last-child {
-  border-top-right-radius: var(--top-button-corners);
+  border-top-right-radius: var(--outer-button-corners);
 }
 .power-button:hover {
   background-color: var(--enabled-hover);
@@ -100,7 +99,7 @@
 /* . */
 
 .button {
-  border-radius: var(--button-corners);
+  border-radius: var(--inner-button-corners);
   font-weight: bold;
   border: none;
 }
@@ -132,13 +131,13 @@
 .multi-button {
   font-weight: bold;
   border: none;
-  border-radius: var(--button-corners);
+  border-radius: var(--inner-button-corners);
 }
 .multi-button:first-child {
-  border-radius: var(--button-corners) 0px 0px var(--button-corners);
+  border-radius: var(--inner-button-corners) 0px 0px var(--inner-button-corners);
 }
 .multi-button:last-child {
-  border-radius: 0px var(--button-corners) var(--button-corners) 0px;
+  border-radius: 0px var(--inner-button-corners) var(--inner-button-corners) 0px;
 }
 
 /* . */
@@ -147,7 +146,7 @@
     font-weight: 600;
 }
 .notification-list {
-    border-radius: var(--button-corners) var(--button-corners) var(--top-button-corners) var(--top-button-corners);
+    border-radius: var(--inner-button-corners) var(--inner-button-corners) var(--outer-button-corners) var(--outer-button-corners);
     /* NOTE: pointless height request, it already works by magic (smh) */
     /* min-height: calc((40px) * 3); */
 }
@@ -164,7 +163,7 @@
     margin: 0px;
     min-height: 40px;
     background-color: var(--secondary-bg);
-    border-radius: var(--button-corners);
+    border-radius: var(--inner-button-corners);
 }
 .notification-label {
 }
