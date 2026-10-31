@@ -28,27 +28,14 @@ impl BuilderObject for gtk::Builder {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct AudioStream {
-    pub sink_id: u32,
-    pub name: String,
-    pub volume: u32,
-    pub is_muted: bool,
+pub trait WidgetDowncastExt {
+    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError>;
 }
-pub type AudioStreamTuple = (u32, String, u32, bool);
-impl From<AudioStream> for AudioStreamTuple {
-    fn from(value: AudioStream) -> Self {
-        (value.sink_id, value.name, value.volume, value.is_muted)
-    }
-}
-impl From<AudioStreamTuple> for AudioStream {
-    fn from(value: AudioStreamTuple) -> Self {
-        Self {
-            sink_id: value.0,
-            name: value.1,
-            volume: value.2,
-            is_muted: value.3,
-        }
+
+impl WidgetDowncastExt for Option<Widget> {
+    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError> {
+        self.and_downcast::<T>()
+            .ok_or(HandlerError::ObjectError(msg.to_owned()))
     }
 }
 

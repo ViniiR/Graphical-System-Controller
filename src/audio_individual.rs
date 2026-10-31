@@ -13,7 +13,7 @@ use gtk::{
 use crate::{
     clone_as, dbus,
     lib_utils::{
-        types::{AudioStream, AudioStreamTuple, BuilderObject, HandlerError},
+        types::{BuilderObject, HandlerError, WidgetDowncastExt},
         ui,
     },
     Program,
@@ -90,6 +90,31 @@ pub fn handle_audio_individual(
     Ok(())
 }
 
+#[derive(Debug, Clone)]
+struct AudioStream {
+    pub sink_id: u32,
+    pub name: String,
+    pub volume: u32,
+    pub is_muted: bool,
+}
+type AudioStreamTuple = (u32, String, u32, bool);
+impl From<AudioStream> for AudioStreamTuple {
+    fn from(value: AudioStream) -> Self {
+        (value.sink_id, value.name, value.volume, value.is_muted)
+    }
+}
+impl From<AudioStreamTuple> for AudioStream {
+    fn from(value: AudioStreamTuple) -> Self {
+        Self {
+            sink_id: value.0,
+            name: value.1,
+            volume: value.2,
+            is_muted: value.3,
+        }
+    }
+}
+
+// TODO: make this func generic
 /// Variant is expected to be (a(usub))
 fn get_stream_array(variant: &Variant) -> Vec<AudioStream> {
     if let Some((array,)) = variant.get::<(Vec<AudioStreamTuple>,)>() {
