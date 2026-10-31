@@ -17,6 +17,8 @@ glib-build-tools = "0.22.8"
 pedantic = { level = "deny", priority = -1 }
 style = { level = "warn", priority = -2 }
 
+wildcard_enum_match_arm = { level = "deny", priority = -1 }
+
 arithmetic_side_effects = "deny"
 unchecked_time_subtraction = "deny"
 
