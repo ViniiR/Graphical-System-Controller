@@ -15,6 +15,7 @@ use crate::{
     lib_utils::{
         types::{BuilderObject, HandlerError, WidgetDowncastExt},
         ui,
+        variant_array::VariantArray,
     },
     Program,
 };
@@ -73,7 +74,7 @@ pub fn handle_audio_individual(
                     let call = dbus::Audio::get_all_individual(&conn);
                     match call.await {
                         Ok(v) => {
-                            let children = get_stream_array(&v);
+                            let children = v.get_array::<AudioStream,AudioStreamTuple>();
 
                             store.remove_all();
                             for item in children {
@@ -111,19 +112,6 @@ impl From<AudioStreamTuple> for AudioStream {
             volume: value.2,
             is_muted: value.3,
         }
-    }
-}
-
-// TODO: make this func generic
-/// Variant is expected to be (a(usub))
-fn get_stream_array(variant: &Variant) -> Vec<AudioStream> {
-    if let Some((array,)) = variant.get::<(Vec<AudioStreamTuple>,)>() {
-        array
-            .into_iter()
-            .map(|tuple: AudioStreamTuple| tuple.into())
-            .collect()
-    } else {
-        vec![]
     }
 }
 

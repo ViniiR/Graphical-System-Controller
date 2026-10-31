@@ -24,9 +24,6 @@
                 <property name="row-span">2</property>
             </layout>
             <property name="icon-name"></property>
-            <!-- TODO: icon doesnt expand fully (???) -->
-            <!-- <property name="hexpand">True</property> -->
-            <!-- <property name="vexpand">True</property> -->
 
             <style>
                 <class name="notification-icon"/>

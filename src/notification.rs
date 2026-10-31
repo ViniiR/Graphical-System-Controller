@@ -3,7 +3,7 @@ use gtk::{
     glib::{
         self, g_warning,
         object::{Cast, CastNone, IsA},
-        BoxedAnyObject, Variant,
+        BoxedAnyObject,
     },
     prelude::{GridExt, ListItemExt},
     Builder, Grid, Image, Label, ListItem, ListView, NoSelection, SignalListItemFactory, Widget,
@@ -11,7 +11,10 @@ use gtk::{
 
 use crate::{
     clone_as, dbus,
-    lib_utils::types::{BuilderObject, HandlerError, WidgetDowncastExt},
+    lib_utils::{
+        types::{BuilderObject, HandlerError, WidgetDowncastExt},
+        variant_array::VariantArray,
+    },
     Program,
 };
 
@@ -61,7 +64,7 @@ pub fn handle_notification(builder: &Builder, conn: &DBusConnection) -> Result<(
             let call = dbus::Notification::get_recent(&conn);
             match call.await {
                 Ok(v) => {
-                    let children = get_array_from_variant(&v);
+                    let children = v.get_array::<Notification, NotificationTuple>();
 
                     store.remove_all();
                     for item in children {
@@ -74,17 +77,6 @@ pub fn handle_notification(builder: &Builder, conn: &DBusConnection) -> Result<(
     ));
 
     Ok(())
-}
-
-fn get_array_from_variant(variant: &Variant) -> Vec<Notification> {
-    if let Some((array,)) = variant.get::<(Vec<NotificationTuple>,)>() {
-        array
-            .into_iter()
-            .map(|tuple: NotificationTuple| tuple.into())
-            .collect()
-    } else {
-        vec![]
-    }
 }
 
 #[derive(Debug, Clone)]
