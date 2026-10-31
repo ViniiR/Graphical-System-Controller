@@ -1,4 +1,11 @@
-use gtk::glib::{self, g_warning, object::IsA, Object};
+use gtk::{
+    glib::{
+        self, g_warning,
+        object::{CastNone, IsA},
+        Object,
+    },
+    Widget,
+};
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]

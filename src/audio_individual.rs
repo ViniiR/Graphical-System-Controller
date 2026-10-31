@@ -168,14 +168,3 @@ fn populate_list_item(stream: &AudioStream, list_item: &ListItem) -> Result<(), 
 
     Ok(())
 }
-
-trait WidgetDowncastExt {
-    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError>;
-}
-
-impl WidgetDowncastExt for Option<Widget> {
-    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError> {
-        self.and_downcast::<T>()
-            .ok_or(HandlerError::ObjectError(msg.to_owned()))
-    }
-}
