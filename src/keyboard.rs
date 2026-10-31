@@ -8,7 +8,7 @@ use gtk::{
 use crate::{
     clone_as, dbus,
     lib_utils::{
-        types::{BuilderObject, HandlerError},
+        types::{builder_object::BuilderObject, handler_error::HandlerError},
         ui,
     },
 };

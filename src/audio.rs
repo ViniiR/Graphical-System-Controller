@@ -11,7 +11,7 @@ use crate::{
     clone_as, dbus,
     lib_utils::{
         transform::LossyU32Cast,
-        types::{BuilderObject, HandlerError, State},
+        types::{builder_object::BuilderObject, handler_error::HandlerError, State},
         ui::get_volume_icon,
     },
 };

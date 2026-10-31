@@ -11,7 +11,7 @@ use crate::{
     clone_as, dbus,
     lib_utils::{
         transform::LossyU32Cast,
-        types::{BuilderObject, HandlerError},
+        types::{builder_object::BuilderObject, handler_error::HandlerError},
         ui::get_brightness_icon,
     },
 };

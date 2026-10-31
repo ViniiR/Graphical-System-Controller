@@ -8,7 +8,7 @@ use gtk::{
     Application, ApplicationWindow, CssProvider, EventControllerFocus, EventControllerKey,
 };
 
-use crate::lib_utils::types::HandlerError;
+use crate::lib_utils::types::handler_error::HandlerError;
 
 mod audio;
 mod audio_individual;

@@ -7,7 +7,7 @@ use gtk::{
 
 use crate::{
     clone_as, dbus,
-    lib_utils::types::{BuilderObject, HandlerError},
+    lib_utils::types::{builder_object::BuilderObject, handler_error::HandlerError},
 };
 
 pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {

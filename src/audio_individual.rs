@@ -3,7 +3,7 @@ use gtk::{
     glib::{
         self, g_warning,
         object::{Cast, CastNone, IsA},
-        BoxedAnyObject, Variant,
+        BoxedAnyObject,
     },
     prelude::{GridExt, ListItemExt, RangeExt, WidgetExt},
     Builder, Expander, Grid, Image, Label, ListItem, ListView, NoSelection, Scale,
@@ -13,9 +13,11 @@ use gtk::{
 use crate::{
     clone_as, dbus,
     lib_utils::{
-        types::{BuilderObject, HandlerError, WidgetDowncastExt},
+        types::{
+            builder_object::BuilderObject, handler_error::HandlerError,
+            variant_array::VariantArray, widget_downcast_ext::WidgetDowncastExt,
+        },
         ui,
-        variant_array::VariantArray,
     },
     Program,
 };

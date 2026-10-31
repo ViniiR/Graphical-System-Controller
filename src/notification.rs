@@ -11,9 +11,9 @@ use gtk::{
 
 use crate::{
     clone_as, dbus,
-    lib_utils::{
-        types::{BuilderObject, HandlerError, WidgetDowncastExt},
-        variant_array::VariantArray,
+    lib_utils::types::{
+        builder_object::BuilderObject, handler_error::HandlerError, variant_array::VariantArray,
+        widget_downcast_ext::WidgetDowncastExt,
     },
     Program,
 };

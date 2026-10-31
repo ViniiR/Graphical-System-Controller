@@ -1,50 +1,9 @@
-use gtk::{
-    glib::{
-        self, g_warning,
-        object::{CastNone, IsA},
-        Object,
-    },
-    Widget,
-};
+use gtk::glib::{self, g_warning};
 
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-pub enum HandlerError {
-    DBusError(String),
-    ObjectError(String),
-}
-
-impl From<glib::Error> for HandlerError {
-    fn from(value: glib::Error) -> Self {
-        Self::DBusError(value.message().to_owned())
-    }
-}
-
-pub trait BuilderObject {
-    fn get_object<T>(&self, name: &str) -> Result<T, HandlerError>
-    where
-        T: IsA<Object>;
-}
-impl BuilderObject for gtk::Builder {
-    fn get_object<T>(&self, name: &str) -> Result<T, HandlerError>
-    where
-        T: IsA<Object>,
-    {
-        self.object::<T>(name)
-            .ok_or(HandlerError::ObjectError(format!("Failed to get {name}")))
-    }
-}
-
-pub trait WidgetDowncastExt {
-    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError>;
-}
-
-impl WidgetDowncastExt for Option<Widget> {
-    fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError> {
-        self.and_downcast::<T>()
-            .ok_or(HandlerError::ObjectError(msg.to_owned()))
-    }
-}
+pub mod builder_object;
+pub mod handler_error;
+pub mod variant_array;
+pub mod widget_downcast_ext;
 
 #[derive(Default)]
 pub struct State {
