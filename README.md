@@ -70,7 +70,8 @@ for_window [class="vgsc"]\
 ## WIP
 
 ### Bugs
-- battery charging under 10% does not display icon
+- Battery charging under 10% does not display icon
+- Crashes individual_audio when closing while in discord call
 
 ### TODOs
 - Handle individual_audio input: mute, and volume
@@ -82,3 +83,10 @@ for_window [class="vgsc"]\
 
 References for icons:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg
+
+<!-- # Dev -->
+
+<!-- debug -->
+<!-- cmake --preset debug -->
+<!-- cmake --build --preset debug -->
+<!-- cargo run -->
