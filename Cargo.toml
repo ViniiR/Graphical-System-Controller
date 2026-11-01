@@ -1,5 +1,3 @@
-workspace = { members = ["macros"] }
-
 [package]
 name = "vgsc"
 version = "0.1.0"
@@ -13,6 +11,10 @@ macros = { path = "./macros" }
 [build-dependencies]
 glib-build-tools = "0.22.8"
 
+[workspace]
+members = ["macros"] 
+
+# TODO: I don't know how to expand clippy checks for nested crates
 [lints.clippy]
 pedantic = { level = "deny", priority = -1 }
 style = { level = "warn", priority = -2 }
