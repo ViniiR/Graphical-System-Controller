@@ -19,6 +19,7 @@
             pipewire
             wireplumber
             setxkbmap
+            dunst
         ];
     in {
         packages.${system} = {
