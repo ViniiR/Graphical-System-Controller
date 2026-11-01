@@ -95,13 +95,14 @@ static ResultHeapString get_battery_directory() {
         snprintf(start, sizeof(start), "%.3s", entry->d_name);
 
         if (strcmp(start, "BAT") == 0) {
-            closedir(dir);
             char *buf;
             int size = asprintf(&buf, "%s/%s", power_supply, entry->d_name);
             if (size == -1) {
                 res.err_msg = "Failed to alloc";
                 return res;
             }
+
+            closedir(dir);
 
             res.variant = OK;
             res.ok_value = buf;
@@ -197,10 +198,10 @@ static ResultInt get_charging_status() {
 
     char filepath[KIBIBYTE];
     snprintf(filepath, sizeof(filepath), "%s%s", result_dir.ok_value, status);
+    free(result_dir.ok_value);
 
     ResultHeapString result = read_file(filepath);
     if (result.variant == ERR) {
-        free(result_dir.ok_value);
         res.err_msg = result.err_msg;
         return res;
     }
@@ -212,7 +213,6 @@ static ResultInt get_charging_status() {
         status = DISCHARGING;
     }
 
-    free(result_dir.ok_value);
     free(result.ok_value);
 
     res.variant = OK;
