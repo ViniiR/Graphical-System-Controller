@@ -15,10 +15,10 @@
   --dark-white: #a1a1a1;
   --foreground: white;
 
-  --secondary-bg: #505050;
-
   --outer-button-corners: 10px;
   --inner-button-corners: 5px;
+
+  --secondary-bg: #20202040;
 }
 
 * {
@@ -147,6 +147,7 @@
 }
 .notification-list {
     border-radius: var(--inner-button-corners) var(--inner-button-corners) var(--outer-button-corners) var(--outer-button-corners);
+    background-color: var(--secondary-bg);
     /* NOTE: pointless height request, it already works by magic (smh) */
     /* min-height: calc((40px) * 3); */
 }
@@ -162,12 +163,13 @@
 .notification {
     margin: 0px;
     min-height: 40px;
-    background-color: var(--secondary-bg);
+    background-color: var(--disabled);
     border-radius: var(--inner-button-corners);
 }
 .notification-label {
 }
 .notification-icon {
+    padding: 5px;
 }
 
 /* . */

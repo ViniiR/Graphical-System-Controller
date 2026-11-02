@@ -6,14 +6,17 @@ use gtk::{
         BoxedAnyObject,
     },
     prelude::{GridExt, ListItemExt},
-    Builder, Grid, Image, Label, ListItem, ListView, NoSelection, SignalListItemFactory, Widget,
+    Builder, Grid, Label, ListItem, ListView, NoSelection, Picture, SignalListItemFactory, Widget,
 };
 
 use crate::{
     clone_as, dbus,
-    lib_utils::types::{
-        builder_object::BuilderObject, handler_error::HandlerError, variant_array::VariantArray,
-        widget_downcast_ext::WidgetDowncastExt,
+    lib_utils::{
+        types::{
+            builder_object::BuilderObject, handler_error::HandlerError,
+            variant_array::VariantArray, widget_downcast_ext::WidgetDowncastExt,
+        },
+        ui,
     },
     Program,
 };
@@ -117,8 +120,15 @@ fn populate_list_item(notif: &Notification, list_item: &ListItem) -> Result<(), 
 
     let icon = grid
         .child_at(0, 0)
-        .downcast_or_err::<Image>("Failed to get image on notification.ui")?;
-    icon.set_from_file(Some(&notif.icon));
+        .downcast_or_err::<Picture>("Failed to get image on notification.ui")?;
+    match ui::parse_notification_icon(notif.clone()) {
+        Ok(v) => {
+            icon.set_filename(Some(v));
+        }
+        Err(e) => {
+            g_warning!(None, "Notification icon error: {e:?}");
+        }
+    }
     let label = grid
         .child_at(1, 0)
         .downcast_or_err::<Label>("Failed to get label on notification.ui")?;

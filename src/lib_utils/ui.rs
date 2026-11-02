@@ -1,8 +1,12 @@
+use std::{error::Error, path::PathBuf, process::Command};
+
 use gtk::{
     glib::{self, g_warning, Variant},
     prelude::WidgetExt,
     Button,
 };
+
+use crate::notification::Notification;
 
 const ACTIVE_CLASS: &str = "button-active";
 const INACTIVE_CLASS: &str = "button-inactive";
@@ -63,5 +67,26 @@ pub async fn button_click_handler(
     match dbus_call.await {
         Ok(v) if let Some(b) = v.child_value(0).get::<bool>() => update_button_active(&button, b),
         e => g_warning!(None, "DBus call error: {e:?}"),
+    }
+}
+
+pub fn parse_notification_icon(notification: Notification) -> Result<String, Box<dyn Error>> {
+    match notification.app.as_str() {
+        "discord" => {
+            let discord_path = Command::new("which").arg("discord").output()?;
+            let output = Command::new("readlink")
+                .args(["-f", &*String::from_utf8_lossy(&discord_path.stdout)])
+                .output()?;
+            let dc_root: String = String::from_utf8_lossy(&output.stdout).into();
+            let mut icon_path = PathBuf::from(dc_root);
+            icon_path.pop();
+            icon_path.pop();
+            icon_path.push("share/icons/hicolor/256x256/apps/discord.png");
+            Ok(icon_path
+                .into_os_string()
+                .into_string()
+                .map_err(|e| format!("OSString error: {}", e.display()))?)
+        }
+        _ => Ok(notification.icon),
     }
 }
