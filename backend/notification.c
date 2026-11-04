@@ -17,6 +17,13 @@ const sd_bus_vtable NOTIFICATION_VTABLE[] = {
         get_recent_notifications,
         SD_BUS_VTABLE_UNPRIVILEGED
     ),
+    SD_BUS_METHOD_WITH_ARGS(
+        "ClearNotifications",
+        SD_BUS_NO_ARGS,
+        SD_BUS_NO_RESULT,
+        clear_notifications,
+        SD_BUS_VTABLE_UNPRIVILEGED
+    ),
     SD_BUS_VTABLE_END
 };
 
@@ -82,6 +89,24 @@ int get_recent_notifications(
     }
 
     return return_value;
+}
+int clear_notifications(
+    sd_bus_message *p_msg,
+    [[maybe_unused]] void *p_userdata,
+    sd_bus_error *p_reterror
+) {
+    ResultVoid result =
+        exec_command_as_user(nullptr, 0, "dunstctl history-clear", "r", UID);
+    if (result.variant == ERR) {
+        return sd_bus_error_setf(
+            p_reterror,
+            SD_BUS_ERROR_FAILED,
+            "Failed to clear notifications, Error: %s",
+            result.err_msg
+        );
+    }
+
+    return sd_bus_reply_method_return(p_msg, nullptr);
 }
 
 static ResultVoid get_notifications(

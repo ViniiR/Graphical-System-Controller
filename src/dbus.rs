@@ -169,9 +169,13 @@ impl Keyboard {
 pub struct Notification;
 impl Notification {
     pub const GET_RECENT: &str = "GetRecentNotifications";
+    pub const CLEAR: &str = "ClearNotifications";
 
     pub fn get_recent(conn: &DBusConnection) -> DbusCallFuture {
         Self::build(conn, Self::GET_RECENT, None, Some(VariantTy::TUPLE))
+    }
+    pub fn clear_notifications(conn: &DBusConnection) -> DbusCallFuture {
+        Self::build(conn, Self::CLEAR, None, None)
     }
 }
 

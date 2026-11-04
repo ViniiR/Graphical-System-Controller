@@ -5,8 +5,9 @@ use gtk::{
         object::{Cast, CastNone, IsA},
         BoxedAnyObject,
     },
-    prelude::{GridExt, ListItemExt},
-    Builder, Grid, Label, ListItem, ListView, NoSelection, Picture, SignalListItemFactory, Widget,
+    prelude::{GridExt, ListItemExt, WidgetExt},
+    Builder, Grid, Image, Label, ListItem, ListView, NoSelection, Picture, SignalListItemFactory,
+    Widget,
 };
 
 use crate::{
@@ -23,6 +24,7 @@ use crate::{
 
 pub fn handle_notification(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let list: ListView = builder.get_object("notification-list")?;
+    let image_btn: Image = builder.get_object("notification-clear-button")?;
 
     let store = ListStore::new::<glib::BoxedAnyObject>();
 
@@ -78,6 +80,25 @@ pub fn handle_notification(builder: &Builder, conn: &DBusConnection) -> Result<(
             }
         }
     ));
+
+    let click_controller = gtk::GestureClick::new();
+    click_controller.connect_pressed(clone_as!(
+        #[strong],
+        [conn, store],
+        move |_, _, _, _| {
+            glib::spawn_future_local(clone_as!(
+                #[strong],
+                [conn, store],
+                async move {
+                    if let Err(e) = dbus::Notification::clear_notifications(&conn).await{
+                        g_warning!(None, "Dbus call error: {e:?}");
+                    }
+                    store.remove_all();
+                }
+            ));
+        }
+    ));
+    image_btn.add_controller(click_controller);
 
     Ok(())
 }
