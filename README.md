@@ -4,7 +4,7 @@ A system quick settings menu
 
 ## Showcase
 
-<img src="./assets/showcase.png" alt="">
+<img src="./assets/showcase2.png" alt="">
 
 ## Requirements 
 
