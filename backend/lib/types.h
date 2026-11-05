@@ -23,6 +23,7 @@ typedef enum { OK, ERR } ResultVariant;
 
 RESULT(void *, Void)
 RESULT(int, Int)
+RESULT(double, Double)
 RESULT(bool, Bool)
 
 /// ResultHeap... do not need free() on ERR variant

@@ -1,6 +1,9 @@
+#include "lib/transform.h"
 #include "types.h"
 #include <errno.h>
 #include <limits.h>
+#include <math.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -44,4 +47,10 @@ ResultInt string_to_int(const char *string) {
     res.err_msg = "";
     res.ok_value = value;
     return res;
+}
+
+double metric_conversion(double value, MetricExponent from, MetricExponent to) {
+    int8_t difference = (int8_t)from - (int8_t)to;
+    double converted = value * pow(10.0, difference);
+    return converted;
 }
