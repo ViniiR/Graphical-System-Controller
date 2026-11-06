@@ -1,7 +1,7 @@
 #include "brightness.h"
 #include "lib/file.h"
 #include "lib/transform.h"
-#include "lib/types.h"
+#include "lib/units.h"
 #include "lib/result.h"
 #include "systemd/sd-bus-protocol.h"
 #include <dirent.h>
