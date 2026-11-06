@@ -120,8 +120,14 @@ fn activate(app: &Application) {
         move |_, val, _code, _state| {
             match val {
                 Key::Escape => {
-                    // Leave focus, focus_controller handles closing
-                    GtkWindowExt::set_focus(&window, None::<&gtk::Widget>);
+                    // INFO: Not using window.close() directly
+                    // because it can throw gtk-critical-error
+                    if *enable_focus_close.borrow() {
+                        // Leave focus, focus_controller handles closing
+                        GtkWindowExt::set_focus(&window, None::<&gtk::Widget>);
+                    } else {
+                        window.close();
+                    }
                     glib::Propagation::Stop
                 }
                 Key::F12 => {
