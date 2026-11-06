@@ -63,7 +63,8 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
         }
         AudioStream *stream = result.ok_value;
 
-        stream_array[(*array_size)++] = stream;
+        (*array_size)++;
+        stream_array[*array_size] = stream;
     }
 
     free(line);
