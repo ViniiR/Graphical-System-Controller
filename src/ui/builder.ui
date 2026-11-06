@@ -48,7 +48,7 @@
                     <property name="column-span">4</property>
                     <property name="row-span">1</property>
                 </layout>
-                <property name="orientation">horizontal</property>
+                <property name="orientation">Horizontal</property>
                 <property name="spacing">6</property>
 
                 <style>
@@ -64,8 +64,8 @@
                     <child>
                     <object class="GtkBox">
                         <property name="spacing">6</property>
-                        <property name="halign">center</property>
-                        <property name="valign">center</property>
+                        <property name="halign">Center</property>
+                        <property name="valign">Center</property>
 
                         <child>
                         <object class="GtkLabel" id="battery-button-box-label">
@@ -83,7 +83,7 @@
                 </child>
                 <child>
                 <object class="GtkBox">
-                    <property name="hexpand">true</property>
+                    <property name="hexpand">True</property>
                 </object>
                 </child>
                 <child>
@@ -127,10 +127,10 @@
                     <property name="column-span">1</property>
                     <property name="row-span">1</property>
                 </layout>
-                <property name="orientation">horizontal</property>
+                <property name="orientation">Horizontal</property>
                 <property name="spacing">10</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
+                <property name="halign">Center</property>
+                <property name="valign">Center</property>
 
                 <child>
                 <object class="GtkImage" id="brightness-scale-label-image">
@@ -176,10 +176,10 @@
                     <property name="column-span">1</property>
                     <property name="row-span">1</property>
                 </layout>
-                <property name="orientation">horizontal</property>
+                <property name="orientation">Horizontal</property>
                 <property name="spacing">10</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
+                <property name="halign">Center</property>
+                <property name="valign">Center</property>
 
                 <child>
                 <object class="GtkImage" id="volume-scale-label-image">
@@ -290,10 +290,10 @@
 
                 <child>
                 <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
+                    <property name="orientation">Horizontal</property>
                     <property name="spacing">10</property>
-                    <property name="halign">start</property>
-                    <property name="valign">center</property>
+                    <property name="halign">Start</property>
+                    <property name="valign">Center</property>
 
                     <style>
                         <class name="button-box"/>
@@ -347,10 +347,10 @@
 
                 <child>
                 <object class="GtkBox">
-                    <property name="orientation">horizontal</property>
+                    <property name="orientation">Horizontal</property>
                     <property name="spacing">10</property>
-                    <property name="halign">start</property>
-                    <property name="valign">center</property>
+                    <property name="halign">Start</property>
+                    <property name="valign">Center</property>
 
                     <style>
                         <class name="button-box"/>
@@ -444,7 +444,7 @@
                         <property name="row-span">1</property>
                     </layout>
                     <property name="label">Notifications</property>
-                    <property name="halign">start</property>
+                    <property name="halign">Start</property>
                     <property name="hexpand">True</property>
 
                     <style>
@@ -461,10 +461,10 @@
                         <property name="column-span">1</property>
                         <property name="row-span">1</property>
                     </layout>
-                    <property name="orientation">horizontal</property>
+                    <property name="orientation">Horizontal</property>
                     <property name="spacing">10</property>
-                    <property name="halign">end</property>
-                    <property name="valign">center</property>
+                    <property name="halign">End</property>
+                    <property name="valign">Center</property>
 
                     <child>
                     <object class="GtkImage" id="notification-clear-button">

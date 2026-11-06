@@ -37,7 +37,7 @@
                 <property name="row-span">1</property>
             </layout>
             <property name="label">Stream</property>
-            <property name="halign">start</property>
+            <property name="halign">Start</property>
             <property name="ellipsize">3</property>
         </object>
         </child>
@@ -50,10 +50,10 @@
                 <property name="column-span">1</property>
                 <property name="row-span">1</property>
             </layout>
-            <property name="orientation">horizontal</property>
+            <property name="orientation">Horizontal</property>
             <property name="spacing">10</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
+            <property name="halign">Center</property>
+            <property name="valign">Center</property>
 
             <child>
             <object class="GtkImage">

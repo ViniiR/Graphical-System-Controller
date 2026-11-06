@@ -40,7 +40,7 @@
                 <property name="row-span">1</property>
             </layout>
             <property name="label"></property>
-            <property name="halign">start</property>
+            <property name="halign">Start</property>
             <property name="valign">Center</property>
             <property name="wrap">False</property>
             <property name="single-line-mode">True</property>
@@ -83,7 +83,7 @@
                 <property name="row-span">1</property>
             </layout>
             <property name="label"></property>
-            <property name="halign">start</property>
+            <property name="halign">Start</property>
             <property name="valign">Center</property>
             <property name="wrap">False</property>
             <property name="single-line-mode">True</property>
