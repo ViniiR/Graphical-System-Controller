@@ -1,7 +1,10 @@
 #include "notification.h"
 #include "lib/process.h"
+#include "lib/transform.h"
 #include "lib/types.h"
 #include <cjson/cJSON.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
@@ -13,7 +16,7 @@ const sd_bus_vtable NOTIFICATION_VTABLE[] = {
     SD_BUS_METHOD_WITH_ARGS(
         "GetRecentNotifications",
         SD_BUS_NO_ARGS,
-        SD_BUS_RESULT("a(sss)", array),
+        SD_BUS_RESULT("a(ssssx)", array),
         get_recent_notifications,
         SD_BUS_VTABLE_UNPRIVILEGED
     ),
@@ -33,6 +36,8 @@ typedef struct {
     char *body;
     char *app;
     char *icon;
+    char *summary;
+    int64_t timestamp;
 } Notification;
 
 static const unsigned int MAX_NOTIFICATIONS = 20;
@@ -66,13 +71,15 @@ int get_recent_notifications(
     sd_bus_message *p_reply_msg = nullptr;
     sd_bus_message_new_method_return(p_msg, &p_reply_msg);
 
-    sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_ARRAY, "(sss)");
+    sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_ARRAY, "(ssssx)");
     for (size_t i = 0; i < size; i++) {
-        sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_STRUCT, "sss");
+        sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_STRUCT, "ssssx");
 
         sd_bus_message_append(p_reply_msg, "s", output[i]->body);
         sd_bus_message_append(p_reply_msg, "s", output[i]->app);
         sd_bus_message_append(p_reply_msg, "s", output[i]->icon);
+        sd_bus_message_append(p_reply_msg, "s", output[i]->summary);
+        sd_bus_message_append(p_reply_msg, "x", output[i]->timestamp);
 
         sd_bus_message_close_container(p_reply_msg);
     }
@@ -85,6 +92,8 @@ int get_recent_notifications(
         free(ptr->app);
         free(ptr->body);
         free(ptr->icon);
+        free(ptr->summary);
+        // don't forget that timestamp is pass-by-value
         free(ptr);
     }
 
@@ -114,14 +123,21 @@ static ResultVoid get_notifications(
 ) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    static char command[200];
+    // TODO: prevent from being recalculated
+    static char command[250];
     snprintf(
         command,
         sizeof(command),
         "dunstctl history"
         "| jq '[limit(%u; .data[0][]"
         "| select(.urgency.data == \"NORMAL\" or .urgency.data == \"CRITICAL\")"
-        "| { body: .body.data, icon: .icon_path.data, app: .appname.data })]'",
+        "| {"
+        "    body: .body.data,"
+        "    icon: .icon_path.data,"
+        "    app: .appname.data,"
+        "    summary: .summary.data,"
+        "    timestamp: .timestamp.data"
+        "})]'",
         MAX_NOTIFICATIONS
     );
 
@@ -162,9 +178,12 @@ static ResultVoid get_notifications(
         cJSON *body = cJSON_GetObjectItemCaseSensitive(item, "body");
         cJSON *app = cJSON_GetObjectItemCaseSensitive(item, "app");
         cJSON *icon = cJSON_GetObjectItemCaseSensitive(item, "icon");
+        cJSON *summary = cJSON_GetObjectItemCaseSensitive(item, "summary");
+        cJSON *timestamp = cJSON_GetObjectItemCaseSensitive(item, "timestamp");
         if (!cJSON_IsString(body) || !cJSON_IsString(app) ||
-            !cJSON_IsString(icon)) {
-            res.err_msg = "Json items are not string";
+            !cJSON_IsString(icon) || !cJSON_IsString(summary) ||
+            !cJSON_IsNumber(timestamp)) {
+            res.err_msg = "Json item is not the correct type";
             cJSON_Delete(json);
             free(notif);
             return res;
@@ -173,6 +192,10 @@ static ResultVoid get_notifications(
         notif->body = strdup(body->valuestring);
         notif->app = strdup(app->valuestring);
         notif->icon = strdup(icon->valuestring);
+        notif->summary = strdup(summary->valuestring);
+        notif->timestamp = (int64_t)metric_conversion(
+            timestamp->valuedouble, METRIC_MICRO, METRIC_BASE
+        );
         if (notif->body == nullptr || notif->app == nullptr ||
             notif->icon == nullptr) {
             res.err_msg = "Strdup failed";

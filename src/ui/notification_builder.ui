@@ -4,7 +4,6 @@
 
     <object class="GtkGrid" id="main-grid">
         <property name="column-spacing">10</property>
-        <property name="row-spacing">10</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <property name="column-homogeneous">True</property>
@@ -33,21 +32,65 @@
         </object>
         </child>
         <child>
-        <object class="GtkLabel" id="notification-body-label">
+        <object class="GtkLabel" id="notification-summary-label">
             <layout>
                 <property name="column">1</property>
                 <property name="row">0</property>
-                <property name="column-span">3</property>
-                <property name="row-span">2</property>
+                <property name="column-span">2</property>
+                <property name="row-span">1</property>
             </layout>
             <property name="label"></property>
             <property name="halign">start</property>
+            <property name="valign">Center</property>
             <property name="wrap">False</property>
             <property name="single-line-mode">True</property>
             <property name="ellipsize">3</property>
 
             <style>
-                <class name="notification-label"/>
+                <class name="notification-summary"/>
+            </style>
+
+        </object>
+        </child>
+        <child>
+        <object class="GtkLabel" id="notification-timestamp-label">
+            <layout>
+                <property name="column">3</property>
+                <property name="row">0</property>
+                <property name="column-span">1</property>
+                <property name="row-span">1</property>
+            </layout>
+            <property name="label"></property>
+            <property name="halign">End</property>
+            <property name="valign">Center</property>
+            <property name="wrap">False</property>
+            <property name="single-line-mode">True</property>
+            <property name="ellipsize">3</property>
+
+            <style>
+                <class name="notification-timestamp"/>
+            </style>
+
+        </object>
+        </child>
+
+        <child>
+        <object class="GtkLabel" id="notification-body-label">
+            <layout>
+                <property name="column">1</property>
+                <property name="row">1</property>
+                <property name="column-span">3</property>
+                <property name="row-span">1</property>
+            </layout>
+            <property name="label"></property>
+            <property name="halign">start</property>
+            <property name="valign">Center</property>
+            <property name="wrap">False</property>
+            <property name="single-line-mode">True</property>
+            <property name="ellipsize">3</property>
+
+            <style>
+                <class name="notification-body"/>
             </style>
 
         </object>

@@ -6,7 +6,7 @@ use gtk::{
     Button,
 };
 
-use crate::notification::Notification;
+use crate::{lib_utils::types::handler_error::HandlerError, notification::Notification};
 
 const ACTIVE_CLASS: &str = "button-active";
 const INACTIVE_CLASS: &str = "button-inactive";
@@ -89,4 +89,38 @@ pub fn parse_notification_icon(notification: Notification) -> Result<String, Box
         }
         _ => Ok(notification.icon),
     }
+}
+
+pub fn parse_notitication_timestamp(timestamp: i64) -> Result<String, HandlerError> {
+    let output = Command::new("awk")
+        .args(["{print int($1)}", "/proc/uptime"])
+        .output()
+        .map_err(|e| HandlerError::IoError(format!("Failed to read /proc/uptime, error: {e:?}")))?;
+    let current_timestamp: String = String::from_utf8_lossy(&output.stdout).into();
+    let current_timestamp = current_timestamp.trim().parse::<i64>().map_err(|e| {
+        HandlerError::ConversionError(format!("Failed to convert String to i64, error: {e:?}"))
+    })?;
+
+    let timestamp =
+        current_timestamp
+            .checked_sub(timestamp)
+            .ok_or(HandlerError::OperationError(String::from(
+                "Failed to subtract i64",
+            )))?;
+
+    let suffix: (i64, &str) = match timestamp {
+        0..60 => (1, "s"),
+        60..3_600 => (60, "min"),
+        3_600..86_400 => (3_600, "h"),
+        86_400..2_592_000 => (86_400, "d"),
+        _ => (2_592_000, "mo"), // practically unreachable (really)
+    };
+
+    let time_ago = timestamp
+        .checked_div(suffix.0)
+        .ok_or(HandlerError::OperationError(String::from(
+            "Failed to divide i64",
+        )))?;
+
+    Ok(format!("{}{} ago", time_ago, suffix.1))
 }

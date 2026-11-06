@@ -5,6 +5,9 @@ use gtk::glib;
 pub enum HandlerError {
     DBusError(String),
     ObjectError(String),
+    IoError(String),
+    ConversionError(String),
+    OperationError(String),
 }
 
 impl From<glib::Error> for HandlerError {

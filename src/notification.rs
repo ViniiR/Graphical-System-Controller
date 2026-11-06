@@ -108,11 +108,19 @@ pub struct Notification {
     pub body: String,
     pub app: String,
     pub icon: String,
+    pub summary: String,
+    pub timestamp: i64,
 }
-pub type NotificationTuple = (String, String, String);
+pub type NotificationTuple = (String, String, String, String, i64);
 impl From<Notification> for NotificationTuple {
     fn from(value: Notification) -> Self {
-        (value.body, value.app, value.icon)
+        (
+            value.body,
+            value.app,
+            value.icon,
+            value.summary,
+            value.timestamp,
+        )
     }
 }
 impl From<NotificationTuple> for Notification {
@@ -121,6 +129,8 @@ impl From<NotificationTuple> for Notification {
             body: value.0,
             app: value.1,
             icon: value.2,
+            summary: value.3,
+            timestamp: value.4,
         }
     }
 }
@@ -142,6 +152,7 @@ fn populate_list_item(notif: &Notification, list_item: &ListItem) -> Result<(), 
     let icon = grid
         .child_at(0, 0)
         .downcast_or_err::<Picture>("Failed to get image on notification.ui")?;
+    // TODO: parse to handler error
     match ui::parse_notification_icon(notif.clone()) {
         Ok(v) => {
             icon.set_filename(Some(v));
@@ -150,8 +161,19 @@ fn populate_list_item(notif: &Notification, list_item: &ListItem) -> Result<(), 
             g_warning!(None, "Notification icon error: {e:?}");
         }
     }
-    let label = grid
+
+    let title = grid
         .child_at(1, 0)
+        .downcast_or_err::<Label>("Failed to get title on notification.ui")?;
+    title.set_label(&notif.summary);
+
+    let timestamp = grid
+        .child_at(3, 0)
+        .downcast_or_err::<Label>("Failed to get timestamp on notification.ui")?;
+    timestamp.set_label(&ui::parse_notitication_timestamp(notif.timestamp)?);
+
+    let label = grid
+        .child_at(1, 1)
         .downcast_or_err::<Label>("Failed to get label on notification.ui")?;
     label.set_label(&notif.body);
 

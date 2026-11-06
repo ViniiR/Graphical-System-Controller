@@ -166,7 +166,17 @@
     background-color: var(--disabled);
     border-radius: var(--inner-button-corners);
 }
-.notification-label {
+.notification-summary {
+    font-size: .9rem;
+    font-weight: bold;
+}
+.notification-body {
+    font-size: .8rem;
+}
+.notification-timestamp {
+    font-size: .8rem;
+    color: darkgrey;
+    padding-right: 5px;
 }
 .notification-icon {
     padding: 5px;
