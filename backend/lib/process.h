@@ -1,7 +1,7 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
-#include "lib/types.h"
+#include "lib/result.h"
 #include <sys/types.h>
 
 extern const unsigned int UID;

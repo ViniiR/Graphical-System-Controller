@@ -1,7 +1,7 @@
 #ifndef _TRANSFORM_H
 #define _TRANSFORM_H
 
-#include "lib/types.h"
+#include "lib/result.h"
 #include <stdint.h>
 
 typedef enum : int8_t {

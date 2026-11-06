@@ -1,5 +1,5 @@
 #include "lib/transform.h"
-#include "types.h"
+#include "lib/result.h"
 #include <errno.h>
 #include <limits.h>
 #include <math.h>

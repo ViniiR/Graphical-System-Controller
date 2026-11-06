@@ -1,5 +1,6 @@
 #include "notification.h"
 #include "lib/process.h"
+#include "lib/result.h"
 #include "lib/transform.h"
 #include "lib/types.h"
 #include <cjson/cJSON.h>

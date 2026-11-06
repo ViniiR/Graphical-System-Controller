@@ -1,4 +1,5 @@
 #include "battery.h"
+#include "lib/result.h"
 #include "dirent.h"
 #include "lib/file.h"
 #include "lib/transform.h"

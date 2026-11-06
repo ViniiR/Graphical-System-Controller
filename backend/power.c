@@ -1,6 +1,6 @@
 #include "power.h"
 #include "lib/process.h"
-#include "lib/types.h"
+#include "lib/result.h"
 #include "systemd/sd-bus-vtable.h"
 #include <systemd/sd-bus.h>
 

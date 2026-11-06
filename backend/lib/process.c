@@ -1,5 +1,6 @@
 #include "sys/wait.h"
-#include "types.h"
+#include "lib/types.h"
+#include "lib/result.h"
 #include "unistd.h"
 #include <pwd.h>
 #include <stdio.h>

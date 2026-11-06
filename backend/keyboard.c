@@ -1,6 +1,7 @@
 #include "keyboard.h"
 #include "lib/process.h"
 #include "lib/transform.h"
+#include "lib/result.h"
 #include "lib/types.h"
 #include <string.h>
 #include <systemd/sd-bus.h>

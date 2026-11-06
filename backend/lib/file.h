@@ -1,7 +1,7 @@
 #ifndef _FILE_H
 #define _FILE_H
 
-#include "lib/types.h"
+#include "lib/result.h"
 
 ResultHeapString read_file(const char *path);
 

@@ -1,7 +1,7 @@
 #ifndef _AUDIO_INTERNAL_H
 #define _AUDIO_INTERNAL_H
 
-#include "lib/types.h"
+#include "lib/result.h"
 
 typedef struct {
     bool is_muted;
