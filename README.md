@@ -4,7 +4,7 @@ A system quick settings menu
 
 ## Showcase
 
-<img src="./assets/showcase2.png" alt="">
+<img src="./assets/showcase3.png" alt="">
 
 ## Requirements 
 
@@ -78,8 +78,13 @@ for_window [class="vgsc"]\
 - Add cpu frequency governor module (+ power mode icons)
 - Function ```exec_command_as_user``` does not propagate errors with messages
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
-- Update Result types to one single type with a union (may be pointless)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
+
+- Use exclusively stdint types
+- Use _Float types as they seem to exist in GCC
+
+- Must specify array size in sd_bus?
+- Use named lifetime in Notification.rs over String
 
 References for icons:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg
