@@ -124,23 +124,27 @@ static ResultVoid get_notifications(
 ) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    // TODO: prevent from being recalculated
     static char command[250];
-    snprintf(
-        command,
-        sizeof(command),
-        "dunstctl history"
-        "| jq '[limit(%u; .data[0][]"
-        "| select(.urgency.data == \"NORMAL\" or .urgency.data == \"CRITICAL\")"
-        "| {"
-        "    body: .body.data,"
-        "    icon: .icon_path.data,"
-        "    app: .appname.data,"
-        "    summary: .summary.data,"
-        "    timestamp: .timestamp.data"
-        "})]'",
-        MAX_NOTIFICATIONS
-    );
+    static bool initialized = false;
+    if (!initialized) {
+        snprintf(
+            command,
+            sizeof(command),
+            "dunstctl history"
+            "| jq '[limit(%u; .data[0][]"
+            "| select(.urgency.data == \"NORMAL\" or .urgency.data == "
+            "\"CRITICAL\")"
+            "| {"
+            "    body: .body.data,"
+            "    icon: .icon_path.data,"
+            "    app: .appname.data,"
+            "    summary: .summary.data,"
+            "    timestamp: .timestamp.data"
+            "})]'",
+            MAX_NOTIFICATIONS
+        );
+        initialized = true;
+    }
 
     char output[KIBIBYTE * 4];
     ResultVoid exec_result =

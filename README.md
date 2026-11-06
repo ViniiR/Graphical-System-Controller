@@ -80,11 +80,7 @@ for_window [class="vgsc"]\
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
 
-- Use exclusively stdint types
-- Use _Float types as they seem to exist in GCC
-
 - Must specify array size in sd_bus?
-- Use named lifetime in Notification.rs over String
 
 References for icons:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg
