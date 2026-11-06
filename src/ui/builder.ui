@@ -471,7 +471,9 @@
                         <property name="icon-name">user-trash-symbolic</property>
 
                         <style>
-                            <class name="image-button"/>
+                            /* NOTE: "image-button" may be some weird internal class */
+                            /* hence using vgsc prefix */
+                            <class name="vgsc-image-button"/>
                         </style>
 
                     </object>

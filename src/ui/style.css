@@ -184,11 +184,11 @@
 
 /* . */
 
-.image-button {
+.vgsc-image-button {
     padding: 5px;
     border-radius: var(--inner-button-corners);
 }
-.image-button:hover {
+.vgsc-image-button:hover {
   background-color: var(--disabled-hover);
 }
 
