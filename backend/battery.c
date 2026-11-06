@@ -79,7 +79,7 @@ static ResultHeapString get_battery_directory() {
     DIR *dir;
     struct dirent *entry;
     ResultHeapString res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
     dir = opendir(power_supply);
@@ -120,7 +120,7 @@ static ResultHeapString get_battery_directory() {
 
 static ResultInt get_battery_percentage() {
     ResultInt res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
     };
 
     ResultHeapString result_directory = get_battery_directory();
@@ -188,7 +188,7 @@ static ResultInt get_battery_percentage() {
 /// it is safe to cast ok value to ChargingStatus, unless it is ERR
 static ResultInt get_charging_status() {
     ResultInt res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
     };
 
     ResultHeapString result_dir = get_battery_directory();
@@ -224,7 +224,7 @@ static ResultInt get_charging_status() {
 
 static ResultInt format_percentage(int percentage) {
     ResultInt res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
     };
     int battery_level_formatted = 0;
 
@@ -256,7 +256,7 @@ static ResultHeapString allocate_suffix(const ChargingStatus status) {
     static const char charging[] = "-charging";
 
     ResultHeapString res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
     char *suffix = nullptr;
@@ -286,7 +286,7 @@ static ResultHeapString get_battery_icon() {
     static const char battery_prefix[] = "battery-level-";
 
     ResultHeapString res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
     ResultInt charging_status_result = get_charging_status();

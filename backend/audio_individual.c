@@ -78,7 +78,7 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
 
 ResultHeapStruct get_stream(unsigned int id) {
     ResultHeapStruct res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
     char id_char[KIBIBYTE];

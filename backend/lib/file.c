@@ -7,7 +7,7 @@
 
 ResultHeapString read_file(const char *path) {
     ResultHeapString res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
     FILE *f = fopen(path, "r");

@@ -104,7 +104,7 @@ static ResultHeapString read_brightness_from(
     const char *dir_name, const char *file_name
 ) {
     ResultHeapString res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
     char filepath[KIBIBYTE];
@@ -135,7 +135,7 @@ static ResultInt get_brightness() {
     DIR *dir;
     struct dirent *entry;
     ResultInt res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
     };
 
     dir = opendir(BACKLIGHT_PATH);

@@ -30,9 +30,9 @@ RESULT(bool, Bool)
 RESULT(char *, HeapString)
 RESULT(void *, HeapStruct)
 
-#define RESULT_ERR_MSG_UNKNOWN "Unknown error"
+extern const char *UNKNOWN_ERR;
 
 #define RESULT_VOID_DEFAULT                                                    \
-    {.variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr}
+    {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr}
 
 #endif

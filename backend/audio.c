@@ -291,7 +291,7 @@ ResultHeapStruct external_get_pipewire_volume(const char *sink_id) {
 
 static ResultHeapStruct get_pipewire_volume(const char *sink_id) {
     ResultHeapStruct res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = nullptr
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
     char command[KIBIBYTE];

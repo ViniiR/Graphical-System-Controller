@@ -15,7 +15,7 @@ void trim_newlines(char *str) {
 
 ResultInt string_to_int(const char *string) {
     ResultInt res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = 0
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
     };
 
     errno = 0;

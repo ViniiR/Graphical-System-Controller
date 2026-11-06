@@ -81,7 +81,7 @@ int get_keyboard_handler(
 
 static ResultBool get_is_standard_keyboard() {
     ResultBool res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = false
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = false
     };
 
     bool is_standard = true;

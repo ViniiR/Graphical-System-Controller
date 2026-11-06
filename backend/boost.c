@@ -84,7 +84,7 @@ static const char boost_filepath[] = "/sys/devices/system/cpu/cpufreq/boost";
 
 static ResultBool get_is_boost_active() {
     ResultBool res = {
-        .variant = ERR, .err_msg = RESULT_ERR_MSG_UNKNOWN, .ok_value = false
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = false
     };
 
     ResultHeapString result_file = read_file(boost_filepath);
