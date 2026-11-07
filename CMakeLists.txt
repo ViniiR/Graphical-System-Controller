@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 4.1.2)
-
-project(vgsc LANGUAGES C)
-
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+
+project(vgsc LANGUAGES C)
 
 set(INCLUDE_DIR
     "${CMAKE_SOURCE_DIR}/backend"
