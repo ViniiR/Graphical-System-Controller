@@ -30,6 +30,9 @@ RESULT(bool, Bool)
 RESULT(char *, HeapString)
 RESULT(void *, HeapStruct)
 
+    // TODO: use this type on charging enum +++++++
+RESULT(int, Enum)
+
 extern const char *UNKNOWN_ERR;
 
 #define RESULT_VOID_DEFAULT                                                    \

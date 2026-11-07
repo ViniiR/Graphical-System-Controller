@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "notification.h"
 #include "power.h"
+#include "power_profile.h"
 #include <systemd/sd-bus.h>
 
 const char DBUS_SERVICE_PATH[] = "/com/vinii/vgsc";
@@ -37,6 +38,11 @@ int main(void) {
     err = add_controller(POWER_NAME, POWER_VTABLE);
     if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
     printf("Added '%s' object vtable\n", POWER_NAME);
+
+    // Power Profile controller
+    err = add_controller(POWER_PROFILE_NAME, POWER_PROFILE_VTABLE);
+    if (err < 0) return fail_with_msg("Failed to add object vtable", p_dbus, err);
+    printf("Added '%s' object vtable\n", POWER_PROFILE_NAME);
 
     // Battery controller
     err = add_controller(BATTERY_NAME, BATTERY_VTABLE);
