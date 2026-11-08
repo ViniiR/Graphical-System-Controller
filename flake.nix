@@ -20,6 +20,7 @@
             wireplumber
             setxkbmap
             dunst
+            tlp
         ];
     in {
         packages.${system} = {
