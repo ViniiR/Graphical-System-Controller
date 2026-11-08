@@ -20,7 +20,7 @@
     <object class="GtkApplicationWindow" id="main-window">
         <property name="default-width">350</property>
         <!-- NOTE: this height is pixel perfect for NotificationList to properly size 3 Notifications + their in-between padding -->
-        <property name="default-height">425</property>
+        <property name="default-height">427</property>
 
         <style>
             <class name="main-window"/>
