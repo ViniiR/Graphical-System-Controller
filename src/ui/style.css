@@ -1,5 +1,6 @@
 :root {
   --prussian: #003153;
+  --prussian-complementary: #E66B00;
 
   --enabled: #003153;
   --enabled-foreground: white;
@@ -40,6 +41,12 @@
 .transparent-bg {
   /* NOTE: picom opacity must be at 100 */
   background: transparent;
+}
+
+tooltip {
+    border-radius: 0px;
+    border: none;
+    background-color: var(--prussian-complementary);
 }
 
 /* . */

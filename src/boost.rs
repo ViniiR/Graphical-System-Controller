@@ -1,7 +1,7 @@
 use gtk::{
     gio::DBusConnection,
     glib::{self, g_warning},
-    prelude::ButtonExt,
+    prelude::{ButtonExt, WidgetExt},
     Builder, Button,
 };
 
@@ -26,6 +26,8 @@ pub fn handle_boost(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             ));
         }
     ));
+
+    boost.set_tooltip_text(Some("Cpu boost mode"));
 
     // Get boost on startup
     glib::spawn_future_local(clone_as!(

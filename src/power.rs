@@ -1,7 +1,7 @@
 use gtk::{
     gio::DBusConnection,
     glib::{self, g_warning},
-    prelude::ButtonExt,
+    prelude::{ButtonExt, WidgetExt},
     Builder, Button,
 };
 
@@ -57,6 +57,10 @@ pub fn handle_power(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
             });
         }
     ));
+
+    shutdown.set_tooltip_text(Some("Shudown"));
+    reboot.set_tooltip_text(Some("Reboot"));
+    logout.set_tooltip_text(Some("Quit session"));
 
     Ok(())
 }

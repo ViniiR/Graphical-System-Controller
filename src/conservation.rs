@@ -1,7 +1,7 @@
 use gtk::{
     gio::DBusConnection,
     glib::{self, g_warning},
-    prelude::ButtonExt,
+    prelude::{ButtonExt, WidgetExt},
     Builder, Button,
 };
 
@@ -26,6 +26,8 @@ pub fn handle_conservation(builder: &Builder, conn: &DBusConnection) -> Result<(
             ));
         }
     ));
+
+    conservation.set_tooltip_text(Some("Battery conservation mode"));
 
     // Get boost on startup
     glib::spawn_future_local(clone_as!(

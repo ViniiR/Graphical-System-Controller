@@ -81,6 +81,8 @@ pub fn handle_notification(builder: &Builder, conn: &DBusConnection) -> Result<(
         }
     ));
 
+    image_btn.set_tooltip_text(Some("Clear notifications"));
+
     let click_controller = gtk::GestureClick::new();
     click_controller.connect_pressed(clone_as!(
         #[strong],

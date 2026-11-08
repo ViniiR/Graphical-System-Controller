@@ -1,7 +1,7 @@
 use gtk::{
     gio::DBusConnection,
     glib::{self, g_warning},
-    prelude::ButtonExt,
+    prelude::{ButtonExt, WidgetExt},
     Builder, Button,
 };
 
@@ -88,6 +88,10 @@ pub fn handle_power_profile(builder: &Builder, conn: &DBusConnection) -> Result<
             ));
         }
     ));
+
+    performance_btn.set_tooltip_text(Some("Performance(AC) profile"));
+    balanced_btn.set_tooltip_text(Some("Balanced(BAT) profile"));
+    powersave_btn.set_tooltip_text(Some("Power Saver(SAV) profile"));
 
     // Get power profile on startup
     glib::spawn_future_local(clone_as!(

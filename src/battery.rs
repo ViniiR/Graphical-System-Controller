@@ -1,7 +1,8 @@
 use gtk::{
     gio::DBusConnection,
     glib::{self, g_warning},
-    Builder, Image, Label,
+    prelude::WidgetExt,
+    Builder, Button, Image, Label,
 };
 
 use crate::{
@@ -10,8 +11,11 @@ use crate::{
 };
 
 pub fn handle_battery(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
+    let button: Button = builder.get_object("battery-button")?;
     let label: Label = builder.get_object("battery-button-box-label")?;
     let image: Image = builder.get_object("battery-button-box-image")?;
+
+    button.set_tooltip_text(Some("Battery charge"));
 
     glib::spawn_future_local(clone_as!(
         #[strong],

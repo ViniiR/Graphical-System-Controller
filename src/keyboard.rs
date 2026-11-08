@@ -1,7 +1,7 @@
 use gtk::{
     gio::DBusConnection,
     glib::{self, g_warning},
-    prelude::ButtonExt,
+    prelude::{ButtonExt, WidgetExt},
     Builder, Button,
 };
 
@@ -31,6 +31,9 @@ pub fn handle_keyboard(builder: &Builder, conn: &DBusConnection) -> Result<(), H
             glib::spawn_future_local(handle_click(conn.clone(), dev_btn.clone(), btn.clone()));
         }
     ));
+
+    dev_btn.set_tooltip_text(Some("Keyboard nodeadkeys"));
+    std_btn.set_tooltip_text(Some("Keyboard with deadkeys"));
 
     // Get keyboard on startup
     glib::spawn_future_local(clone_as!(

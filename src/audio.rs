@@ -27,6 +27,8 @@ pub fn handle_audio(builder: &Builder, conn: &DBusConnection) -> Result<(), Hand
     let pending_timer: Rc<RefCell<Option<glib::SourceId>>> = Rc::new(RefCell::new(None));
     let last_sent_value = Rc::new(std::cell::Cell::new(u32::MAX));
 
+    label_box.set_tooltip_text(Some("Toggle audio muted"));
+
     let signal = scale.connect_value_changed(clone_as!(
         #[strong],
         [conn, label, label_image, state],
