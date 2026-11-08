@@ -314,20 +314,72 @@
             </object>
             </child>
             <child>
-            <object class="GtkButton" id="power-mode-button">
-                <property name="label">Power</property>
+            <object class="GtkGrid" id="power-profile-button-wrapper">
                 <layout>
                     <property name="column">2</property>
                     <property name="row">4</property>
                     <property name="column-span">2</property>
                     <property name="row-span">1</property>
                 </layout>
+                <property name="column-spacing">0</property>
+                <property name="row-spacing">0</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">False</property>
+                <property name="column-homogeneous">True</property>
 
                 <style>
                     <class name="button"/>
-                    <class name="unused"/>
+                    <class name="multi-button-wrapper"/>
                 </style>
 
+                <child>
+                <object class="GtkButton" id="power-profile-button-power-save">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+
+                    <style>
+                        <class name="multi-button"/>
+                    </style>
+
+                    <child>
+                    <object class="GtkImage">
+                        <property name="icon-name">power-profile-power-saver-symbolic</property>
+                    </object>
+                    </child>
+                </object>
+                </child>
+                <child>
+                <object class="GtkButton" id="power-profile-button-balanced">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+
+                    <style>
+                        <class name="multi-button"/>
+                    </style>
+
+                    <child>
+                    <object class="GtkImage">
+                        <property name="icon-name">power-profile-balanced-symbolic</property>
+                    </object>
+                    </child>
+                </object>
+                </child>
+                <child>
+                <object class="GtkButton" id="power-profile-button-performance">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+
+                    <style>
+                        <class name="multi-button"/>
+                    </style>
+
+                    <child>
+                    <object class="GtkImage">
+                        <property name="icon-name">power-profile-performance-symbolic</property>
+                    </object>
+                    </child>
+                </object>
+                </child>
             </object>
             </child>
 
@@ -378,7 +430,6 @@
                     <property name="column-span">2</property>
                     <property name="row-span">1</property>
                 </layout>
-
                 <property name="column-spacing">0</property>
                 <property name="row-spacing">0</property>
                 <property name="hexpand">True</property>

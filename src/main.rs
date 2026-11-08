@@ -21,6 +21,7 @@ mod keyboard;
 mod lib_utils;
 mod notification;
 mod power;
+mod power_profile;
 
 // Vinii's Graphical System Controller (Daemon)
 pub struct Program;
@@ -94,6 +95,7 @@ fn activate(app: &Application) {
 
             brightness::handle_brightness(&builder, &dbus_connection)?;
             power::handle_power(&builder, &dbus_connection)?;
+            power_profile::handle_power_profile(&builder, &dbus_connection)?;
             battery::handle_battery(&builder, &dbus_connection)?;
             boost::handle_boost(&builder, &dbus_connection)?;
             conservation::handle_conservation(&builder, &dbus_connection)?;

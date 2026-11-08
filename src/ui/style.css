@@ -131,7 +131,7 @@
 .multi-button {
   font-weight: bold;
   border: none;
-  border-radius: var(--inner-button-corners);
+  border-radius: 0px;
 }
 .multi-button:first-child {
   border-radius: var(--inner-button-corners) 0px 0px var(--inner-button-corners);

@@ -72,6 +72,20 @@ impl Power {
 }
 
 #[derive(BuildCall)]
+pub struct PowerProfile;
+impl PowerProfile {
+    pub const GET: &str = "GetPowerProfile";
+    pub const SET: &str = "SetPowerProfile";
+
+    pub fn get(conn: &DBusConnection) -> DbusCallFuture {
+        Self::build(conn, Self::GET, None, Some(VariantTy::TUPLE))
+    }
+    pub fn set(conn: &DBusConnection, value: u32) -> DbusCallFuture {
+        Self::build(conn, Self::SET, Some(&(value,).to_variant()), None)
+    }
+}
+
+#[derive(BuildCall)]
 pub struct Battery;
 impl Battery {
     pub const GET: &str = "GetBattery";

@@ -13,6 +13,7 @@
         <file alias="scalable/status/bluetooth-active-symbolic.svg">bluetooth-active-symbolic.svg</file>
         
         <file alias="scalable/status/power-profile-power-saver-symbolic.svg">power-profile-power-saver-symbolic.svg</file>
+        <file alias="scalable/status/power-profile-balanced-symbolic.svg">power-profile-balanced-symbolic.svg</file>
         <file alias="scalable/status/power-profile-performance-symbolic.svg">power-profile-performance-symbolic.svg</file>
 
         <file alias="scalable/status/audio-volume-zero-symbolic.svg">audio-volume-zero-symbolic.svg</file>
