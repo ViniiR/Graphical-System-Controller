@@ -72,7 +72,6 @@ for_window [class="vgsc"]\
 ### Bugs
 - Battery charging under 10% does not display icon
 - Crashes individual_audio when closing while in discord call
-- Individual audio backend memory bug
 
 ### TODOs
 - Handle individual_audio input: mute, and volume
