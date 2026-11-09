@@ -39,7 +39,7 @@ To properly use it I set up some extra external settings.
         Set this opacity rule: <code>100:class_g = 'vgsc'</code>
     </li>
     <li>
-        Set this corner radius rule: <code>30:class_g = 'vgsc'</code>
+        Set this corner radius rule: <code>30:class_g = 'vgsc' && window_type = 'normal'</code>
     </li>
 </ul>
 
@@ -72,18 +72,25 @@ for_window [class="vgsc"]\
 ### Bugs
 - Battery charging under 10% does not display icon
 - Crashes individual_audio when closing while in discord call
+- Individual audio backend memory bug
 
 ### TODOs
 - Handle individual_audio input: mute, and volume
-- Add cpu frequency governor module (+ power mode icons)
+- Add individual_audio tooltips
 - Function ```exec_command_as_user``` does not propagate errors with messages
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
 
 - Must specify array size in sd_bus?
+- Return sd_bus_error is better than error_setf?
 
-References for icons:
-- https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status/battery-level-0-symbolic.svg
+- Remove ui updates after backend reply
+- Check for unecessary backend requests, avoid allowing performance request if performance is active
+- Dynamic battery tooltips
+- Fix array return types on sd_bus?
+
+Icons reference:
+- https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status
 
 <!-- # Dev -->
 

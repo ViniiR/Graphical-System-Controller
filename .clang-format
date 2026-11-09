@@ -9,6 +9,9 @@ BinPackParameters: false
 BinPackArguments: false
 AlignAfterOpenBracket: BlockIndent
 
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterFunction: false

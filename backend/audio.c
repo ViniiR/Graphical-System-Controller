@@ -1,9 +1,11 @@
 #include "audio.h"
 #include "audio_individual.h"
 #include "audio_internal.h"
+#include "lib/dbus.h"
 #include "lib/process.h"
-#include "lib/units.h"
 #include "lib/result.h"
+#include "lib/units.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
 
@@ -109,6 +111,21 @@ int toggle_audio_muted_handler(
 
 //
 
+int sd_bus_array_append_audio_individual(
+    sd_bus_message *p_reply_msg, const char *struct_types, void *struct_ptr
+) {
+    AudioStream *stream = (AudioStream *)struct_ptr;
+    int result = sd_bus_message_append(
+        p_reply_msg,
+        struct_types,
+        stream->sink_id,
+        stream->name,
+        stream->volume,
+        stream->is_muted
+    );
+    return result;
+}
+
 int get_all_audio_handler_individual(
     sd_bus_message *p_msg,
     [[maybe_unused]] void *p_userdata,
@@ -117,45 +134,38 @@ int get_all_audio_handler_individual(
     // Realistically it will never be bigger than 5 elements
     static const size_t MAX_SIZE = 20;
 
-    AudioStream *array[MAX_SIZE];
-    size_t size = 0;
-    ResultVoid result_streams = get_all_streams(array, &size);
+    AudioStream *stream_array[MAX_SIZE];
+    size_t stream_array_size = 0;
+    ResultVoid result_streams =
+        get_all_streams(stream_array, &stream_array_size);
     if (result_streams.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror, SD_BUS_ERROR_FAILED, "%s", result_streams.err_msg
         );
     }
-    if (size > MAX_SIZE) {
-        size = MAX_SIZE;
+    if (stream_array_size > MAX_SIZE) {
+        stream_array_size = MAX_SIZE;
     }
 
     //
 
-    sd_bus_message *p_reply_msg = nullptr;
-    sd_bus_message_new_method_return(p_msg, &p_reply_msg);
-
-    sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_ARRAY, "(usub)");
-    for (size_t i = 0; i < size; i++) {
-        sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_STRUCT, "usub");
-
-        sd_bus_message_append(p_reply_msg, "u", array[i]->sink_id);
-        sd_bus_message_append(p_reply_msg, "s", array[i]->name);
-        sd_bus_message_append(p_reply_msg, "u", array[i]->volume);
-        sd_bus_message_append(p_reply_msg, "b", array[i]->is_muted);
-
-        sd_bus_message_close_container(p_reply_msg);
-    }
-    sd_bus_message_close_container(p_reply_msg);
-
-    int return_value = sd_bus_send(nullptr, p_reply_msg, nullptr);
+    AudioStream **stream_array_decay = stream_array;
+    int return_value = make_sd_bus_array_of_struct(
+        p_msg,
+        p_reterror,
+        (void **)(void *)stream_array_decay,
+        stream_array_size,
+        "usub",
+        5,
+        &sd_bus_array_append_audio_individual
+    );
 
     //
 
-    for (size_t i = 0; i < size; i++) {
-        free(array[i]->name);
-        free(array[i]);
+    for (size_t i = 0; i < stream_array_size; i++) {
+        free(stream_array[i]->name);
+        free(stream_array[i]);
     }
-    sd_bus_message_unref(p_reply_msg);
 
     return return_value;
 }

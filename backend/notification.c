@@ -1,13 +1,13 @@
 #include "notification.h"
+#include "lib/dbus.h"
 #include "lib/process.h"
 #include "lib/result.h"
 #include "lib/transform.h"
 #include "lib/units.h"
 #include <cjson/cJSON.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <systemd/sd-bus.h>
 
 const char NOTIFICATION_NAME[] = "Notification";
@@ -51,15 +51,31 @@ static ResultVoid get_notifications(
 
 //
 
+int sd_bus_array_append_notification(
+    sd_bus_message *p_reply_msg, const char *struct_types, void *struct_ptr
+) {
+    Notification *notif = (Notification *)struct_ptr;
+    int result = sd_bus_message_append(
+        p_reply_msg,
+        struct_types,
+        notif->body,
+        notif->app,
+        notif->icon,
+        notif->summary,
+        notif->timestamp
+    );
+    return result;
+}
+
 int get_recent_notifications(
     sd_bus_message *p_msg,
     [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror
 ) {
     Notification *output[MAX_NOTIFICATIONS];
-    size_t size = 0;
+    size_t output_size = 0;
 
-    ResultVoid result = get_notifications(output, &size, sizeof(output));
+    ResultVoid result = get_notifications(output, &output_size, sizeof(output));
     if (result.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -69,26 +85,18 @@ int get_recent_notifications(
         );
     }
 
-    sd_bus_message *p_reply_msg = nullptr;
-    sd_bus_message_new_method_return(p_msg, &p_reply_msg);
+    Notification **notif_arr_decay = output;
+    int return_value = make_sd_bus_array_of_struct(
+        p_msg,
+        p_reterror,
+        (void **)(void *)notif_arr_decay,
+        output_size,
+        "ssssx",
+        6,
+        &sd_bus_array_append_notification
+    );
 
-    sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_ARRAY, "(ssssx)");
-    for (size_t i = 0; i < size; i++) {
-        sd_bus_message_open_container(p_reply_msg, SD_BUS_TYPE_STRUCT, "ssssx");
-
-        sd_bus_message_append(p_reply_msg, "s", output[i]->body);
-        sd_bus_message_append(p_reply_msg, "s", output[i]->app);
-        sd_bus_message_append(p_reply_msg, "s", output[i]->icon);
-        sd_bus_message_append(p_reply_msg, "s", output[i]->summary);
-        sd_bus_message_append(p_reply_msg, "x", output[i]->timestamp);
-
-        sd_bus_message_close_container(p_reply_msg);
-    }
-    sd_bus_message_close_container(p_reply_msg);
-
-    int return_value = sd_bus_send(nullptr, p_reply_msg, nullptr);
-
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < output_size; i++) {
         Notification *ptr = output[i];
         free(ptr->app);
         free(ptr->body);
