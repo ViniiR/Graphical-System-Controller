@@ -1,0 +1,5 @@
+Diagnostics:
+  Suppress:
+    - "typecheck_sclass_func"
+    - "attribute_cleanup_arg_not_function"
+    - "function_definition_not_allowed"
