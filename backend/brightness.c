@@ -104,7 +104,7 @@ static ResultHeapString read_brightness_from(
     const char *dir_name, const char *file_name
 ) {
     ResultHeapString res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
     char filepath[KIBIBYTE];

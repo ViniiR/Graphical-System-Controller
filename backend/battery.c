@@ -79,7 +79,7 @@ static ResultHeapString get_battery_directory() {
     DIR *dir;
     struct dirent *entry;
     ResultHeapString res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
     dir = opendir(power_supply);
@@ -256,7 +256,7 @@ static ResultHeapString allocate_suffix(const ChargingStatus status) {
     static const char charging[] = "-charging";
 
     ResultHeapString res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
     char *suffix = nullptr;
@@ -286,7 +286,7 @@ static ResultHeapString get_battery_icon() {
     static const char battery_prefix[] = "battery-level-";
 
     ResultHeapString res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
+        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
     ResultInt charging_status_result = get_charging_status();
