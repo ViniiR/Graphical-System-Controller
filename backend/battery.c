@@ -184,10 +184,9 @@ static ResultInt get_battery_percentage() {
     return res;
 }
 
-/// Returns integer of enum ChargingStatus,
-/// it is safe to cast ok value to ChargingStatus, unless it is ERR
-static ResultInt get_charging_status() {
-    ResultInt res = {
+/// Returns ChargingStatus enum
+static ResultEnum get_charging_status() {
+    ResultEnum res = {
         .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
     };
 
@@ -289,7 +288,7 @@ static ResultHeapString get_battery_icon() {
         .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = nullptr
     };
 
-    ResultInt charging_status_result = get_charging_status();
+    ResultEnum charging_status_result = get_charging_status();
     if (charging_status_result.variant == ERR) {
         res.err_msg = charging_status_result.err_msg;
         return res;
