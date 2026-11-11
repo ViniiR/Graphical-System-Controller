@@ -1,10 +1,12 @@
 #include "audio.h"
 #include "audio_individual.h"
 #include "audio_internal.h"
+#include "lib/cleanup.h"
 #include "lib/dbus.h"
 #include "lib/process.h"
 #include "lib/result.h"
 #include "lib/units.h"
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <systemd/sd-bus.h>
@@ -126,16 +128,27 @@ int sd_bus_array_append_audio_individual(
     return result;
 }
 
+// Realistically it will never be bigger than 5 elements
+static const size_t MAX_SIZE = 20;
+
+static void free_stream_array(AudioStream *(*stream)[MAX_SIZE]) {
+    for (size_t i = 0; i < MAX_SIZE; i++) {
+        AudioStream *ptr = (*stream)[i];
+        if (ptr && ptr->name) {
+            free(ptr->name);
+            free(ptr);
+        }
+    }
+}
+
 int get_all_audio_handler_individual(
     sd_bus_message *p_msg,
     [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror
 ) {
-    // Realistically it will never be bigger than 5 elements
-    static const size_t MAX_SIZE = 20;
-
-    AudioStream *stream_array[MAX_SIZE];
+    AudioStream *stream_array [[gnu::cleanup(free_stream_array)]][MAX_SIZE];
     size_t stream_array_size = 0;
+
     ResultVoid result_streams =
         get_all_streams(stream_array, &stream_array_size);
     if (result_streams.variant == ERR) {
@@ -147,8 +160,6 @@ int get_all_audio_handler_individual(
         stream_array_size = MAX_SIZE;
     }
 
-    //
-
     AudioStream **stream_array_decay = stream_array;
     int return_value = make_sd_bus_array_of_struct(
         p_msg,
@@ -159,13 +170,6 @@ int get_all_audio_handler_individual(
         5,
         &sd_bus_array_append_audio_individual
     );
-
-    //
-
-    for (size_t i = 0; i < stream_array_size; i++) {
-        free(stream_array[i]->name);
-        free(stream_array[i]);
-    }
 
     return return_value;
 }
@@ -190,7 +194,8 @@ static int get_audio_handler_sink(
     sd_bus_error *p_reterror,
     const char *sink_id
 ) {
-    ResultHeapStruct result_volume = get_pipewire_volume(sink_id);
+    ResultHeapStruct result_volume [[gnu::cleanup(result_struct_freep)]] =
+        get_pipewire_volume(sink_id);
     if (result_volume.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -205,8 +210,6 @@ static int get_audio_handler_sink(
     int return_value = sd_bus_reply_method_return(
         p_msg, "ub", volume_status->volume, volume_status->is_muted
     );
-
-    free(result_volume.ok_value);
 
     return return_value;
 }
@@ -249,7 +252,8 @@ static int set_audio_handler_sink(
 
     //
 
-    ResultHeapStruct result_get_volume = get_pipewire_volume(sink_id);
+    ResultHeapStruct result_get_volume [[gnu::cleanup(result_struct_freep)]] =
+        get_pipewire_volume(sink_id);
     if (result_get_volume.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -264,8 +268,6 @@ static int set_audio_handler_sink(
     int return_value = sd_bus_reply_method_return(
         p_msg, "ub", volume_status->volume, volume_status->is_muted
     );
-
-    free(result_get_volume.ok_value);
 
     return return_value;
 }

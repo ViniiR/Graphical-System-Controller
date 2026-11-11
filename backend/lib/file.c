@@ -1,3 +1,4 @@
+#include "lib/cleanup.h"
 #include "lib/result.h"
 #include "lib/transform.h"
 #include <errno.h>
@@ -10,7 +11,7 @@ ResultHeapString read_file(const char *path) {
         .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
-    FILE *f = fopen(path, "r");
+    FILE *f [[gnu::cleanup(fclosep)]] = fopen(path, "r");
     if (f == nullptr) {
         res.err_msg = "Failed to open file with 'read' mode";
         return res;
@@ -20,7 +21,6 @@ ResultHeapString read_file(const char *path) {
     size_t len = 0;
 
     ssize_t bytes_read = getdelim(&buffer, &len, '\0', f); // malloc
-    fclose(f);
     if (bytes_read == -1) {
         free(buffer);
         res.err_msg = "Failed to read file content";
@@ -39,7 +39,7 @@ ResultVoid write_file(const char *path, const char *content) {
 
     errno = 0;
 
-    int fd = open(path, O_WRONLY);
+    int fd [[gnu::cleanup(closep)]] = open(path, O_WRONLY);
     if (fd == -1) {
         if (errno == ENOENT) {
             res.err_msg = "Failed to write to file, does not exist";
@@ -49,14 +49,13 @@ ResultVoid write_file(const char *path, const char *content) {
         return res;
     }
 
-    FILE *f = fdopen(fd, "w");
+    FILE *f [[gnu::cleanup(fdclosep)]] = fdopen(fd, "w");
     if (f == nullptr) {
         res.err_msg = "Failed to open file with 'write' mode";
         return res;
     }
 
     int chars_written = fprintf(f, "%s", content);
-    fclose(f);
     if (chars_written == -1) {
         res.err_msg = "Failed to write to file";
         return res;

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 4.1.2)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS ON)
 
 project(vgsc LANGUAGES C)
 

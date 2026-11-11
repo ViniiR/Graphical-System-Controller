@@ -1,4 +1,5 @@
 #include "conservation.h"
+#include "lib/cleanup.h"
 #include "lib/file.h"
 #include "lib/result.h"
 #include <stdlib.h>
@@ -95,7 +96,8 @@ static ResultBool get_is_conservation_active() {
 
     bool is_active = false;
 
-    ResultHeapString result_file = read_file(conservation_filepath);
+    ResultHeapString result_file [[gnu::cleanup(result_string_freep)]] =
+        read_file(conservation_filepath);
     if (result_file.variant == ERR) {
         res.err_msg = result_file.err_msg;
         return res;
@@ -103,8 +105,6 @@ static ResultBool get_is_conservation_active() {
     if (strcmp(result_file.ok_value, "1") == 0) {
         is_active = true;
     }
-
-    free(result_file.ok_value);
 
     res.variant = OK;
     res.err_msg = "";

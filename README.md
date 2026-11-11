@@ -80,13 +80,13 @@ for_window [class="vgsc"]\
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
 
-- Must specify array size in sd_bus?
-- Return sd_bus_error is better than error_setf?
-
 - Remove ui updates after backend reply
 - Check for unecessary backend requests, avoid allowing performance request if performance is active
 - Dynamic battery tooltips
-- Fix array return types on sd_bus?
+
+- Void ** casts
+
+- Use attribute cleanup
 
 Icons reference:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status

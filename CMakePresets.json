@@ -13,6 +13,7 @@
             "cacheVariables":{
                 "CMAKE_C_STANDARD": "23",
                 "CMAKE_C_STANDARD_REQUIRED": "ON",
+                "CMAKE_C_EXTENSIONS": "ON",
                 "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wswitch-enum -Wstrict-prototypes -Wunreachable-code -Wredundant-decls"
             }
         },

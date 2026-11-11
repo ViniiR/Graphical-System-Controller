@@ -1,7 +1,8 @@
 #include "battery.h"
-#include "lib/result.h"
 #include "dirent.h"
+#include "lib/cleanup.h"
 #include "lib/file.h"
+#include "lib/result.h"
 #include "lib/transform.h"
 #include "lib/units.h"
 #include "string.h"
@@ -36,7 +37,8 @@ int get_battery_handler(
     [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror
 ) {
-    ResultHeapString result_icon = get_battery_icon();
+    ResultHeapString result_icon [[gnu::cleanup(result_string_freep)]] =
+        get_battery_icon();
     if (result_icon.variant == ERR) {
         return sd_bus_error_setf(
             p_reterror,
@@ -47,7 +49,6 @@ int get_battery_handler(
     }
     ResultInt result_percent = get_battery_percentage();
     if (result_percent.variant == ERR) {
-        free(result_icon.ok_value);
         return sd_bus_error_setf(
             p_reterror,
             SD_BUS_ERROR_INVALID_ARGS,
@@ -60,7 +61,6 @@ int get_battery_handler(
         p_msg, "su", result_icon.ok_value, result_percent.ok_value
     );
 
-    free(result_icon.ok_value);
     return return_value;
 }
 
@@ -71,18 +71,22 @@ static const char energy_full[] = "/energy_full";
 static const char energy_now[] = "/energy_now";
 static const char status[] = "/status";
 
-typedef enum { CHARGING, DISCHARGING, PLUGGED_IN } ChargingStatus;
+typedef enum {
+    CHARGING,
+    DISCHARGING,
+    PLUGGED_IN,
+} ChargingStatus;
 
 //
 
 static ResultHeapString get_battery_directory() {
-    DIR *dir;
-    struct dirent *entry;
     ResultHeapString res = {
         .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = ""
     };
 
-    dir = opendir(power_supply);
+    DIR *dir [[gnu::cleanup(closedirp)]] = opendir(power_supply);
+    struct dirent *entry;
+
     if (dir == nullptr) {
         res.err_msg = "Failed to open directory";
         return res;
@@ -103,8 +107,6 @@ static ResultHeapString get_battery_directory() {
                 return res;
             }
 
-            closedir(dir);
-
             res.variant = OK;
             res.ok_value = buf;
             res.err_msg = "";
@@ -112,18 +114,15 @@ static ResultHeapString get_battery_directory() {
         }
     }
 
-    closedir(dir);
-
     res.err_msg = "Failed to read directory";
     return res;
 }
 
 static ResultInt get_battery_percentage() {
-    ResultInt res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultInt res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
 
-    ResultHeapString result_directory = get_battery_directory();
+    ResultHeapString result_directory [[gnu::cleanup(result_string_freep)]] =
+        get_battery_directory();
     if (result_directory.variant == ERR) {
         res.err_msg = result_directory.err_msg;
         return res;
@@ -146,27 +145,26 @@ static ResultInt get_battery_percentage() {
         result_directory.ok_value,
         energy_now
     );
-    free(result_directory.ok_value);
 
-    ResultHeapString result_full = read_file(full_capacity);
+    ResultHeapString result_full [[gnu::cleanup(result_string_freep)]] =
+        read_file(full_capacity);
     if (result_full.variant == ERR) {
         res.err_msg = result_full.err_msg;
         return res;
     }
     ResultInt full_number_result = string_to_int(result_full.ok_value);
-    free(result_full.ok_value);
     if (full_number_result.variant == ERR) {
         res.err_msg = full_number_result.err_msg;
         return res;
     }
 
-    ResultHeapString result_now = read_file(now_capacity);
+    ResultHeapString result_now [[gnu::cleanup(result_string_freep)]] =
+        read_file(now_capacity);
     if (result_now.variant == ERR) {
         res.err_msg = result_now.err_msg;
         return res;
     }
     ResultInt now_number_result = string_to_int(result_now.ok_value);
-    free(result_now.ok_value);
     if (now_number_result.variant == ERR) {
         res.err_msg = now_number_result.err_msg;
         return res;
@@ -187,11 +185,10 @@ static ResultInt get_battery_percentage() {
 /// Returns integer of enum ChargingStatus,
 /// it is safe to cast ok value to ChargingStatus, unless it is ERR
 static ResultInt get_charging_status() {
-    ResultInt res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultInt res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
 
-    ResultHeapString result_dir = get_battery_directory();
+    ResultHeapString result_dir [[gnu::cleanup(result_string_freep)]] =
+        get_battery_directory();
     if (result_dir.variant == ERR) {
         res.err_msg = result_dir.err_msg;
         return res;
@@ -199,9 +196,9 @@ static ResultInt get_charging_status() {
 
     char filepath[KIBIBYTE];
     snprintf(filepath, sizeof(filepath), "%s%s", result_dir.ok_value, status);
-    free(result_dir.ok_value);
 
-    ResultHeapString result = read_file(filepath);
+    ResultHeapString result [[gnu::cleanup(result_string_freep)]] =
+        read_file(filepath);
     if (result.variant == ERR) {
         res.err_msg = result.err_msg;
         return res;
@@ -214,8 +211,6 @@ static ResultInt get_charging_status() {
         status = DISCHARGING;
     }
 
-    free(result.ok_value);
-
     res.variant = OK;
     res.ok_value = status;
     res.err_msg = "";
@@ -223,9 +218,7 @@ static ResultInt get_charging_status() {
 }
 
 static ResultInt format_percentage(int percentage) {
-    ResultInt res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultInt res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
     int battery_level_formatted = 0;
 
     if (percentage <= 0) {
@@ -295,7 +288,7 @@ static ResultHeapString get_battery_icon() {
         return res;
     }
 
-    ResultHeapString result_suffix =
+    ResultHeapString result_suffix [[gnu::cleanup(result_string_freep)]] =
         allocate_suffix((ChargingStatus)charging_status_result.ok_value);
     if (result_suffix.variant == ERR) {
         res.err_msg = result_suffix.err_msg;
@@ -304,7 +297,6 @@ static ResultHeapString get_battery_icon() {
 
     ResultInt result_percentage = get_battery_percentage();
     if (result_percentage.variant == ERR) {
-        free(result_suffix.ok_value);
         res.err_msg = result_percentage.err_msg;
         return res;
     }
@@ -312,7 +304,6 @@ static ResultHeapString get_battery_icon() {
     ResultInt battery_level_formatted_result =
         format_percentage(result_percentage.ok_value);
     if (battery_level_formatted_result.variant == ERR) {
-        free(result_suffix.ok_value);
         res.err_msg = battery_level_formatted_result.err_msg;
         return res;
     }
@@ -325,7 +316,6 @@ static ResultHeapString get_battery_icon() {
         battery_level_formatted_result.ok_value,
         result_suffix.ok_value
     );
-    free(result_suffix.ok_value);
     if (size == -1) {
         res.err_msg = "Failed to alloc";
         return res;

@@ -32,7 +32,6 @@ const sd_bus_vtable POWER_VTABLE[] = {
 };
 
 //
-//
 
 int reboot_handler(
     sd_bus_message *p_msg,

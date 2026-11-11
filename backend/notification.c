@@ -67,12 +67,25 @@ int sd_bus_array_append_notification(
     return result;
 }
 
+static void free_notification_array(Notification *(*array)[MAX_NOTIFICATIONS]) {
+    for (size_t i = 0; i < MAX_NOTIFICATIONS; i++) {
+        Notification *ptr = (*array)[i];
+        free(ptr->app);
+        free(ptr->body);
+        free(ptr->icon);
+        free(ptr->summary);
+        // don't forget that timestamp is pass-by-value
+        free(ptr);
+    }
+}
+
 int get_recent_notifications(
     sd_bus_message *p_msg,
     [[maybe_unused]] void *p_userdata,
     sd_bus_error *p_reterror
 ) {
-    Notification *output[MAX_NOTIFICATIONS];
+    Notification *output
+        [[gnu::cleanup(free_notification_array)]][MAX_NOTIFICATIONS];
     size_t output_size = 0;
 
     ResultVoid result = get_notifications(output, &output_size, sizeof(output));
@@ -96,16 +109,6 @@ int get_recent_notifications(
         &sd_bus_array_append_notification
     );
 
-    for (size_t i = 0; i < output_size; i++) {
-        Notification *ptr = output[i];
-        free(ptr->app);
-        free(ptr->body);
-        free(ptr->icon);
-        free(ptr->summary);
-        // don't forget that timestamp is pass-by-value
-        free(ptr);
-    }
-
     return return_value;
 }
 int clear_notifications(
@@ -125,6 +128,18 @@ int clear_notifications(
     }
 
     return sd_bus_reply_method_return(p_msg, nullptr);
+}
+
+static void cJSON_Deletep(cJSON **json) {
+    if (*json) {
+        cJSON_Delete(*json);
+    }
+}
+
+static void notification_freep(Notification **ptr) {
+    if (*ptr) {
+        free(*ptr);
+    }
 }
 
 static ResultVoid get_notifications(
@@ -162,14 +177,13 @@ static ResultVoid get_notifications(
         return res;
     }
 
-    cJSON *json = cJSON_Parse(output);
+    cJSON *json [[gnu::cleanup(cJSON_Deletep)]] = cJSON_Parse(output);
     if (json == nullptr) {
         res.err_msg = "Failed to get json object";
         return res;
     }
     if (!cJSON_IsArray(json)) {
         res.err_msg = "Json object is not an array";
-        cJSON_Delete(json);
         return res;
     }
 
@@ -178,13 +192,12 @@ static ResultVoid get_notifications(
     cJSON_ArrayForEach(item, json) {
         if (*size >= max_size) {
             res.err_msg = "Received more notifications than can hold";
-            cJSON_Delete(json);
             return res;
         }
-        Notification *notif = malloc(sizeof(Notification));
+        Notification *notif [[gnu::cleanup(notification_freep)]] =
+            malloc(sizeof(Notification));
         if (notif == nullptr) {
             res.err_msg = "Failed to alloc";
-            cJSON_Delete(json);
             return res;
         }
 
@@ -197,8 +210,6 @@ static ResultVoid get_notifications(
             !cJSON_IsString(icon) || !cJSON_IsString(summary) ||
             !cJSON_IsNumber(timestamp)) {
             res.err_msg = "Json item is not the correct type";
-            cJSON_Delete(json);
-            free(notif);
             return res;
         }
 
@@ -219,8 +230,6 @@ static ResultVoid get_notifications(
         index++;
         *size = index;
     }
-
-    cJSON_Delete(json);
 
     res.variant = OK;
     res.err_msg = "";

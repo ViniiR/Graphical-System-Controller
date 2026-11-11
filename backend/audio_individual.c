@@ -1,8 +1,9 @@
 #include "audio_internal.h"
-#include "lib/result.h"
-#include "lib/units.h"
+#include "lib/cleanup.h"
 #include "lib/process.h"
+#include "lib/result.h"
 #include "lib/transform.h"
+#include "lib/units.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +29,8 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
         return res;
     }
 
-    FILE *f = fmemopen(output_id, strnlen(output_id, sizeof(output_id)), "r");
+    FILE *f [[gnu::cleanup(fclosep)]] =
+        fmemopen(output_id, strnlen(output_id, sizeof(output_id)), "r");
     if (f == nullptr) {
         res.err_msg = "fmemopen failed";
         return res;
@@ -36,7 +38,7 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
 
     //
 
-    char *line = nullptr;
+    char *line [[gnu::cleanup(cfreep)]] = nullptr;
     size_t len = 0;
     ssize_t read_bytes;
 
@@ -50,15 +52,11 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
 
         ResultInt line_int_result = string_to_int(line);
         if (line_int_result.variant == ERR) {
-            free(line);
-            fclose(f);
             res.err_msg = line_int_result.err_msg;
             return res;
         }
         ResultHeapStruct result = get_stream(line_int_result.ok_value);
         if (result.variant == ERR) {
-            free(line);
-            fclose(f);
             res.err_msg = result.err_msg;
             return res;
         }
@@ -67,9 +65,6 @@ ResultVoid get_all_streams(AudioStream *stream_array[], size_t *array_size) {
         stream_array[*array_size] = stream;
         (*array_size)++;
     }
-
-    free(line);
-    fclose(f);
 
     res.variant = OK;
     res.err_msg = "";
@@ -106,7 +101,7 @@ ResultHeapStruct get_stream(unsigned int id) {
 
     //
 
-    ResultHeapStruct result_volume =
+    ResultHeapStruct result_volume [[gnu::cleanup(result_struct_freep)]] =
         external_get_pipewire_volume(id_char);
     if (result_volume.variant == ERR) {
         res.err_msg = result_volume.err_msg;
@@ -127,8 +122,6 @@ ResultHeapStruct get_stream(unsigned int id) {
         res.err_msg = "Strdup failed";
         return res;
     }
-
-    free(result_volume.ok_value);
 
     res.variant = OK;
     res.err_msg = "";

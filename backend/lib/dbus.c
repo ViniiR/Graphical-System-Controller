@@ -24,7 +24,8 @@ int make_sd_bus_array_of_struct(
 
     int e = 0;
 
-    sd_bus_message *p_reply_msg = nullptr;
+    sd_bus_message *p_reply_msg [[gnu::cleanup(sd_bus_message_unrefp)]] =
+        nullptr;
     e = sd_bus_message_new_method_return(p_msg, &p_reply_msg);
     if (e < 0) goto failure;
 
@@ -50,13 +51,9 @@ int make_sd_bus_array_of_struct(
     int return_value = sd_bus_send(nullptr, p_reply_msg, nullptr);
     if (return_value < 0) goto failure;
 
-    sd_bus_message_unref(p_reply_msg);
-
     return return_value;
 
 failure:
-    sd_bus_message_unref(p_reply_msg);
-
     return sd_bus_error_setf(
         p_reterror,
         SD_BUS_ERROR_FAILED,

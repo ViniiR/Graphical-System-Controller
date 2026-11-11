@@ -1,8 +1,9 @@
 #include "brightness.h"
+#include "lib/cleanup.h"
 #include "lib/file.h"
+#include "lib/result.h"
 #include "lib/transform.h"
 #include "lib/units.h"
-#include "lib/result.h"
 #include "systemd/sd-bus-protocol.h"
 #include <dirent.h>
 #include <math.h>
@@ -132,13 +133,11 @@ static ResultHeapString read_brightness_from(
 }
 
 static ResultInt get_brightness() {
-    DIR *dir;
-    struct dirent *entry;
-    ResultInt res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultInt res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
 
-    dir = opendir(BACKLIGHT_PATH);
+    DIR *dir [[gnu::cleanup(closedirp)]] = opendir(BACKLIGHT_PATH);
+    struct dirent *entry;
+
     if (dir == nullptr) {
         res.err_msg = "Failed to open directory";
         return res;
@@ -150,36 +149,30 @@ static ResultInt get_brightness() {
             continue;
         }
 
-        ResultHeapString result_max_brightness =
-            read_brightness_from(entry->d_name, MAX_BRIGHTNESS_PATH);
+        ResultHeapString result_max_brightness
+            [[gnu::cleanup(result_string_freep)]] =
+                read_brightness_from(entry->d_name, MAX_BRIGHTNESS_PATH);
         if (result_max_brightness.variant == ERR) {
-            closedir(dir);
             res.err_msg = result_max_brightness.err_msg;
             return res;
         }
-        ResultHeapString result_current_brightness =
-            read_brightness_from(entry->d_name, CURRENT_BRIGHTNESS_PATH);
+        ResultHeapString result_current_brightness
+            [[gnu::cleanup(result_string_freep)]] =
+                read_brightness_from(entry->d_name, CURRENT_BRIGHTNESS_PATH);
         if (result_current_brightness.variant == ERR) {
-            free(result_max_brightness.ok_value);
-            closedir(dir);
             res.err_msg = result_current_brightness.err_msg;
             return res;
         }
 
         ResultInt result_current_brightness_int =
             string_to_int(result_current_brightness.ok_value);
-        free(result_current_brightness.ok_value);
         if (result_current_brightness_int.variant == ERR) {
-            free(result_max_brightness.ok_value);
-            closedir(dir);
             res.err_msg = result_current_brightness_int.err_msg;
             return res;
         }
         ResultInt result_max_brightness_int =
             string_to_int(result_max_brightness.ok_value);
-        free(result_max_brightness.ok_value);
         if (result_max_brightness_int.variant == ERR) {
-            closedir(dir);
             res.err_msg = result_max_brightness_int.err_msg;
             return res;
         }
@@ -187,14 +180,11 @@ static ResultInt get_brightness() {
         int percent = (result_current_brightness_int.ok_value * 100) /
                       result_max_brightness_int.ok_value;
 
-        closedir(dir);
-
         res.variant = OK;
         res.ok_value = percent;
         res.err_msg = "";
         return res;
     }
-    closedir(dir);
 
     res.err_msg = "Failed to read backlight directory";
     return res;
@@ -205,14 +195,14 @@ static ResultVoid set_brightness(
 ) {
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    ResultHeapString result_max = read_file(max_filepath);
+    ResultHeapString result_max [[gnu::cleanup(result_string_freep)]] =
+        read_file(max_filepath);
     if (result_max.variant == ERR) {
         res.err_msg = result_max.err_msg;
         return res;
     }
 
     ResultInt result_max_int = string_to_int(result_max.ok_value);
-    free(result_max.ok_value);
     if (result_max_int.variant == ERR) {
         res.err_msg = result_max_int.err_msg;
         return res;
@@ -234,11 +224,11 @@ static ResultVoid set_brightness(
     return res;
 }
 static ResultVoid set_brightness_all(unsigned int percent) {
-    DIR *dir;
-    struct dirent *entry;
     ResultVoid res = RESULT_VOID_DEFAULT;
 
-    dir = opendir(BACKLIGHT_PATH);
+    DIR *dir [[gnu::cleanup(closedirp)]] = opendir(BACKLIGHT_PATH);
+    struct dirent *entry;
+
     if (dir == nullptr) {
         res.err_msg = "Failed to open directory";
         return res;
@@ -271,13 +261,10 @@ static ResultVoid set_brightness_all(unsigned int percent) {
 
         ResultVoid result = set_brightness(percent, filepath, max_filepath);
         if (result.variant == ERR) {
-            closedir(dir);
             res.err_msg = result.err_msg;
             return res;
         }
     }
-
-    closedir(dir);
 
     res.variant = OK;
     res.err_msg = "";

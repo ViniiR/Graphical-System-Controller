@@ -1,4 +1,5 @@
 #include "sys/wait.h"
+#include "lib/cleanup.h"
 #include "lib/units.h"
 #include "lib/result.h"
 #include "unistd.h"
@@ -20,9 +21,8 @@ ResultVoid exec_command(
     static thread_local char error_message[KIBIBYTE];
 
     ResultVoid res = RESULT_VOID_DEFAULT;
-    FILE *fp;
 
-    fp = popen(command, modes);
+    FILE *fp [[gnu::cleanup(pclosep)]] = popen(command, modes);
     if (fp == nullptr) {
         snprintf(
             error_message,
@@ -34,7 +34,6 @@ ResultVoid exec_command(
         return res;
     }
     if (output == nullptr && size == 0) {
-        pclose(fp);
         res.variant = OK;
         res.err_msg = "";
         return res;
@@ -45,13 +44,12 @@ ResultVoid exec_command(
     char full_output[size];
     full_output[0] = '\0';
 
-    char *line = nullptr;
+    char *line [[gnu::cleanup(cfreep)]] = nullptr;
     size_t len = 0;
     ssize_t read_bytes;
 
     while ((read_bytes = getline(&line, &len, fp)) != -1) {
         if (read_bytes == 0 && output != nullptr) {
-            pclose(fp);
             snprintf(
                 error_message,
                 sizeof(error_message),
@@ -65,9 +63,6 @@ ResultVoid exec_command(
     }
 
     snprintf(output, size, "%s", full_output);
-
-    free(line);
-    pclose(fp);
 
     res.variant = OK;
     res.err_msg = "";

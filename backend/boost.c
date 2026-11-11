@@ -1,4 +1,5 @@
 #include "boost.h"
+#include "lib/cleanup.h"
 #include "lib/file.h"
 #include "lib/result.h"
 #include <stdlib.h>
@@ -87,7 +88,8 @@ static ResultBool get_is_boost_active() {
         .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = false
     };
 
-    ResultHeapString result_file = read_file(boost_filepath);
+    ResultHeapString result_file [[gnu::cleanup(result_string_freep)]] =
+        read_file(boost_filepath);
     if (result_file.variant == ERR) {
         res.err_msg = result_file.err_msg;
         return res;
@@ -97,8 +99,6 @@ static ResultBool get_is_boost_active() {
     if (strcmp(result_file.ok_value, "1") == 0) {
         is_active = true;
     }
-
-    free(result_file.ok_value);
 
     res.variant = OK;
     res.ok_value = is_active;
