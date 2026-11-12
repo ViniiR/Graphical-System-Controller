@@ -95,18 +95,17 @@ pub fn parse_notitication_timestamp(timestamp: i64) -> Result<String, HandlerErr
     let output = Command::new("awk")
         .args(["{print int($1)}", "/proc/uptime"])
         .output()
-        .map_err(|e| HandlerError::IoError(format!("Failed to read /proc/uptime, error: {e:?}")))?;
+        .map_err(|e| HandlerError::Io(format!("Failed to read /proc/uptime, error: {e:?}")))?;
     let current_timestamp: String = String::from_utf8_lossy(&output.stdout).into();
     let current_timestamp = current_timestamp.trim().parse::<i64>().map_err(|e| {
-        HandlerError::ConversionError(format!("Failed to convert String to i64, error: {e:?}"))
+        HandlerError::Conversion(format!("Failed to convert String to i64, error: {e:?}"))
     })?;
 
-    let timestamp =
-        current_timestamp
-            .checked_sub(timestamp)
-            .ok_or(HandlerError::OperationError(String::from(
-                "Failed to subtract i64",
-            )))?;
+    let timestamp = current_timestamp
+        .checked_sub(timestamp)
+        .ok_or(HandlerError::Operation(String::from(
+            "Failed to subtract i64",
+        )))?;
 
     let suffix: (i64, &str) = match timestamp {
         0..60 => (1, "s"),
@@ -118,7 +117,7 @@ pub fn parse_notitication_timestamp(timestamp: i64) -> Result<String, HandlerErr
 
     let time_ago = timestamp
         .checked_div(suffix.0)
-        .ok_or(HandlerError::OperationError(String::from(
+        .ok_or(HandlerError::Operation(String::from(
             "Failed to divide i64",
         )))?;
 

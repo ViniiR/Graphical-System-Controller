@@ -83,7 +83,6 @@ for_window [class="vgsc"]\
 - Check for unecessary backend requests, avoid allowing performance request if performance is active?
 
 - Use ConversionError instead of u32 error
-- Rename HandlerError branches
 
 Icons reference:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status

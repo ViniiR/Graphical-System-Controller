@@ -12,6 +12,6 @@ pub trait WidgetDowncastExt {
 impl WidgetDowncastExt for Option<Widget> {
     fn downcast_or_err<T: IsA<Widget>>(self, msg: &str) -> Result<T, HandlerError> {
         self.and_downcast::<T>()
-            .ok_or(HandlerError::ObjectError(msg.to_owned()))
+            .ok_or(HandlerError::Object(msg.to_owned()))
     }
 }

@@ -13,6 +13,6 @@ impl BuilderObject for gtk::Builder {
         T: IsA<Object>,
     {
         self.object::<T>(name)
-            .ok_or(HandlerError::ObjectError(format!("Failed to get {name}")))
+            .ok_or(HandlerError::Object(format!("Failed to get {name}")))
     }
 }

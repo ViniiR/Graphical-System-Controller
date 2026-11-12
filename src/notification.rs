@@ -155,7 +155,7 @@ fn populate_list_item(notif: &Notification, list_item: &ListItem) -> Result<(), 
         .child_at(0, 0)
         .downcast_or_err::<Picture>("Failed to get image on notification.ui")?;
     let icon_name = ui::parse_notification_icon(notif.clone())
-        .map_err(|e| HandlerError::IoError(format!("{e:?}")))?;
+        .map_err(|e| HandlerError::Io(format!("{e:?}")))?;
     icon.set_filename(Some(icon_name));
 
     let title = grid

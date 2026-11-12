@@ -5,27 +5,27 @@ use gtk::glib;
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub enum HandlerError {
-    DBusError(String),
-    ObjectError(String),
-    IoError(String),
-    ConversionError(String),
-    OperationError(String),
+    Dbus(String),
+    Object(String),
+    Io(String),
+    Conversion(String),
+    Operation(String),
 }
 
 impl From<glib::Error> for HandlerError {
     fn from(value: glib::Error) -> Self {
-        Self::DBusError(value.message().to_owned())
+        Self::Dbus(value.message().to_owned())
     }
 }
 
 impl Display for HandlerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let val = match self {
-            Self::DBusError(v)
-            | Self::ObjectError(v)
-            | Self::IoError(v)
-            | Self::ConversionError(v)
-            | Self::OperationError(v) => v,
+            Self::Dbus(v)
+            | Self::Object(v)
+            | Self::Io(v)
+            | Self::Conversion(v)
+            | Self::Operation(v) => v,
         };
         write!(f, "{val}")
     }

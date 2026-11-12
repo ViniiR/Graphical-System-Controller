@@ -82,7 +82,7 @@ impl TryFrom<u32> for ChargingStatus {
             0 => Ok(Self::Charging),
             1 => Ok(Self::Discharging),
             2 => Ok(Self::PluggedIn),
-            _ => Err(HandlerError::ConversionError(format!(
+            _ => Err(HandlerError::Conversion(format!(
                 "Failed to convert {value} to ChargingStatus"
             ))),
         }
