@@ -13,35 +13,6 @@ use crate::{
     },
 };
 
-// NOTE: matches backend's power profile
-#[derive(Debug, Clone, Copy)]
-#[repr(u32)]
-enum PowerProfile {
-    Performance = 0,
-    Balanced = 1,
-    PowerSaver = 2,
-}
-impl TryFrom<u32> for PowerProfile {
-    type Error = u32;
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        match value {
-            0 => Ok(Self::Performance),
-            1 => Ok(Self::Balanced),
-            2 => Ok(Self::PowerSaver),
-            _ => Err(value),
-        }
-    }
-}
-impl From<PowerProfile> for u32 {
-    fn from(value: PowerProfile) -> Self {
-        match value {
-            PowerProfile::Performance => 0,
-            PowerProfile::Balanced => 1,
-            PowerProfile::PowerSaver => 2,
-        }
-    }
-}
-
 pub fn handle_power_profile(builder: &Builder, conn: &DBusConnection) -> Result<(), HandlerError> {
     let performance_btn: Button = builder.get_object("power-profile-button-performance")?;
     let balanced_btn: Button = builder.get_object("power-profile-button-balanced")?;
@@ -102,7 +73,7 @@ pub fn handle_power_profile(builder: &Builder, conn: &DBusConnection) -> Result<
 
             match &res {
                 Ok(v) if let Some(profile) = v.child_value(0).get::<u32>() => {
-                    let Ok(profile) = PowerProfile::try_from(profile)  else {
+                    let Ok(profile) = PowerProfile::try_from(profile) else {
                         g_warning!(None, "PowerProfile conversion error");
                         return;
                     };
@@ -139,5 +110,35 @@ async fn handle_click(
     match dbus_call.await {
         Ok(_) => (),
         e => g_warning!(None, "DBus call error: {e:?}"),
+    }
+}
+
+// NOTE: matches backend's power profile
+#[derive(Debug, Clone, Copy)]
+enum PowerProfile {
+    Performance = 0,
+    Balanced = 1,
+    PowerSaver = 2,
+}
+impl TryFrom<u32> for PowerProfile {
+    type Error = HandlerError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Performance),
+            1 => Ok(Self::Balanced),
+            2 => Ok(Self::PowerSaver),
+            _ => Err(HandlerError::Conversion(format!(
+                "Failed to convert {value} to PowerProfile"
+            ))),
+        }
+    }
+}
+impl From<PowerProfile> for u32 {
+    fn from(value: PowerProfile) -> Self {
+        match value {
+            PowerProfile::Performance => 0,
+            PowerProfile::Balanced => 1,
+            PowerProfile::PowerSaver => 2,
+        }
     }
 }

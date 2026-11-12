@@ -79,10 +79,9 @@ for_window [class="vgsc"]\
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
 - Create a cache
+- Write tests
 
 - Check for unecessary backend requests, avoid allowing performance request if performance is active?
-
-- Use ConversionError instead of u32 error
 
 Icons reference:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status
