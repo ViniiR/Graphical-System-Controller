@@ -1,7 +1,7 @@
 #include "battery.h"
-#include "lib/result.h"
 #include "dirent.h"
 #include "lib/file.h"
+#include "lib/result.h"
 #include "lib/transform.h"
 #include "lib/units.h"
 #include "string.h"
@@ -17,7 +17,7 @@ const sd_bus_vtable BATTERY_VTABLE[] = {
     SD_BUS_METHOD_WITH_ARGS(
         "GetBattery",
         SD_BUS_NO_ARGS,
-        SD_BUS_RESULT("s", icon, "u", percentage),
+        SD_BUS_RESULT("s", icon, "u", percentage, "u", status),
         get_battery_handler,
         SD_BUS_VTABLE_UNPRIVILEGED
     ),
@@ -28,6 +28,7 @@ const sd_bus_vtable BATTERY_VTABLE[] = {
 
 static ResultHeapString get_battery_icon();
 static ResultInt get_battery_percentage();
+static ResultEnum get_charging_status();
 
 //
 
@@ -55,9 +56,23 @@ int get_battery_handler(
             result_percent.err_msg
         );
     }
+    ResultEnum result_status = get_charging_status();
+    if (result_status.variant == ERR) {
+        free(result_icon.ok_value);
+        return sd_bus_error_setf(
+            p_reterror,
+            SD_BUS_ERROR_INVALID_ARGS,
+            "Failed to get battery, Error %s",
+            result_status.err_msg
+        );
+    }
 
     int return_value = sd_bus_reply_method_return(
-        p_msg, "su", result_icon.ok_value, result_percent.ok_value
+        p_msg,
+        "suu",
+        result_icon.ok_value,
+        result_percent.ok_value,
+        result_status.ok_value
     );
 
     free(result_icon.ok_value);
@@ -71,7 +86,11 @@ static const char energy_full[] = "/energy_full";
 static const char energy_now[] = "/energy_now";
 static const char status[] = "/status";
 
-typedef enum { CHARGING, DISCHARGING, PLUGGED_IN } ChargingStatus;
+typedef enum {
+    CHARGING = 0,
+    DISCHARGING = 1,
+    PLUGGED_IN = 2,
+} ChargingStatus;
 
 //
 
@@ -119,9 +138,7 @@ static ResultHeapString get_battery_directory() {
 }
 
 static ResultInt get_battery_percentage() {
-    ResultInt res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultInt res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
 
     ResultHeapString result_directory = get_battery_directory();
     if (result_directory.variant == ERR) {
@@ -186,9 +203,7 @@ static ResultInt get_battery_percentage() {
 
 /// Returns ChargingStatus enum
 static ResultEnum get_charging_status() {
-    ResultEnum res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultEnum res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
 
     ResultHeapString result_dir = get_battery_directory();
     if (result_dir.variant == ERR) {
@@ -222,9 +237,7 @@ static ResultEnum get_charging_status() {
 }
 
 static ResultInt format_percentage(int percentage) {
-    ResultInt res = {
-        .variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0
-    };
+    ResultInt res = {.variant = ERR, .err_msg = UNKNOWN_ERR, .ok_value = 0};
     int battery_level_formatted = 0;
 
     if (percentage <= 0) {

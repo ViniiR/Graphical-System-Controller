@@ -71,7 +71,6 @@ for_window [class="vgsc"]\
 
 ### Bugs
 - Battery charging under 10% does not display icon
-- Crashes individual_audio when closing while in discord call
 
 ### TODOs
 - Handle individual_audio input: mute, and volume
@@ -79,14 +78,12 @@ for_window [class="vgsc"]\
 - Function ```exec_command_as_user``` does not propagate errors with messages
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
+- Create a cache
 
-- Must specify array size in sd_bus?
-- Return sd_bus_error is better than error_setf?
+- Check for unecessary backend requests, avoid allowing performance request if performance is active?
 
-- Remove ui updates after backend reply
-- Check for unecessary backend requests, avoid allowing performance request if performance is active
-- Dynamic battery tooltips
-- Fix array return types on sd_bus?
+- Use ConversionError instead of u32 error
+- Rename HandlerError branches
 
 Icons reference:
 - https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/Adwaita/symbolic/status
