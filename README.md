@@ -71,15 +71,17 @@ for_window [class="vgsc"]\
 
 ### Bugs
 - Battery charging under 10% does not display icon
+- Exec_command doesnt propagate errors to callee :cry:
 
 ### TODOs
 - Handle individual_audio input: mute, and volume
 - Add individual_audio tooltips
-- Function ```exec_command_as_user``` does not propagate errors with messages
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
 - Create a cache
 - Write tests
+
+- main.c has unreachable code
 
 - Check for unecessary backend requests, avoid allowing performance request if performance is active?
 
