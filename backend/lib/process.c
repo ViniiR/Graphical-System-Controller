@@ -9,17 +9,17 @@
 
 const unsigned int UID = 1000;
 
-/// WARNING: if programs are not available in root's $PATH
-/// must add it flake.nix systemd.services.<...>.path
+/// WARNING: if programs are not available in the root's $PATH
+/// they must be added to flake.nix systemd.services.<...>.path;
+/// Do not assume they are available
 ResultVoid exec_command(
-    char *output, unsigned int size, const char *command, const char *modes
+    char *output, size_t size, const char *command, const char *modes
 ) {
     static thread_local char error_message[KIBIBYTE];
 
     ResultVoid res = RESULT_VOID_DEFAULT;
-    FILE *fp;
 
-    fp = popen(command, modes);
+    FILE *fp = popen(command, modes);
     if (fp == nullptr) {
         snprintf(
             error_message,
@@ -48,13 +48,13 @@ ResultVoid exec_command(
 
     while ((read_bytes = getline(&line, &len, fp)) != -1) {
         if (read_bytes == 0 && output != nullptr) {
-            pclose(fp);
             snprintf(
                 error_message,
                 sizeof(error_message),
                 "Could not read file, Command: '%s'",
                 command
             );
+            pclose(fp);
             res.err_msg = error_message;
             return res;
         }
@@ -73,7 +73,7 @@ ResultVoid exec_command(
 
 ResultVoid exec_command_as_user(
     char *output,
-    unsigned int size,
+    size_t size,
     const char *command,
     const char *modes,
     uid_t target_uid
