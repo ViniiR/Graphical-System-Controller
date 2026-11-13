@@ -81,8 +81,6 @@ for_window [class="vgsc"]\
 - Create a cache
 - Write tests
 
-- main.c has unreachable code
-
 - Check for unecessary backend requests, avoid allowing performance request if performance is active?
 
 Icons reference:

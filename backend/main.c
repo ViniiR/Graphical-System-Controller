@@ -86,10 +86,6 @@ int main(void) {
         err = sd_bus_wait(p_dbus, 100);
         if (err < 0) return fail_with_msg("Failed to wait for bus", p_dbus, err);
     }
-
-    // Finish
-    sd_bus_unref(p_dbus);
-    return err;
 }
 
 //
