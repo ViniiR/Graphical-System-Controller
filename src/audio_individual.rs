@@ -135,14 +135,16 @@ fn populate_list_item(stream: &AudioStream, list_item: &ListItem) -> Result<(), 
         .child_at(0, 0)
         .downcast_or_err::<Image>("Failed to get image on individual_audio.ui")?;
     icon.set_icon_name(Some(ui::get_individual_audio_icon(&stream.name)));
-    let label = grid
+    let name_label = grid
         .child_at(1, 0)
         .downcast_or_err::<Label>("Failed to get label on individual_audio.ui")?;
-    label.set_label(&stream.name);
+    name_label.set_label(&stream.name);
+    name_label.set_tooltip_text(Some(&stream.name));
 
     let r#box = grid
         .child_at(0, 1)
         .downcast_or_err::<gtk::Box>("Failed to get box on individual_audio.ui")?;
+    r#box.set_tooltip_text(Some("Toggle audio muted"));
     let icon = r#box
         .first_child()
         .downcast_or_err::<Image>("Failed to get box image on individual_audio.ui")?;

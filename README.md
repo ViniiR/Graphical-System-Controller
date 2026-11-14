@@ -74,8 +74,8 @@ for_window [class="vgsc"]\
 - Exec_command doesnt propagate errors to callee :cry:
 
 ### TODOs
+- Rename project
 - Handle individual_audio input: mute, and volume
-- Add individual_audio tooltips
 - Restructure frontend to avoid excessive ```g_warning!()``` macro calls, prefer Result type (unless inside closure)
 - Simplify audio.rs, audio_individual.rs, brightness.rs
 - Create a cache
