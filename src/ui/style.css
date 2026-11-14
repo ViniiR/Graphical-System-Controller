@@ -149,6 +149,12 @@ tooltip {
 
 /* . */
 
+listview > row:hover {
+    background-color: transparent;
+}
+
+/* . */
+
 .notification-title {
     font-weight: 600;
 }
